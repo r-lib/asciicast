@@ -1,13 +1,13 @@
 Package: asciicast
-Title: What the Package Does (One Line, Title Case)
+Title: Create R Screencasts
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Gábor",
+           family = "Csárdi",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           email = "csardi.gabor@gmail.com")
+Description: Create 'asciinema' screencasts from R scripts, and convert them
+    to SVG images, that can be used in 'README' files, or blog posts.
 License: MIT + file LICENSE
 Suggests: 
     testthat
