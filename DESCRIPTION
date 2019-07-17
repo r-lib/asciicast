@@ -1,18 +1,23 @@
 Package: asciicast
 Title: Create R Screencasts
 Version: 0.0.0.9000
-Authors@R: 
+Authors@R: c(
     person(given = "Gábor",
            family = "Csárdi",
            role = c("aut", "cre"),
-           email = "csardi.gabor@gmail.com")
+           email = "csardi.gabor@gmail.com"),
+    person(given = "Mario",
+           family = "Nebl",
+           role = c("aut"),
+           comment = "https://github.com/marionebl/svg-term author"))
 Description: Create 'asciinema' screencasts from R scripts, and convert them
     to SVG images, that can be used in 'README' files, or blog posts.
 License: MIT + file LICENSE
 Imports:
     jsonlite,
     processx,
-    tibble
+    tibble,
+    V8
 Suggests: 
     testthat
 Encoding: UTF-8

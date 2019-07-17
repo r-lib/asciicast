@@ -109,10 +109,25 @@ play <- function(cast) {
 #' @param path Path to SVG file to create.
 #'
 #' @export
+#' @importFrom V8 v8 JS
 
 write_svg <- function(cast, path) {
-  stop("Not yet implemented")
-  ## TODO
+  ct <- v8(c("global", "window", "document"))
+  ct$assign("setTimeout", JS("function(callback, after) { callback(); }"))
+  ct$assign("clearTimeout", JS("function(timer) { }"))
+  jsfile <- gzfile(system.file("svg-term.js.gz", package = "asciicast"))
+  on.exit(close(jsfile), add = TRUE)
+  ct$source(jsfile)
+
+  tmp <- tempfile()
+  on.exit(unlink(tmp), add = TRUE)
+  write_json(cast, tmp)
+
+  json <- readChar(tmp, nchars = file.size(tmp))
+  svg <- ct$call("svgterm.render", json)
+  cat(svg, file = path)
+
+  invisible()
 }
 
 parse_header <- function(lines) {
