@@ -1,13 +1,44 @@
 
-#' @importFrom zeallot %<-%
+#' Record an ascii screencast
+#'
+#' @param script Path of an R script to record.
+#' @param speed Average typing speed, per keypress, in seconds.
+#' @param empty_wait How long to wait for empty lines in the script file,
+#'   in seconds.
+#' @param width Width of the terminal, in number of characters.
+#' @param height Height of the terminal, in number of characters.
+#' @param title Title of the cast, this is included in the cast JSON file.
+#' @param timestamp Time stamp of the recording, defaults to `Sys.time()`,
+#'   this is included in the cast JSON file.
+#' @param env Environment variables to include in the case JSON file.
+#'   Defaults to `list(TERM = "xterm-256color", SHELL = "/bin/zsh")`.
+#' @param idle_time_limit Time limit for the cast not printing anything,
+#'   in seconds. By default there is no limit.
+#' @param allow_errors Whether to cast errors properly. If this is set to
+#'   `TRUE`, then asciicast overwrites the `"error"` option. Only change
+#'   this if you know what you are doing.
+#' @param timeout Idle timeout, in seconds If the R subprocess running
+#'   the recording does not answer within this limit, it is killed and the
+#'   recording stops. Update this for slow running code, that produces no
+#'   output as it runs.
+#'
+#' @return An `asciicast` object, write this to file with [write_json()].
+#'
 #' @export
+#' @examples
+#' script <- system.file("examples", "hello.R", package = "asciicast")
+#' cast <- record(script)
+#' cast
 
-record <- function(events, width = NULL, height = NULL,
-                   title = NULL, timestamp = NULL, env = NULL,
-                   idle_time_limit = NULL) {
+record <- function(script, speed = 0.05, empty_wait = 1, width = NULL,
+                   height = NULL, title = NULL, timestamp = NULL,
+                   env = NULL, idle_time_limit = NULL, allow_errors = TRUE,
+                   timeout = 10) {
 
-  lines <- readLines(events)
-  c(header, body) %<-% parse_header(lines)
+  lines <- readLines(script)
+  parsed <- parse_header(lines)
+  header <- parsed$header
+  body <- parsed$body
 
   ## Default values for attributes
   config <- not_null(list(
@@ -18,12 +49,12 @@ record <- function(events, width = NULL, height = NULL,
     title = title %||% header$title,
     timestamp = as.integer(timestamp %||% header$timestamp %||% Sys.time()),
     env = env %||%
-      (if (!is.null(header$env)) eval(parse(text = header$env))) %||% 
+      (if (!is.null(header$env)) eval(parse(text = header$env))) %||%
       list(TERM = "xterm-256color", SHELL = "/bin/zsh"),
     idle_time_limit = idle_time_limit %||% header$idle_time_limit
   ))
 
-  output <- record_commands(body)
+  output <- record_commands(body, speed, timeout, empty_wait, allow_errors)
 
   new_cast(config, output)
 }
@@ -34,9 +65,17 @@ new_cast <- function(config, output) {
     class = "asciicast")
 }
 
+#' Write an ascii cast to file
+#'
+#' The file uses the asciicast file format, version 2:
+#' <https://github.com/asciinema/asciinema/blob/master/doc/asciicast-v2.md>.
+#'
+#' @param cast `asciicast` object.
+#' @param path Path to write to.
+#'
 #' @export
 
-write_cast <- function(cast, path) {
+write_json <- function(cast, path) {
   stopifnot(inherits(cast, "asciicast"))
   con <- file(path, open = "wb")
   on.exit(close(con), add = TRUE)
@@ -53,20 +92,27 @@ write_cast <- function(cast, path) {
   invisible()
 }
 
-encode_str <- function(x) {
-  vapply(x, jsonlite::toJSON, character(1), auto_unbox = TRUE)
-}
-
+#' Play an ascii cast
+#'
+#' @param cast `asciicast` object.
+#'
 #' @export
 
 play <- function(cast) {
-
+  stop("Not yet implemented")
+  ## TODO
 }
 
+#' Create animated SVG from a cast
+#'
+#' @param cast `asciicast` object.
+#' @param path Path to SVG file to create.
+#'
 #' @export
 
-to_svg <- function(cast) {
-
+write_svg <- function(cast, path) {
+  stop("Not yet implemented")
+  ## TODO
 }
 
 parse_header <- function(lines) {
@@ -87,6 +133,7 @@ parse_header <- function(lines) {
 
 parse_header_dcf <- function(lines) {
   lines <- sub("^#'\\s*", "", lines)
+  if (length(lines) == 0) return(list())
   dcf <- as.list(read.dcf(textConnection(lines))[1, ])
   names(dcf) <- tolower(names(dcf))
   dcf

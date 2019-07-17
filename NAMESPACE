@@ -2,5 +2,6 @@
 
 export(play)
 export(record)
-export(to_svg)
-importFrom(zeallot,"%<-%")
+export(write_json)
+export(write_svg)
+importFrom(stats,runif)

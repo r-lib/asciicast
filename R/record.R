@@ -1,60 +1,60 @@
 
-record_commands <- function(lines, timeout = 10) {
-  px <- processx::process$new("R", "-q", pty = TRUE)
-  on.exit(px$kill(), add = TRUE)
+record_commands <- function(lines, speed, timeout, empty_wait,
+                            allow_errors) {
+
+  px <- processx::process$new("R", "-q", pty = TRUE,
+                              pty_options = list(echo = TRUE),
+                              poll_connection = TRUE)
+  on.exit({ close(px$get_input_connection()); px$kill() }, add = TRUE)
 
   ready <- px$poll_io(5000)
   if (!px$is_alive() || ready["output"] != "ready") {
-    throw("R subprocess is not ready after 5s")
+    stop("R subprocess is not ready after 5s")
   }
-  
 
   start <- Sys.time()
-  output <- list(list(0, px$read_output()))
   next_line <- 1L
-  
-  poll_with_timeout <- function() {
-    ready <- px$poll_io(timeout * 1000)
-    if (ready["process"] == "ready") stop("R subprocess crashed")
-    if (ready["output"] != "ready") stop("R subprocess frozen or slow")
-  }
-  
-  read_output <- function() {
-    out <- ""
-    while (TRUE) {
-      poll_with_timeout()
-      newout <- px$read_output()
-      print(newout)
-      output <<- append(output, list(list(Sys.time() - start, newout)))
-      out <- paste0(out, newout)
-      if (grepl("READY\r?\n", out)) {
-        cat("GOT:\n", out)
-        return()
-      }
-    }
-  }
+  output <- list()
+
+  record_setup_subprocess(px, timeout, allow_errors)
 
   next_expression <- function() {
     end <- next_line
     while (end <= length(lines) && ! is_complete(lines[next_line:end])) {
       end <- end + 1L
     }
+
     if (end > length(lines)) {
       stop("Incomplete expression at end of file, from line ", next_line)
     }
 
-    expr <- paste0(lines[next_line:end], "\n", collapse = "")
+    expr <- lines[next_line:end]
     next_line <<- end + 1L
     expr
   }
 
+  output_callback <- function(out) {
+    output <<- append(output, list(list(Sys.time() - start, out)))
+  }
+
   while (next_line <= length(lines)) {
     expr <- next_expression()
-    px$write_input(paste0(expr, "cat('READY\n')\n"))
-    cat("RUNNING\n", expr)
-    output <- append(output, list(list(Sys.time() - start, expr)))
-    read_output()
+    for (line in expr) {
+      if (is_empty_line(line)) {
+        cat("--> ...\n")
+        poll_wait(px, empty_wait, output_callback)
+      } else {
+        linenl <- paste0(line, "\n")
+        type_input(px, linenl, speed, output_callback)
+      }
+    }
+    wait_for_done(px, timeout, output_callback)
   }
+
+  close(px$get_input_connection())
+  poll_wait(px, timeout, output_callback, done = TRUE)
+  px$wait(timeout)
+  if (px$is_alive()) stop("R subprocess did not finish")
 
   tibble::tibble(
     time = as.double(vapply(output, "[[", double(1), 1), units = "secs"),
@@ -62,10 +62,99 @@ record_commands <- function(lines, timeout = 10) {
     data = vapply(output, "[[", character(1), 2))
 }
 
+#' @importFrom stats runif
+
+rtime <- function(n, speed){
+  runif(n, min = speed * 0.5, max = speed * 1.5)
+}
+
+type_input <- function(proc, text, speed, callback) {
+  cat("--> ")
+  chars <- strsplit(text, "")[[1]]
+  time <- rtime(length(chars), speed)
+  for (i in seq_along(chars)) {
+    write_for_sure(proc, chars[i])
+    cat(chars[i])
+    poll_wait(proc, time[i], callback)
+  }
+}
+
+# Wait for the specified amount of time, but still read the output
+# while waiting
+
+poll_wait <- function(proc, time, callback, done = FALSE) {
+  deadline <- Sys.time() + time
+  while ((left <- deadline - Sys.time()) > 0) {
+    timeout <- as.double(left, units = "secs") * 1000
+    ready <- proc$poll_io(as.integer(timeout))
+    if (ready["output"] == "ready") callback(proc$read_output())
+    if (done && ready["process"] == "ready") return()
+  }
+}
+
+record_setup_subprocess <- function(proc, timeout, allow_errors) {
+  setup <- substitute({
+    while ("tools:asciicast" %in% search()) detach("tools:asciicast")
+    env <- readRDS(env_file)
+    do.call(
+      "attach",
+      list(env, pos = length(search()), name = "tools:asciicast"))
+    data <- env$`__asciicast_data__`
+    data$pxlib <- data$load_client_lib(data$sofile)
+    addTaskCallback(function(...) {
+      env <- as.environment("tools:asciicast")$`__asciicast_data__`
+      env$pxlib$write_fd(3L, "OK\n")
+      TRUE
+    })
+    if (allow_errors) {
+      options(error = function() {
+        env <- as.environment("tools:asciicast")$`__asciicast_data__`
+        env$pxlib$write_fd(3L, "OK\n")
+      })
+    }
+  }, list(allow_errors = allow_errors, env_file = env_file))
+
+  setupstr <- paste0(deparse(setup), "\n", collapse = "")
+  write_for_sure(proc, setupstr)
+  wait_for_done(proc, timeout)
+}
+
+write_for_sure <- function(proc, text) {
+  while (1) {
+    text <- proc$write_input(text)
+    if (!length(text)) break;
+    Sys.sleep(.1)
+  }
+}
+
+wait_for_done <- function(proc, timeout, callback = NULL) {
+  while (1) {
+    ready <- proc$poll_io(timeout * 1000)
+    if (ready["output"] == "ready") {
+      out <- proc$read_output()
+      if (!is.null(callback)) callback(out)
+    } else {
+      break
+    }
+  }
+  ready <- proc$poll_io(timeout * 1000)
+  if (ready["process"] != "ready") stop("R subprocess did not respond")
+  con <- proc$get_poll_connection()
+  processx::conn_read_lines(con, n = 1)
+}
+
 is_complete <- function(x) {
-  err <- NULL
-  tryCatch(parse(text = x), error = function(e) err <<- e)
+  err <- expr <- NULL
+  tryCatch(expr <- parse(text = x), error = function(e) err <<- e)
+
+  # Might be an empty line or a comment, they are considered incomplete
+  if (length(expr) == 0) return(FALSE)
+
+  # Otherwise if no error, then we are good
   if (is.null(err)) return(TRUE)
+
+  # If error, then need to check if "unexpected end of input",
+  # because that is incomplete. If a parse error, then it is complete.
   exp <- tryCatch(parse(text = "1+"), error = function(e) e$message)
   exp1 <- strsplit(exp, "\n")[[1]][[1]]
   msg <- sub("^.*:\\s*([^:]+)$",  "\\1", exp1, perl = TRUE)
