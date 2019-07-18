@@ -1,12 +1,14 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
-dist: xenial
-language: R
-sudo: false
+language: r
 cache: packages
+latex: false
+fortran: false
 
-r:
-- release
+matrix:
+  include:
+    - os: osx
+      brew_packages: v8
 
 after_success:
-  - test $TRAVIS_R_VERSION_STRING = "release" && Rscript -e 'covr::codecov()'
+  - if [[ "${R_CODECOV}" ]]; then R -e 'covr::codecov()'; fi
