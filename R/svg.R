@@ -15,6 +15,7 @@
 #' @param padding_y Distance between text and image bounds on y axis.
 #'
 #' @export
+#' @family asciicast functions
 #' @importFrom V8 v8 JS
 
 write_svg <- function(cast, path, window = FALSE, from = NULL, to = NULL,
@@ -47,4 +48,30 @@ write_svg <- function(cast, path, window = FALSE, from = NULL, to = NULL,
   cat(svg, file = path)
 
   invisible()
+}
+
+#' Play ascii cast as an SVG image in the default browser
+#'
+#' Uses [write_svg()] to create an SVG image for a cast, in a temporary
+#' file, and then previews a minimal HTML file with the SVG image,
+#' in the default browser.
+#'
+#' @param cast `asciicast` object
+#' @param ... Additional arguments are passed to [write_svg()].
+#' @return The path of the temporary SVG file, invisibly.
+#' 
+#' @export
+#' @family asciicast functions
+
+play <- function(cast, ...) {
+  tmpsvg <- tempfile(fileext = ".svg")
+  tmphtml <- tempfile(fileext = ".html")
+
+  write_svg(cast, path = tmpsvg, ...)
+
+  cat(sep = "", file = tmphtml,
+      "<html><body><img src=\"", basename(tmpsvg), "\"></body></html>")
+
+  utils::browseURL(tmphtml)
+  invisible(tmpsvg)
 }

@@ -17,6 +17,7 @@ Imports:
     jsonlite,
     processx,
     tibble,
+    utils,
     V8
 Suggests: 
     testthat

@@ -7,7 +7,7 @@
 record(script, speed = 0.05, empty_wait = 1, width = NULL,
   height = NULL, title = NULL, timestamp = NULL, env = NULL,
   idle_time_limit = NULL, allow_errors = TRUE, timeout = 10,
-  start_delay = 0, end_delay = 5)
+  start_delay = 2, end_delay = 5)
 }
 \arguments{
 \item{script}{Path of an R script to record.}
@@ -56,3 +56,8 @@ script <- system.file("examples", "hello.R", package = "asciicast")
 cast <- record(script)
 cast
 }
+\seealso{
+Other asciicast functions: \code{\link{play}},
+  \code{\link{write_json}}, \code{\link{write_svg}}
+}
+\concept{asciicast functions}

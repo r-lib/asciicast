@@ -15,3 +15,8 @@ write_json(cast, path)
 The file uses the asciicast file format, version 2:
 \url{https://github.com/asciinema/asciinema/blob/master/doc/asciicast-v2.md}.
 }
+\seealso{
+Other asciicast functions: \code{\link{play}},
+  \code{\link{record}}, \code{\link{write_svg}}
+}
+\concept{asciicast functions}

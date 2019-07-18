@@ -27,6 +27,7 @@
 #' @return An `asciicast` object, write this to file with [write_json()].
 #'
 #' @export
+#' @family asciicast functions
 #' @examples
 #' script <- system.file("examples", "hello.R", package = "asciicast")
 #' cast <- record(script)
@@ -93,6 +94,7 @@ print.asciicast <- function(x, ...) {
 #' @param path Path to write to.
 #'
 #' @export
+#' @family asciicast functions
 
 write_json <- function(cast, path) {
   stopifnot(inherits(cast, "asciicast"))
@@ -109,17 +111,6 @@ write_json <- function(cast, path) {
              encode_str(cast$output$type), ", ",
              encode_str(cast$output$data), "]", "\n"))
   invisible()
-}
-
-#' Play an ascii cast
-#'
-#' @param cast `asciicast` object.
-#'
-#' @export
-
-play <- function(cast) {
-  stop("Not yet implemented")
-  ## TODO
 }
 
 parse_header <- function(lines) {
