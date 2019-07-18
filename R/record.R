@@ -4,7 +4,8 @@ record_commands <- function(lines, speed, timeout, empty_wait,
 
   px <- processx::process$new("R", "-q", pty = TRUE,
                               pty_options = list(echo = TRUE),
-                              poll_connection = TRUE)
+                              poll_connection = TRUE,
+                              env = c(Sys.getenv(), ASCIICAST = "true"))
   on.exit({ close(px$get_input_connection()); px$kill() }, add = TRUE)
 
   ready <- px$poll_io(5000)
