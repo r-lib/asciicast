@@ -12,7 +12,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 [![CRAN
 status](https://www.r-pkg.org/badges/version/asciicast)](https://cran.r-project.org/package=asciicast)
 [![Linux Build
-Status](https://travis-ci.org/r-lib/asciicast.svg?branch=master)](https://travis-ci.org/r-lib/asciicast)
+Status](https://travis-ci.org/gaborcsardi/asciicast.svg?branch=master)](https://travis-ci.org/gaborcsardi/asciicast)
 <!-- badges: end -->
 
 asciicast takes an R script and turns it into an
@@ -24,6 +24,8 @@ records all terminal output in real time as it happens.
   - Input is a simple R script, output is a [v2 asciinema
     recording](https://github.com/asciinema/asciinema/blob/develop/doc/asciicast-v2.md).
   - Record all terminal output in real time, as it happens.
+  - Simulate typing in the commands, with a configurable, randomized
+    speed.
   - Alternatively, whole comment blocks or expressions can just appear
     on the screen.
   - Convert casts to SVG images using
@@ -54,13 +56,34 @@ install.packages("asciicast")
 
 ## Examples
 
+See the [`inst/examples`
+directory](https://github.com/gaborcsardi/asciicast/tree/master/inst/examples)
+for these
+examples.
+
 ### Hello world
 
-TODO
+<p align="center">
+
+<img width="1000" src="https://cdn.jsdelivr.net/gh/gaborcsardi/asciicast@master/tools/images/hello.svg">
+
+</p>
+
+### Asciicast demo in asciicast
+
+<p align="center">
+
+<img width="1000" src="https://cdn.jsdelivr.net/gh/gaborcsardi/asciicast@master/tools/images/asciicast.svg">
+
+</p>
 
 ### Errors are recorded
 
-TODO
+<p align="center">
+
+<img width="1000" src="https://cdn.jsdelivr.net/gh/gaborcsardi/asciicast@master/tools/images/errors.svg">
+
+</p>
 
 ### 
 
