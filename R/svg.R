@@ -40,7 +40,7 @@ write_svg <- function(cast, path, window = FALSE, from = NULL, to = NULL,
 
   options <- not_null(list(
     window = window, from = from, to = to, at = at, cursor = cursor,
-    paddingx = paddingx %||% padding, paddingy = paddingy %||% padding,
+    paddingX = padding_x %||% padding, paddingY = padding_y %||% padding,
     height = height, width = width))
 
   svg <- ct$call("svgterm.render", json, options)
