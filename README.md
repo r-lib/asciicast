@@ -16,7 +16,7 @@ Status](https://travis-ci.org/gaborcsardi/asciicast.svg?branch=master)](https://
 <!-- badges: end -->
 
 asciicast takes an R script and turns it into an
-[asciiname](https://asciinema.org/) cast. It can simulate typing, and
+[asciinema](https://asciinema.org/) cast. It can simulate typing, and
 records all terminal output in real time as it happens.
 
 ## Features
