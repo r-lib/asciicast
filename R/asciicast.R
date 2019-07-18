@@ -21,6 +21,8 @@
 #'   the recording does not answer within this limit, it is killed and the
 #'   recording stops. Update this for slow running code, that produces no
 #'   output as it runs.
+#' @param start_delay Delay at the beginning, in seconds.
+#' @param end_delay Delay at the very end, in seconds.
 #'
 #' @return An `asciicast` object, write this to file with [write_json()].
 #'
@@ -33,7 +35,7 @@
 record <- function(script, speed = 0.05, empty_wait = 1, width = NULL,
                    height = NULL, title = NULL, timestamp = NULL,
                    env = NULL, idle_time_limit = NULL, allow_errors = TRUE,
-                   timeout = 10) {
+                   timeout = 10, start_delay = 0, end_delay = 5) {
 
   lines <- readLines(script)
   parsed <- parse_header(lines)
@@ -54,7 +56,8 @@ record <- function(script, speed = 0.05, empty_wait = 1, width = NULL,
     idle_time_limit = idle_time_limit %||% header$idle_time_limit
   ))
 
-  output <- record_commands(body, speed, timeout, empty_wait, allow_errors)
+  output <- record_commands(body, speed, timeout, empty_wait, allow_errors,
+                            start_delay, end_delay)
 
   new_cast(config, output)
 }

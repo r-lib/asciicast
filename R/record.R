@@ -1,6 +1,6 @@
 
 record_commands <- function(lines, speed, timeout, empty_wait,
-                            allow_errors) {
+                            allow_errors, start_delay, end_delay) {
 
   px <- processx::process$new("R", "-q", pty = TRUE,
                               pty_options = list(echo = TRUE),
@@ -55,6 +55,8 @@ record_commands <- function(lines, speed, timeout, empty_wait,
   poll_wait(px, timeout, output_callback, done = TRUE)
   px$wait(timeout)
   if (px$is_alive()) stop("R subprocess did not finish")
+
+  output <- append(output, list(list(Sys.time() - start + end_delay, "")))
 
   tibble::tibble(
     time = as.double(vapply(output, "[[", double(1), 1), units = "secs"),
