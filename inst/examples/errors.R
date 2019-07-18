@@ -1,4 +1,6 @@
 
+#' Height: 15
+
 # Demonstrate that errors are handled well
 
 library("not-this-really")
