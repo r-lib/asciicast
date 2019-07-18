@@ -1,4 +1,10 @@
 
+#' Title: asciicast example recorded in asciicast
+#' Width: 80
+#' Height: 40
+#' Empty_wait: 3
+#' End_delay: 20
+
 # <<
 # An example for using asciicast, recorded in asciicast itself!
 

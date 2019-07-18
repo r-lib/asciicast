@@ -33,15 +33,20 @@
 #' cast <- record(script)
 #' cast
 
-record <- function(script, speed = 0.05, empty_wait = 1, width = NULL,
+record <- function(script, speed = NULL, empty_wait = NULL, width = NULL,
                    height = NULL, title = NULL, timestamp = NULL,
                    env = NULL, idle_time_limit = NULL, allow_errors = TRUE,
-                   timeout = 10, start_delay = 2, end_delay = 5) {
+                   timeout = 10, start_delay = NULL, end_delay = NULL) {
 
   lines <- readLines(script)
   parsed <- parse_header(lines)
   header <- parsed$header
   body <- parsed$body
+
+  speed <- as.numeric(speed %||% header$speed %||% 0.05)
+  empty_wait <- as.numeric(empty_wait %||% header$empty_wait %||% 1L)
+  start_delay <- as.numeric(start_delay %||% header$start_delay %||% 2L)
+  end_delay <- as.numeric(end_delay %||% header$end_delay %||% 5L)
 
   ## Default values for attributes
   config <- not_null(list(
