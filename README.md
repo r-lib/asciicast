@@ -79,7 +79,7 @@ print("Hello world!")
 
 ### Asciicast demo in asciicast
 
-Input script that asciicast itself:
+Input script that uses asciicast itself:
 
 ``` 
 
