@@ -21,7 +21,7 @@ records all terminal output in real time as it happens.
 
 ## Features
 
-  - Input is a simple R script, output is a [v2 asciinema
+  - Input is an R script, output is a [v2 asciinema
     recording](https://github.com/asciinema/asciinema/blob/develop/doc/asciicast-v2.md).
   - Record all terminal output in real time, as it happens.
   - Simulate typing in the commands, with a configurable, randomized
