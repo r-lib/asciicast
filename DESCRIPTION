@@ -19,7 +19,8 @@ Imports:
     tibble,
     utils,
     V8
-Suggests: 
+Suggests:
+    covr,
     testthat
 Encoding: UTF-8
 LazyData: true
