@@ -66,17 +66,41 @@ for these examples.
 
 ### Hello world
 
+The input script:
+
+```{r echo = FALSE, results = "asis"}
+cat("```\n")
+cat(readLines("inst/examples/hello.R"), sep = "\n")
+cat("```\n")
+```
+
 <p align="center">
 	<img width="1000" src="https://cdn.jsdelivr.net/gh/gaborcsardi/asciicast@master/tools/images/hello.svg">
 </p>
 
 ### Asciicast demo in asciicast
 
+Input script that asciicast itself:
+
+```{r echo = FALSE, results = "asis"}
+cat("```\n")
+cat(readLines("inst/examples/asciicast.R"), sep = "\n")
+cat("```\n")
+```
+
 <p align="center">
 	<img width="1000" src="https://cdn.jsdelivr.net/gh/gaborcsardi/asciicast@master/tools/images/asciicast.svg">
 </p>
 
 ### Errors are recorded
+
+Input script with errors:
+
+```{r echo = FALSE, results = "asis"}
+cat("```\n")
+cat(readLines("inst/examples/errors.R"), sep = "\n")
+cat("```\n")
+```
 
 <p align="center">
 	<img width="1000" src="https://cdn.jsdelivr.net/gh/gaborcsardi/asciicast@master/tools/images/errors.svg">

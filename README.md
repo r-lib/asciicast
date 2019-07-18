@@ -58,10 +58,18 @@ install.packages("asciicast")
 
 See the [`inst/examples`
 directory](https://github.com/gaborcsardi/asciicast/tree/master/inst/examples)
-for these
-examples.
+for these examples.
 
 ### Hello world
+
+The input script:
+
+``` 
+
+#' Height: 10
+
+print("Hello world!")
+```
 
 <p align="center">
 
@@ -71,6 +79,47 @@ examples.
 
 ### Asciicast demo in asciicast
 
+Input script that asciicast itself:
+
+``` 
+
+#' Title: asciicast example recorded in asciicast
+#' Width: 80
+#' Height: 40
+#' Empty_wait: 3
+#' End_delay: 20
+
+# <<
+# An example for using asciicast, recorded in asciicast itself!
+
+# First, save the R code you want to run, in a script file.
+# The file can contain any code, including interactive code,
+# as long as it is a syntactically valid R file.
+
+# Second, perform the recording with the `record()` function.
+# We are recording an example file now, that comes with the package.
+# <<
+
+src <- system.file("examples", "hello.R", package = "asciicast")
+cast <- asciicast::record(src)
+
+# <<
+# `cast` is an `asciicast` object, which has some metadata and the
+# recording itself:
+# <<
+
+cast
+
+# <<
+# You can write `cast` to a JSON file that can be played by any
+# asciinema player. Or you can write it to an SVG file that can
+# be embedded into a web page, or a GitHub README.
+# <<
+
+svg <- tempfile(fileext = ".svg")
+asciicast::write_svg(cast, svg, window = TRUE)
+```
+
 <p align="center">
 
 <img width="1000" src="https://cdn.jsdelivr.net/gh/gaborcsardi/asciicast@master/tools/images/asciicast.svg">
@@ -78,6 +127,21 @@ examples.
 </p>
 
 ### Errors are recorded
+
+Input script with errors:
+
+``` 
+
+#' Height: 15
+
+# Demonstrate that errors are handled well
+
+library("not-this-really")
+
+traceback()
+
+1+1
+```
 
 <p align="center">
 
