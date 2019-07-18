@@ -82,7 +82,7 @@ print.asciicast <- function(x, ...) {
   cat("<config>\n")
   config <- jsonlite::toJSON(x$config, pretty = TRUE, auto_unbox = TRUE)
   config <- strsplit(config, "\n", fixed = TRUE)[[1]]
-  config <- tail(head(config, -1), -1)
+  config <- utils::tail(utils::head(config, -1), -1)
   cat(config, sep = "\n")
 
   cat("\n<frames>\n")
