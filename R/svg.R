@@ -4,9 +4,9 @@
 #' @param cast `asciicast` object.
 #' @param path Path to SVG file to create.
 #' @param window Render with window decorations.
-#' @param from Lower range of timeline to render in ms.
-#' @param to Upper range of timeline to render in ms.
-#' @param at Timestamp of frame to render in ms.
+#' @param from Lower range of timeline to render in seconds.
+#' @param to Upper range of timeline to render in seconds.
+#' @param at Timestamp of frame to render in seconds.
 #' @param cursor Enable cursor rendering.
 #' @param height Height in lines.
 #' @param width Width in columns.
@@ -20,6 +20,10 @@
 write_svg <- function(cast, path, window = FALSE, from = NULL, to = NULL,
                       at = NULL, cursor = TRUE, height = NULL, width = NULL,
                       padding = NULL, padding_x = NULL, padding_y = NULL) {
+
+  if (!is.null(from)) from <- from * 1000
+  if (!is.null(to)) to <- to * 1000
+  if (!is.null(at)) at <- at * 1000
 
   ct <- v8(c("global", "window", "document"))
   ct$assign("setTimeout", JS("function(callback, after) { callback(); }"))
