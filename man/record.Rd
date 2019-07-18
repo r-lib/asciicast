@@ -6,7 +6,8 @@
 \usage{
 record(script, speed = 0.05, empty_wait = 1, width = NULL,
   height = NULL, title = NULL, timestamp = NULL, env = NULL,
-  idle_time_limit = NULL, allow_errors = TRUE, timeout = 10)
+  idle_time_limit = NULL, allow_errors = TRUE, timeout = 10,
+  start_delay = 0, end_delay = 5)
 }
 \arguments{
 \item{script}{Path of an R script to record.}
@@ -39,6 +40,10 @@ this if you know what you are doing.}
 the recording does not answer within this limit, it is killed and the
 recording stops. Update this for slow running code, that produces no
 output as it runs.}
+
+\item{start_delay}{Delay at the beginning, in seconds.}
+
+\item{end_delay}{Delay at the very end, in seconds.}
 }
 \value{
 An \code{asciicast} object, write this to file with \code{\link[=write_json]{write_json()}}.

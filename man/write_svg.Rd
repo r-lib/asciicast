@@ -15,11 +15,11 @@ write_svg(cast, path, window = FALSE, from = NULL, to = NULL,
 
 \item{window}{Render with window decorations.}
 
-\item{from}{Lower range of timeline to render in ms.}
+\item{from}{Lower range of timeline to render in seconds.}
 
-\item{to}{Upper range of timeline to render in ms.}
+\item{to}{Upper range of timeline to render in seconds.}
 
-\item{at}{Timestamp of frame to render in ms.}
+\item{at}{Timestamp of frame to render in seconds.}
 
 \item{cursor}{Enable cursor rendering.}
 
