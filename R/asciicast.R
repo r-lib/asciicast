@@ -36,7 +36,7 @@
 record <- function(script, speed = NULL, empty_wait = NULL, width = NULL,
                    height = NULL, title = NULL, timestamp = NULL,
                    env = NULL, idle_time_limit = NULL, allow_errors = TRUE,
-                   timeout = 10, start_delay = NULL, end_delay = NULL) {
+                   timeout = NULL, start_delay = NULL, end_delay = NULL) {
 
   lines <- readLines(script)
   parsed <- parse_header(lines)
@@ -47,6 +47,7 @@ record <- function(script, speed = NULL, empty_wait = NULL, width = NULL,
   empty_wait <- as.numeric(empty_wait %||% header$empty_wait %||% 1L)
   start_delay <- as.numeric(start_delay %||% header$start_delay %||% 2L)
   end_delay <- as.numeric(end_delay %||% header$end_delay %||% 5L)
+  timeout <- as.numeric(timeout %||% header$timeout %||% 10)
 
   ## Default values for attributes
   config <- not_null(list(
