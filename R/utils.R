@@ -12,3 +12,7 @@ is_empty_line <- function(x) {
 encode_str <- function(x) {
   vapply(x, jsonlite::toJSON, character(1), auto_unbox = TRUE)
 }
+
+str_trim <- function(x) {
+  sub("^\\s+", "", sub("\\s+$", "", x))
+}

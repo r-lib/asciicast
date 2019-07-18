@@ -15,6 +15,7 @@ record_commands <- function(lines, speed, timeout, empty_wait,
   start <- Sys.time()
   next_line <- 1L
   output <- list()
+  speed <- c(speed, 0)
 
   record_setup_subprocess(px, timeout, allow_errors)
 
@@ -37,6 +38,15 @@ record_commands <- function(lines, speed, timeout, empty_wait,
     output <<- append(output, list(list(Sys.time() - start, out)))
   }
 
+  is_command_line <- function(line) {
+    grepl("^# <<", line)
+  }
+
+  run_command_line <- function(line) {
+    line <- str_trim(sub("^# <<", "", line))
+    if (line == "") speed <<- rev(speed)
+  }
+
   cat("--> ...\n")
   poll_wait(px, start_delay, output_callback)
 
@@ -46,9 +56,11 @@ record_commands <- function(lines, speed, timeout, empty_wait,
       if (is_empty_line(line)) {
         cat("--> ...\n")
         poll_wait(px, empty_wait, output_callback)
+      } else if (is_command_line(line)) {
+        run_command_line(line)
       } else {
         linenl <- paste0(line, "\n")
-        type_input(px, linenl, speed, output_callback)
+        type_input(px, linenl, speed[1], output_callback)
       }
     }
     wait_for_done(px, timeout, output_callback)
@@ -75,12 +87,17 @@ rtime <- function(n, speed){
 
 type_input <- function(proc, text, speed, callback) {
   cat("--> ")
-  chars <- strsplit(text, "")[[1]]
-  time <- rtime(length(chars), speed)
-  for (i in seq_along(chars)) {
-    write_for_sure(proc, chars[i])
-    cat(chars[i])
-    poll_wait(proc, time[i], callback)
+  if (speed == 0) {
+    write_for_sure(proc, text)
+    cat(text)
+  } else {
+    chars <- strsplit(text, "")[[1]]
+    time <- rtime(length(chars), speed)
+    for (i in seq_along(chars)) {
+      write_for_sure(proc, chars[i])
+      cat(chars[i])
+      poll_wait(proc, time[i], callback)
+    }
   }
 }
 
