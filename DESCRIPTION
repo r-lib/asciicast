@@ -15,7 +15,7 @@ Description: Create 'asciinema' screencasts from R scripts, and convert them
 License: MIT + file LICENSE
 Imports:
     jsonlite,
-    processx,
+    processx (>= 3.4.0),
     tibble,
     utils,
     V8
