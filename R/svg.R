@@ -18,7 +18,7 @@
 #' @family asciicast functions
 #' @importFrom V8 v8 JS
 
-write_svg <- function(cast, path, window = FALSE, from = NULL, to = NULL,
+write_svg <- function(cast, path, window = TRUE, from = NULL, to = NULL,
                       at = NULL, cursor = TRUE, height = NULL, width = NULL,
                       padding = NULL, padding_x = NULL, padding_y = NULL) {
 
