@@ -3,7 +3,7 @@
 
 # asciicast
 
-> Turn R scripts into R ascii screencasts
+> Turn R scripts into terminal screencasts
 
 <!-- badges: start -->
 

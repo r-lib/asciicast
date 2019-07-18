@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 ```
 # asciicast
 
-> Turn R scripts into R ascii screencasts
+> Turn R scripts into terminal screencasts
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
