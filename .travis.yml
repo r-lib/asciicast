@@ -19,4 +19,4 @@ after_success:
 addons:
   apt:
     packages:
-      libv8-dev
+      libnode-dev
