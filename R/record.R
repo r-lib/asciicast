@@ -17,6 +17,8 @@ record_commands <- function(lines, speed, timeout, empty_wait,
   next_line <- 1L
   output <- list()
   speed <- c(speed, 0)
+  this_speed <- NULL
+  this_callback <- NULL
 
   record_setup_subprocess(px, timeout, allow_errors)
 
@@ -45,7 +47,14 @@ record_commands <- function(lines, speed, timeout, empty_wait,
 
   run_command_line <- function(line) {
     line <- str_trim(sub("^# <<", "", line))
-    if (line == "") speed <<- rev(speed)
+    if (line == "") {
+      speed <<- rev(speed)
+      this_speed <<- speed[1]
+
+    } else if (line == "setup") {
+      this_speed <<- 0L
+      this_callback <<- NULL
+    }
   }
 
   cat("--> ...\n")
@@ -53,18 +62,21 @@ record_commands <- function(lines, speed, timeout, empty_wait,
 
   while (next_line <= length(lines)) {
     expr <- next_expression()
+    this_speed <- speed[1]
+    this_callback <- output_callback
     for (line in expr) {
       if (is_empty_line(line)) {
         cat("--> ...\n")
-        poll_wait(px, empty_wait, output_callback)
+        type_input(px, "\n", 0L, this_callback)
+        poll_wait(px, empty_wait, this_callback)
       } else if (is_command_line(line)) {
         run_command_line(line)
       } else {
         linenl <- paste0(line, "\n")
-        type_input(px, linenl, speed[1], output_callback)
+        type_input(px, linenl, this_speed, this_callback)
       }
     }
-    wait_for_done(px, timeout, output_callback)
+    wait_for_done(px, timeout, this_callback)
   }
 
   close(px$get_input_connection())
