@@ -68,6 +68,22 @@ new_cast <- function(config, output) {
     class = "asciicast")
 }
 
+#' @export
+
+print.asciicast <- function(x, ...) {
+  cat("<asciicast>\n")
+  cat("<config>\n")
+  config <- jsonlite::toJSON(x$config, pretty = TRUE, auto_unbox = TRUE)
+  config <- strsplit(config, "\n", fixed = TRUE)[[1]]
+  config <- tail(head(config, -1), -1)
+  cat(config, sep = "\n")
+
+  cat("\n<frames>\n")
+  print(x$output)
+
+  invisible(x)
+}
+
 #' Write an ascii cast to file
 #'
 #' The file uses the asciicast file format, version 2:
