@@ -4,10 +4,10 @@
 \alias{record}
 \title{Record an ascii screencast}
 \usage{
-record(script, speed = 0.05, empty_wait = 1, width = NULL,
+record(script, speed = NULL, empty_wait = NULL, width = NULL,
   height = NULL, title = NULL, timestamp = NULL, env = NULL,
-  idle_time_limit = NULL, allow_errors = TRUE, timeout = 10,
-  start_delay = 2, end_delay = 5)
+  idle_time_limit = NULL, allow_errors = TRUE, timeout = NULL,
+  start_delay = NULL, end_delay = NULL)
 }
 \arguments{
 \item{script}{Path of an R script to record.}
