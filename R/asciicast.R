@@ -35,7 +35,7 @@
 record <- function(script, speed = 0.05, empty_wait = 1, width = NULL,
                    height = NULL, title = NULL, timestamp = NULL,
                    env = NULL, idle_time_limit = NULL, allow_errors = TRUE,
-                   timeout = 10, start_delay = 0, end_delay = 5) {
+                   timeout = 10, start_delay = 2, end_delay = 5) {
 
   lines <- readLines(script)
   parsed <- parse_header(lines)

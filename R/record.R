@@ -37,6 +37,9 @@ record_commands <- function(lines, speed, timeout, empty_wait,
     output <<- append(output, list(list(Sys.time() - start, out)))
   }
 
+  cat("--> ...\n")
+  poll_wait(px, start_delay, output_callback)
+
   while (next_line <= length(lines)) {
     expr <- next_expression()
     for (line in expr) {
