@@ -7,3 +7,4 @@
 ^\.github$
 ^\.Rprofile$
 ^r-packages$
+^\.travis\.yml$
