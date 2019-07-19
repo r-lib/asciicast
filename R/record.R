@@ -1,11 +1,15 @@
 
 record_commands <- function(lines, speed, timeout, empty_wait,
-                            allow_errors, start_delay, end_delay) {
+                            allow_errors, start_delay, end_delay,
+                            record_env) {
+
+  env <- Sys.getenv()
+  env["ASCIICAST"] <- "true"
+  env[names(record_env)] <- record_env
 
   px <- processx::process$new("R", "-q", pty = TRUE,
                               pty_options = list(echo = TRUE),
-                              poll_connection = TRUE,
-                              env = c(Sys.getenv(), ASCIICAST = "true"))
+                              poll_connection = TRUE, env = env)
   on.exit({ close(px$get_input_connection()); px$kill() }, add = TRUE)
 
   ready <- px$poll_io(5000)

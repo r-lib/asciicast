@@ -23,6 +23,7 @@
 #'   output as it runs.
 #' @param start_delay Delay at the beginning, in seconds.
 #' @param end_delay Delay at the very end, in seconds.
+#' @param record_env Environment variables to set for the R subprocess.
 #'
 #' @return An `asciicast` object, write this to file with [write_json()].
 #'
@@ -36,7 +37,8 @@
 record <- function(script, speed = NULL, empty_wait = NULL, width = NULL,
                    height = NULL, title = NULL, timestamp = NULL,
                    env = NULL, idle_time_limit = NULL, allow_errors = TRUE,
-                   timeout = NULL, start_delay = NULL, end_delay = NULL) {
+                   timeout = NULL, start_delay = NULL, end_delay = NULL,
+                   record_env = NULL) {
 
   lines <- readLines(script)
   parsed <- parse_header(lines)
@@ -48,6 +50,7 @@ record <- function(script, speed = NULL, empty_wait = NULL, width = NULL,
   start_delay <- as.numeric(start_delay %||% header$start_delay %||% 2L)
   end_delay <- as.numeric(end_delay %||% header$end_delay %||% 5L)
   timeout <- as.numeric(timeout %||% header$timeout %||% 10)
+  record_env <- record_env %||% header$record_env %||% NULL
 
   ## Default values for attributes
   config <- not_null(list(
@@ -64,7 +67,7 @@ record <- function(script, speed = NULL, empty_wait = NULL, width = NULL,
   ))
 
   output <- record_commands(body, speed, timeout, empty_wait, allow_errors,
-                            start_delay, end_delay)
+                            start_delay, end_delay, record_env)
 
   new_cast(config, output)
 }
