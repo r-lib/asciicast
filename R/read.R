@@ -1,16 +1,43 @@
 
 #' Import an asciicast from an asciinema file
 #'
-#' @param json JSON asciinema file, version 2:
+#' @param json Path to JSON asciinema file, version 2:
 #'   <https://github.com/asciinema/asciinema/blob/master/doc/asciicast-v2.md>.
+#'   If a numeric id, then it is taken as a public <https://asciinema.org>
+#'   recording id, that is downloaded. It can also be a URL of private
+#'   <https://asciinema.org> link.
 #' @return `asciicast` object.
+#'
+#' @section Examples:
+#' ```
+#' c1 <- read_cast("https://asciinema.org/a/uHQwIVpiZvu0Ioio8KYx6Uwlj.cast?dl=1")
+#' play(c1)
+#'
+#' c2 <- read_cast(258660)
+#' play(c2)
+#'
+#' c3 <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
+#' play(c3)
+#' ```
 #'
 #' @export
 #' @importFrom jsonlite fromJSON
 #' @family asciicast functions
 
 read_cast <- function(json) {
-  lines <- readLines(json)
+  if (is.numeric(json)) {
+    anurl <- sprintf("https://asciinema.org/a/%d.cast?dl=1", json)
+    con <- curl::curl(anurl)
+    on.exit(close(con), add = TRUE)
+    lines <- readLines(con)
+  } else if (grepl("^https?://", json)) {
+    con <- curl::curl(json)
+    on.exit(close(con), add = TRUE)
+    lines <- readLines(con)
+  } else {
+    lines <- readLines(json)
+  }
+
   config <- rethrow(fromJSON(lines[1]), new_parse_error(json))
   if (!identical(as.integer(config$version), 2L)) {
     throw(new_parse_error(json))
