@@ -17,6 +17,7 @@ The file uses the asciicast file format, version 2:
 }
 \seealso{
 Other asciicast functions: \code{\link{play}},
-  \code{\link{record}}, \code{\link{write_svg}}
+  \code{\link{read_cast}}, \code{\link{record}},
+  \code{\link{write_svg}}
 }
 \concept{asciicast functions}

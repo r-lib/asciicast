@@ -1,0 +1,13 @@
+
+dependencies:
+  - name: asciinema
+    version: 2.6.1
+    src: htmlwidgets/lib
+    script:
+      - asciinema-player.js
+    stylesheet:
+      - asciinema-player.css
+  - name: jquery
+    version: 3.2.1
+    src: htmlwidgets/lib
+    script: jquery-3.2.1.min.js

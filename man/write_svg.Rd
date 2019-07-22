@@ -38,6 +38,7 @@ Create animated SVG from an ascii cast
 }
 \seealso{
 Other asciicast functions: \code{\link{play}},
-  \code{\link{record}}, \code{\link{write_json}}
+  \code{\link{read_cast}}, \code{\link{record}},
+  \code{\link{write_json}}
 }
 \concept{asciicast functions}

@@ -7,7 +7,7 @@
 record(script, speed = NULL, empty_wait = NULL, width = NULL,
   height = NULL, title = NULL, timestamp = NULL, env = NULL,
   idle_time_limit = NULL, allow_errors = TRUE, timeout = NULL,
-  start_delay = NULL, end_delay = NULL)
+  start_delay = NULL, end_delay = NULL, record_env = NULL)
 }
 \arguments{
 \item{script}{Path of an R script to record.}
@@ -44,6 +44,8 @@ output as it runs.}
 \item{start_delay}{Delay at the beginning, in seconds.}
 
 \item{end_delay}{Delay at the very end, in seconds.}
+
+\item{record_env}{Environment variables to set for the R subprocess.}
 }
 \value{
 An \code{asciicast} object, write this to file with \code{\link[=write_json]{write_json()}}.
@@ -58,6 +60,7 @@ cast
 }
 \seealso{
 Other asciicast functions: \code{\link{play}},
-  \code{\link{write_json}}, \code{\link{write_svg}}
+  \code{\link{read_cast}}, \code{\link{write_json}},
+  \code{\link{write_svg}}
 }
 \concept{asciicast functions}
