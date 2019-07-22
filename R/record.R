@@ -64,15 +64,18 @@ record_commands <- function(lines, speed, timeout, empty_wait,
   cat("--> ...\n")
   poll_wait(px, start_delay, output_callback)
 
+  this_speed <- speed[1]
+  this_callback <- output_callback
+
   while (next_line <= length(lines)) {
     expr <- next_expression()
-    this_speed <- speed[1]
-    this_callback <- output_callback
     for (line in expr) {
       if (is_empty_line(line)) {
         cat("--> ...\n")
         type_input(px, "\n", 0L, this_callback)
         poll_wait(px, empty_wait, this_callback)
+        this_speed <- speed[1]
+        this_callback <- output_callback
       } else if (is_command_line(line)) {
         run_command_line(line)
       } else {
@@ -121,12 +124,14 @@ type_input <- function(proc, text, speed, callback) {
 # Wait for the specified amount of time, but still read the output
 # while waiting
 
-poll_wait <- function(proc, time, callback, done = FALSE) {
+poll_wait <- function(proc, time, callback = NULL, done = FALSE) {
   deadline <- Sys.time() + time
   while ((left <- deadline - Sys.time()) > 0) {
     timeout <- as.double(left, units = "secs") * 1000
     ready <- proc$poll_io(as.integer(timeout))
-    if (ready["output"] == "ready") callback(proc$read_output())
+    if (ready["output"] == "ready" && !is.null(callback)) {
+      callback(proc$read_output())
+    }
     if (done && ready["process"] == "ready") return()
   }
 }
