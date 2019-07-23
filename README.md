@@ -34,6 +34,10 @@ records all terminal output in real time as it happens.
   - Render a single frame of a cast as an SVG image.
   - Configurable delay at the beginning, at the end and between
     paragraphs.
+  - [HTML widget](http://www.htmlwidgets.org), to be used in Rmarkdown
+    documents, e.g. in vignettes.
+  - Read casts from asciinema JSON files (version 2), or from
+    <https://asciinema.org> directly.
 
 ## Limitations
 
