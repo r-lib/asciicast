@@ -52,7 +52,7 @@ asciinema <- function(cast, from = 0, height = NULL, width = NULL,
   htmlwidgets::createWidget(
     name = "asciinema",
     list(
-      src = src, cols = height, rows = width,
+      src = src, cols = width, rows = height,
       autoplay = autoplay, loop = loop,
       start_at = from,
       speed = speed,
