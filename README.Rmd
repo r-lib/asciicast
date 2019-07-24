@@ -43,6 +43,8 @@ records all terminal output in real time as it happens.
   documents, e.g. in vignettes.
 * Read casts from asciinema JSON files (version 2), or from
   <https://asciinema.org> directly.
+* Special knitr engine to create R markdown files with ascii casts. See
+  the `asciicast-demo` vignette.
 
 ## Limitations
 
