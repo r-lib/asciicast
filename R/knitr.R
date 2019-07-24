@@ -1,4 +1,9 @@
 
+#' Initialize the asciicast knitr engine
+#'
+#' Call this function in your Rmd file, to enable creating asciinema
+#' casts from code chunks.
+#'
 #' @export
 
 init_knitr_engine <- function() {
