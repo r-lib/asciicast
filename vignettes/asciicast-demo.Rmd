@@ -37,7 +37,7 @@ head(mtcars)
 
 This will produce the following cast:
 
-```{asciicast}
+```{asciicast cache = TRUE}
 # This will be an ascii cast
 # Let's evaluate some code
 head(mtcars)
@@ -57,12 +57,28 @@ the height of the widget.
 ```
 ````
 
-```{asciicast}
+```{asciicast cache = TRUE}
 #' Height: 5
 
 # Not much here, so avoid a big widget
 1 + 2 + 3 + 4
 ```
+
+## Caching
+
+Recording the asciinema casts might take long, as everything happens
+in real time. You can tell knitr to cache the results, as long as the
+code of the chunk is unchanged. E.g. the previous chunk with caching
+looks like this:
+
+````
+```{asciicast cache = TRUE}`r ''`
+#' Height: 5
+
+# Not much here, so avoid a big widget
+1 + 2 + 3 + 4
+```
+````
 
 ## Casting a script from a file
 
@@ -75,8 +91,12 @@ to use the code in the R scripts for other purposes.
 ```
 ````
 
-```{asciicast file = "../inst/examples/hello.R"}
+```{asciicast file = "../inst/examples/hello.R", cache = TRUE}
 ```
+
+Unfortunately caching does not work well for external files, the knitr
+cache does not know that it needs to re-record a chunk when the file
+changes.
 
 See the documentation for the other parameters that you can set in the
 header. Enjoy!

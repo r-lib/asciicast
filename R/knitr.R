@@ -3,11 +3,14 @@
 
 init_knitr_engine <- function() {
   knitr::knit_engines$set("asciicast" = eng_asciicast)
+  knitr::cache_engines$set("asciicast" = cache_eng_asciicast)
   deps <- htmlwidgets::getDependency("asciinema", "asciicast")
   knitr::knit_meta_add(deps)
 }
 
 eng_asciicast <- function(options) {
+  options$echo <- FALSE
+
   if (!is.null(options$file)) {
     cast_file <- options$file
     if (!is.null(options$code)) {
@@ -21,7 +24,19 @@ eng_asciicast <- function(options) {
     writeLines(options$code %||% "", cast_file, useBytes = TRUE)
   }
 
-  options$echo <- FALSE
   cast <- record(cast_file)
+
+  if (options$cache > 0) cache_asciicast(cast, options$hash)
+
   knitr::knit_print(asciinema(cast), options = options)
+}
+
+cache_eng_asciicast <- function(options) {
+  options$echo <- FALSE
+  cast <- readRDS(paste0(options$hash, ".cast"))
+  knitr::knit_print(asciinema(cast), options = options)
+}
+
+cache_asciicast <- function(cast, path) {
+  saveRDS(cast, paste0(path, ".cast"))
 }

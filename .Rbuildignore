@@ -10,3 +10,4 @@
 ^\.travis\.yml$
 ^doc$
 ^Meta$
+^vignettes/.*_cache$
