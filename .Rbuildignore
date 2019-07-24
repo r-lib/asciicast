@@ -8,3 +8,5 @@
 ^\.Rprofile$
 ^r-packages$
 ^\.travis\.yml$
+^doc$
+^Meta$

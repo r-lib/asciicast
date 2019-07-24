@@ -2,6 +2,7 @@
 
 S3method(print,asciicast)
 export(asciinema)
+export(init_knitr_engine)
 export(play)
 export(read_cast)
 export(record)

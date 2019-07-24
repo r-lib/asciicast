@@ -1,0 +1,64 @@
+---
+title: "asciicast example vignette"
+author: "Gábor Csárdi"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{asciicast example vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This is an example vignette for creating asciinema ascii screen casts.
+To include a screencast in your document, you need to do two steps.
+The first is to initialize the asciicast engine:
+
+````
+```{r echo = FALSE, results = "hide"}`r ''`
+asciicast::init_knitr_engine()
+```
+````
+
+```{r echo = FALSE, results = "hide"}
+asciicast::init_knitr_engine()
+```
+
+After this, for the chunks that you want to display as an ascii cast,
+use the asciicast engine:
+
+````
+```{asciicast}`r ''`
+# This will be an ascii cast
+# Let's evaluate some code
+head(mtcars)
+```
+````
+
+This will produce the following cast:
+
+```{asciicast}
+# This will be an ascii cast
+# Let's evaluate some code
+head(mtcars)
+```
+
+You can include a DCF header in the asciicast, to set some parameters, e.g.
+the height of the widget.
+
+````
+```{asciicast}`r ''`
+#' Height: 10
+
+# No much here, so avoid a big widget
+1 + 2 + 3 + 4
+```
+````
+
+```{asciicast}
+#' Height: 5
+
+# Not much here, so avoid a big widget
+1 + 2 + 3 + 4
+```
+
+See the documentation for the other parameters that you can set in the
+header. Enjoy!
