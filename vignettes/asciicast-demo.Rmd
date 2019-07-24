@@ -8,6 +8,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+## Example
+
 This is an example vignette for creating asciinema ascii screen casts.
 To include a screencast in your document, you need to do two steps.
 The first is to initialize the asciicast engine:
@@ -41,6 +43,8 @@ This will produce the following cast:
 head(mtcars)
 ```
 
+## Changing parameters
+
 You can include a DCF header in the asciicast, to set some parameters, e.g.
 the height of the widget.
 
@@ -58,6 +62,20 @@ the height of the widget.
 
 # Not much here, so avoid a big widget
 1 + 2 + 3 + 4
+```
+
+## Casting a script from a file
+
+It is possible to read the R code of a cast from a file, instead of
+specifying it in the code chunk. The advantage of this is that it is easier
+to use the code in the R scripts for other purposes.
+
+````
+```{asciicast file = "../inst/examples/hello.R"}`r ''`
+```
+````
+
+```{asciicast file = "../inst/examples/hello.R"}
 ```
 
 See the documentation for the other parameters that you can set in the

@@ -8,10 +8,20 @@ init_knitr_engine <- function() {
 }
 
 eng_asciicast <- function(options) {
+  if (!is.null(options$file)) {
+    cast_file <- options$file
+    if (!is.null(options$code)) {
+      warning("asciicast file and code both given, code will be ignored")
+    }
+    options$code <- ""
+
+  } else {
+    cast_file <- tempfile()
+    on.exit(unlink(cast_file), add = TRUE)
+    writeLines(options$code %||% "", cast_file, useBytes = TRUE)
+  }
+
   options$echo <- FALSE
-  tmp <- tempfile()
-  on.exit(unlink(tmp), add = TRUE)
-  writeLines(options$code, tmp, useBytes = TRUE)
-  cast <- record(tmp)
+  cast <- record(cast_file)
   knitr::knit_print(asciinema(cast), options = options)
 }
