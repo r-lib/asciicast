@@ -66,7 +66,14 @@ asciinema <- function(cast, from = 0, height = NULL, width = NULL,
     width = html_width,
     height = html_height,
     package = "asciicast",
-    elementId = element_id
+    elementId = element_id,
+    sizingPolicy = htmlwidgets::sizingPolicy(
+      viewer.suppress = TRUE,
+      knitr.figure = FALSE,
+      browser.fill = TRUE,
+      browser.padding = 20,
+      knitr.defaultWidth = "100%",
+      knitr.defaultHeight = "100%")
   )
 }
 
