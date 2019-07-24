@@ -17,6 +17,7 @@ Description: Create 'asciinema' screencasts from R scripts, and convert them
     to SVG images, that can be used in 'README' files, or blog posts.
 License: MIT + file LICENSE
 Imports:
+    curl,
     jsonlite,
     processx (>= 3.4.0),
     tibble,
