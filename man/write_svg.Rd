@@ -2,7 +2,7 @@
 % Please edit documentation in R/svg.R
 \name{write_svg}
 \alias{write_svg}
-\title{Create animated SVG from an ascii cast}
+\title{Create animated SVG from an asciicast}
 \usage{
 write_svg(cast, path, window = TRUE, from = NULL, to = NULL,
   at = NULL, cursor = TRUE, height = NULL, width = NULL,
@@ -34,11 +34,11 @@ write_svg(cast, path, window = TRUE, from = NULL, to = NULL,
 \item{padding_y}{Distance between text and image bounds on y axis.}
 }
 \description{
-Create animated SVG from an ascii cast
+Create animated SVG from an asciicast
 }
 \seealso{
-Other asciicast functions: \code{\link{play}},
+Other rsciinema functions: \code{\link{play}},
   \code{\link{read_cast}}, \code{\link{record}},
   \code{\link{write_json}}
 }
-\concept{asciicast functions}
+\concept{rsciinema functions}

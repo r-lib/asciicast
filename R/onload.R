@@ -3,13 +3,13 @@ env_file <- NULL
 
 .onLoad <- function(libname, pkgname) {
   env <- new.env(parent = emptyenv())
-  env$`__asciicast_data__` <- new.env(parent = baseenv())
+  env$`__rsciinema_data__` <- new.env(parent = baseenv())
 
-  client_file <- system.file("client.R", package = "asciicast")
+  client_file <- system.file("client.R", package = "rsciinema")
   if (client_file == "") stop("Cannot find client R file")
 
   source(
-    client_file, local = env$`__asciicast_data__`,
+    client_file, local = env$`__rsciinema_data__`,
     keep.source = FALSE)
 
   arch <- .Platform$r_arch
@@ -36,7 +36,7 @@ env_file <- NULL
   # stop() here and not throw(), because this function should be standalone
   if (sofile == "") stop("Cannot find client file")
 
-  env$`__asciicast_data__`$sofile <- sofile
+  env$`__rsciinema_data__`$sofile <- sofile
 
   env_file <<- tempfile()
   saveRDS(env, file = env_file, version = 2, compress = FALSE)

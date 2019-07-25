@@ -2,7 +2,7 @@
 % Please edit documentation in R/svg.R
 \name{play}
 \alias{play}
-\title{Play ascii cast as an SVG image in the default browser}
+\title{Play asciinema cast as an SVG image in the default browser}
 \usage{
 play(cast, ...)
 }
@@ -20,8 +20,8 @@ file, and then previews a minimal HTML file with the SVG image,
 in the default browser.
 }
 \seealso{
-Other asciicast functions: \code{\link{read_cast}},
+Other rsciinema functions: \code{\link{read_cast}},
   \code{\link{record}}, \code{\link{write_json}},
   \code{\link{write_svg}}
 }
-\concept{asciicast functions}
+\concept{rsciinema functions}

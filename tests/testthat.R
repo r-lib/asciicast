@@ -1,4 +1,4 @@
 library(testthat)
-library(asciicast)
+library(rsciinema)
 
-test_check("asciicast")
+test_check("rsciinema")

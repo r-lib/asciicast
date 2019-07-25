@@ -1,5 +1,5 @@
 
-#' asciicast HTML widget
+#' asciinema player HTML widget
 #'
 #' @param cast `asciicast` object.
 #' @param from Where to start the playback from, in seconds.
@@ -30,13 +30,13 @@
 #'
 #' @export
 
-asciinema <- function(cast, from = 0, height = NULL, width = NULL,
-                      autoplay = FALSE, loop = FALSE, speed = 1,
-                      title = NULL, author = NULL, author_url = NULL,
-                      author_img_url = NULL, poster_text = title,
-                      poster_frame = "", font_size = "small",
-                      theme = "asciinema", html_height = NULL,
-                      html_width = NULL, element_id = NULL) {
+asciinema_player <- function(cast, from = 0, height = NULL, width = NULL,
+                             autoplay = FALSE, loop = FALSE, speed = 1,
+                             title = NULL, author = NULL, author_url = NULL,
+                             author_img_url = NULL, poster_text = title,
+                             poster_frame = "", font_size = "small",
+                             theme = "asciinema", html_height = NULL,
+                             html_width = NULL, element_id = NULL) {
 
   height <- height %||% as.numeric(cast$config$height) %||% 24
   width <- width %||% as.numeric(cast$config$width) %||% 80
@@ -50,7 +50,7 @@ asciinema <- function(cast, from = 0, height = NULL, width = NULL,
     jsonlite::base64_enc(readBin(tmp, what = "raw", n = file.size(tmp))))
 
   htmlwidgets::createWidget(
-    name = "asciinema",
+    name = "asciinema_player",
     list(
       src = src, cols = width, rows = height,
       autoplay = autoplay, loop = loop,
@@ -65,7 +65,7 @@ asciinema <- function(cast, from = 0, height = NULL, width = NULL,
       author_img_url = author_img_url %||% ""),
     width = html_width,
     height = html_height,
-    package = "asciicast",
+    package = "rsciinema",
     elementId = element_id,
     sizingPolicy = htmlwidgets::sizingPolicy(
       viewer.suppress = TRUE,

@@ -1,12 +1,12 @@
 
-#' Title: asciicast example recorded in asciicast
+#' Title: rsciinema example recorded in rsciinema
 #' Width: 80
 #' Height: 40
 #' Empty_wait: 3
 #' End_delay: 20
 
 # <<
-# An example for using asciicast, recorded in asciicast itself!
+# An example for using rsciinema, recorded in rsciinema itself!
 
 # First, save the R code you want to run, in a script file.
 # The file can contain any code, including interactive code,
@@ -16,8 +16,8 @@
 # We are recording an example file now, that comes with the package.
 # <<
 
-src <- system.file("examples", "hello.R", package = "asciicast")
-cast <- asciicast::record(src)
+src <- system.file("examples", "hello.R", package = "rsciinema")
+cast <- rsciinema::record(src)
 
 # <<
 # `cast` is an `asciicast` object, which has some metadata and the
@@ -33,4 +33,4 @@ cast
 # <<
 
 svg <- tempfile(fileext = ".svg")
-asciicast::write_svg(cast, svg, window = TRUE)
+rsciinema::write_svg(cast, svg, window = TRUE)

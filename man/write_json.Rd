@@ -12,12 +12,12 @@ write_json(cast, path)
 \item{path}{Path to write to.}
 }
 \description{
-The file uses the asciicast file format, version 2:
+The file uses the asciinema file format, version 2:
 \url{https://github.com/asciinema/asciinema/blob/master/doc/asciicast-v2.md}.
 }
 \seealso{
-Other asciicast functions: \code{\link{play}},
+Other rsciinema functions: \code{\link{play}},
   \code{\link{read_cast}}, \code{\link{record}},
   \code{\link{write_svg}}
 }
-\concept{asciicast functions}
+\concept{rsciinema functions}

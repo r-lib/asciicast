@@ -9,7 +9,7 @@
 init_knitr_engine <- function() {
   knitr::knit_engines$set("asciicast" = eng_asciicast)
   knitr::cache_engines$set("asciicast" = cache_eng_asciicast)
-  deps <- htmlwidgets::getDependency("asciinema", "asciicast")
+  deps <- htmlwidgets::getDependency("asciinema_player", "rsciinema")
   knitr::knit_meta_add(deps)
 }
 
@@ -33,13 +33,13 @@ eng_asciicast <- function(options) {
 
   if (options$cache > 0) cache_asciicast(cast, options$hash)
 
-  knitr::knit_print(asciinema(cast), options = options)
+  knitr::knit_print(asciinema_player(cast), options = options)
 }
 
 cache_eng_asciicast <- function(options) {
   options$echo <- FALSE
   cast <- readRDS(paste0(options$hash, ".cast"))
-  knitr::knit_print(asciinema(cast), options = options)
+  knitr::knit_print(asciinema_player(cast), options = options)
 }
 
 cache_asciicast <- function(cast, path) {

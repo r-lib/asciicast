@@ -1,6 +1,6 @@
 
 dependencies:
-  - name: asciinema
+  - name: asciinema_player
     version: 2.6.1
     src: htmlwidgets/lib
     script:

@@ -1,7 +1,7 @@
 
-#' Import an asciicast from an asciinema file
+#' Import an asciicast from an asciicast JSON file
 #'
-#' @param json Path to JSON asciinema file, version 2:
+#' @param json Path to JSON asciicast file, version 2:
 #'   <https://github.com/asciinema/asciinema/blob/master/doc/asciicast-v2.md>.
 #'   If a numeric id, then it is taken as a public <https://asciinema.org>
 #'   recording id, that is downloaded. It can also be a URL of private
@@ -16,13 +16,13 @@
 #' c2 <- read_cast(258660)
 #' play(c2)
 #'
-#' c3 <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
+#' c3 <- read_cast(system.file("examples", "hello.cast", package = "rsciinema"))
 #' play(c3)
 #' ```
 #'
 #' @export
 #' @importFrom jsonlite fromJSON
-#' @family asciicast functions
+#' @family rsciinema functions
 
 read_cast <- function(json) {
   if (is.numeric(json)) {
@@ -65,9 +65,9 @@ read_cast <- function(json) {
 new_parse_error <- function(file, line = 1L) {
   msg <- paste0(
     "Parse error in ", file, ":", line, ".",
-    if (line == 1L) " Only version 2 asciinema files are supported")
+    if (line == 1L) " Only version 2 asciicast files are supported")
   cnd <- new_error(msg)
-  class(cnd) <- c("asciinema_parse_error", class(cnd))
+  class(cnd) <- c("asciicast_parse_error", class(cnd))
   cnd$file <- file
   cnd$line <- line
   cnd

@@ -1,31 +1,31 @@
 ---
-title: "asciicast example vignette"
+title: "rsciinema example vignette"
 author: "Gábor Csárdi"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{asciicast example vignette}
+  %\VignetteIndexEntry{rsciinema example vignette}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ## Example
 
-This is an example vignette for creating asciinema ascii screen casts.
+This is an example vignette for creating asciinema screen casts.
 To include a screencast in your document, you need to do two steps.
 The first is to initialize the asciicast engine:
 
 ````
 ```{r echo = FALSE, results = "hide"}`r ''`
-asciicast::init_knitr_engine()
+rsciinema::init_knitr_engine()
 ```
 ````
 
 ```{r echo = FALSE, results = "hide"}
-asciicast::init_knitr_engine()
+rsciinema::init_knitr_engine()
 ```
 
-After this, for the chunks that you want to display as an ascii cast,
-use the asciicast engine:
+After this, for the chunks that you want to display in an asciinema
+player, use the asciicast engine:
 
 ````
 ```{asciicast}`r ''`

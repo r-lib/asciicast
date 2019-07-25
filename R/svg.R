@@ -1,5 +1,5 @@
 
-#' Create animated SVG from an ascii cast
+#' Create animated SVG from an asciicast
 #'
 #' @param cast `asciicast` object.
 #' @param path Path to SVG file to create.
@@ -15,7 +15,7 @@
 #' @param padding_y Distance between text and image bounds on y axis.
 #'
 #' @export
-#' @family asciicast functions
+#' @family rsciinema functions
 #' @importFrom V8 v8 JS
 
 write_svg <- function(cast, path, window = TRUE, from = NULL, to = NULL,
@@ -29,7 +29,7 @@ write_svg <- function(cast, path, window = TRUE, from = NULL, to = NULL,
   ct <- v8(c("global", "window", "document"))
   ct$assign("setTimeout", JS("function(callback, after) { callback(); }"))
   ct$assign("clearTimeout", JS("function(timer) { }"))
-  jsfile <- gzfile(system.file("svg-term.js.gz", package = "asciicast"))
+  jsfile <- gzfile(system.file("svg-term.js.gz", package = "rsciinema"))
   on.exit(close(jsfile), add = TRUE)
   ct$source(jsfile)
 
@@ -50,7 +50,7 @@ write_svg <- function(cast, path, window = TRUE, from = NULL, to = NULL,
   invisible()
 }
 
-#' Play ascii cast as an SVG image in the default browser
+#' Play asciinema cast as an SVG image in the default browser
 #'
 #' Uses [write_svg()] to create an SVG image for a cast, in a temporary
 #' file, and then previews a minimal HTML file with the SVG image,
@@ -61,7 +61,7 @@ write_svg <- function(cast, path, window = TRUE, from = NULL, to = NULL,
 #' @return The path of the temporary SVG file, invisibly.
 #' 
 #' @export
-#' @family asciicast functions
+#' @family rsciinema functions
 
 play <- function(cast, ...) {
   tmpsvg <- tempfile(fileext = ".svg")

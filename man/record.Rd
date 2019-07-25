@@ -2,7 +2,7 @@
 % Please edit documentation in R/asciicast.R
 \name{record}
 \alias{record}
-\title{Record an ascii screencast}
+\title{Record an asciinema screencast}
 \usage{
 record(script, speed = NULL, empty_wait = NULL, width = NULL,
   height = NULL, title = NULL, timestamp = NULL, env = NULL,
@@ -33,7 +33,7 @@ Defaults to \code{list(TERM = "xterm-256color", SHELL = "/bin/zsh")}.}
 in seconds. By default there is no limit.}
 
 \item{allow_errors}{Whether to cast errors properly. If this is set to
-\code{TRUE}, then asciicast overwrites the \code{"error"} option. Only change
+\code{TRUE}, then rsciinema overwrites the \code{"error"} option. Only change
 this if you know what you are doing.}
 
 \item{timeout}{Idle timeout, in seconds If the R subprocess running
@@ -48,19 +48,20 @@ output as it runs.}
 \item{record_env}{Environment variables to set for the R subprocess.}
 }
 \value{
-An \code{asciicast} object, write this to file with \code{\link[=write_json]{write_json()}}.
+An \code{asciicast} object, write this to
+file with \code{\link[=write_json]{write_json()}}.
 }
 \description{
-Record an ascii screencast
+Record an asciinema screencast
 }
 \examples{
-script <- system.file("examples", "hello.R", package = "asciicast")
+script <- system.file("examples", "hello.R", package = "rsciinema")
 cast <- record(script)
 cast
 }
 \seealso{
-Other asciicast functions: \code{\link{play}},
+Other rsciinema functions: \code{\link{play}},
   \code{\link{read_cast}}, \code{\link{write_json}},
   \code{\link{write_svg}}
 }
-\concept{asciicast functions}
+\concept{rsciinema functions}

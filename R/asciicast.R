@@ -1,5 +1,5 @@
 
-#' Record an ascii screencast
+#' Record an asciinema screencast
 #'
 #' @param script Path of an R script to record.
 #' @param speed Average typing speed, per keypress, in seconds.
@@ -15,7 +15,7 @@
 #' @param idle_time_limit Time limit for the cast not printing anything,
 #'   in seconds. By default there is no limit.
 #' @param allow_errors Whether to cast errors properly. If this is set to
-#'   `TRUE`, then asciicast overwrites the `"error"` option. Only change
+#'   `TRUE`, then rsciinema overwrites the `"error"` option. Only change
 #'   this if you know what you are doing.
 #' @param timeout Idle timeout, in seconds If the R subprocess running
 #'   the recording does not answer within this limit, it is killed and the
@@ -25,12 +25,13 @@
 #' @param end_delay Delay at the very end, in seconds.
 #' @param record_env Environment variables to set for the R subprocess.
 #'
-#' @return An `asciicast` object, write this to file with [write_json()].
+#' @return An `asciicast` object, write this to
+#'   file with [write_json()].
 #'
 #' @export
-#' @family asciicast functions
+#' @family rsciinema functions
 #' @examples
-#' script <- system.file("examples", "hello.R", package = "asciicast")
+#' script <- system.file("examples", "hello.R", package = "rsciinema")
 #' cast <- record(script)
 #' cast
 
@@ -96,14 +97,14 @@ print.asciicast <- function(x, ...) {
 
 #' Write an ascii cast to file
 #'
-#' The file uses the asciicast file format, version 2:
+#' The file uses the asciinema file format, version 2:
 #' <https://github.com/asciinema/asciinema/blob/master/doc/asciicast-v2.md>.
 #'
 #' @param cast `asciicast` object.
 #' @param path Path to write to.
 #'
 #' @export
-#' @family asciicast functions
+#' @family rsciinema functions
 
 write_json <- function(cast, path) {
   stopifnot(inherits(cast, "asciicast"))

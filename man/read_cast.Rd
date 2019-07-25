@@ -2,12 +2,12 @@
 % Please edit documentation in R/read.R
 \name{read_cast}
 \alias{read_cast}
-\title{Import an asciicast from an asciinema file}
+\title{Import an asciicast from an asciicast JSON file}
 \usage{
 read_cast(json)
 }
 \arguments{
-\item{json}{Path to JSON asciinema file, version 2:
+\item{json}{Path to JSON asciicast file, version 2:
 \url{https://github.com/asciinema/asciinema/blob/master/doc/asciicast-v2.md}.
 If a numeric id, then it is taken as a public \url{https://asciinema.org}
 recording id, that is downloaded. It can also be a URL of private
@@ -17,7 +17,7 @@ recording id, that is downloaded. It can also be a URL of private
 \code{asciicast} object.
 }
 \description{
-Import an asciicast from an asciinema file
+Import an asciicast from an asciicast JSON file
 }
 \section{Examples}{
 \preformatted{c1 <- read_cast("https://asciinema.org/a/uHQwIVpiZvu0Ioio8KYx6Uwlj.cast?dl=1")
@@ -26,14 +26,14 @@ play(c1)
 c2 <- read_cast(258660)
 play(c2)
 
-c3 <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
+c3 <- read_cast(system.file("examples", "hello.cast", package = "rsciinema"))
 play(c3)
 }
 }
 
 \seealso{
-Other asciicast functions: \code{\link{play}},
+Other rsciinema functions: \code{\link{play}},
   \code{\link{record}}, \code{\link{write_json}},
   \code{\link{write_svg}}
 }
-\concept{asciicast functions}
+\concept{rsciinema functions}

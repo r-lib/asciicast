@@ -2,7 +2,7 @@
 
 HTMLWidgets.widget({
 
-  name: 'asciinema',
+  name: 'asciinema_player',
 
   type: 'output',
 
