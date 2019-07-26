@@ -50,7 +50,7 @@ the height of the widget.
 
 ````
 ```{asciicast}`r ''`
-#' Height: 10
+#' Rows: 10
 
 # No much here, so avoid a big widget
 1 + 2 + 3 + 4
@@ -58,7 +58,7 @@ the height of the widget.
 ````
 
 ```{asciicast cache = TRUE}
-#' Height: 5
+#' Rows: 5
 
 # Not much here, so avoid a big widget
 1 + 2 + 3 + 4
@@ -73,7 +73,7 @@ looks like this:
 
 ````
 ```{asciicast cache = TRUE}`r ''`
-#' Height: 5
+#' Rows: 5
 
 # Not much here, so avoid a big widget
 1 + 2 + 3 + 4

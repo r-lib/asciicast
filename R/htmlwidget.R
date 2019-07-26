@@ -2,10 +2,10 @@
 #' asciinema player HTML widget
 #'
 #' @param cast `asciicast` object.
-#' @param from Where to start the playback from, in seconds.
-#' @param height Number of rows, defaults to the number of rows in the
+#' @param start_at Where to start the playback from, in seconds.
+#' @param rows Number of rows, defaults to the number of rows in the
 #'   recording, or 24 if not specified in the cast.
-#' @param width Number of columns, defaults to the number columns in the
+#' @param cols Number of columns, defaults to the number columns in the
 #'   recording, or 80 if not specified in the cast.
 #' @param autoplay Whether to start playing the cast automatically.
 #' @param loop Whether to loop the playback.
@@ -18,11 +18,13 @@
 #'   titlebar in fullscreen mode.
 #' @param poster_text if not `NULL`, used as the text of the poster
 #'   (preview).
-#' @param poster_frame If not `NULL`, used as the image of the poster
-#'   (preview).
+#' @param poster_frame Text to use as the preview picture. Defaults to the
+#'   title.
 #' @param font_size Size of terminal font. Possible values: small, medium,
 #'   big, any css `font-size` value (e.g. 15px).
 #' @param theme Theme.
+#' @param idle_time_limit Time limit for the cast not printing anything,
+#'   in seconds. By default there is no limit.
 #' @param html_height HTML height of the widget.
 #' @param html_width HTML width of the widget.
 #' @param element_id HTML id of the widget's element. If `NULL`, then the
@@ -30,17 +32,22 @@
 #'
 #' @export
 
-asciinema_player <- function(cast, from = 0, height = NULL, width = NULL,
-                             autoplay = FALSE, loop = FALSE, speed = 1,
+asciinema_player <- function(cast, start_at = 0, rows = NULL, cols = NULL,
+                             autoplay = NULL, loop = NULL, speed = NULL,
                              title = NULL, author = NULL, author_url = NULL,
-                             author_img_url = NULL, poster_text = title,
-                             poster_frame = "", font_size = "small",
-                             theme = "asciinema", html_height = NULL,
-                             html_width = NULL, element_id = NULL) {
+                             author_img_url = NULL, poster_text = NULL,
+                             poster_frame = NULL, font_size = NULL,
+                             theme = NULL, idle_time_limit = NULL,
+                             html_height = NULL, html_width = NULL,
+                             element_id = NULL) {
 
-  height <- height %||% as.numeric(cast$config$height) %||% 24
-  width <- width %||% as.numeric(cast$config$width) %||% 80
+  rows <- rows %||% cast$config$rows %||% 24
+  cols <- cols %||% cast$config$cols %||% 80
   title <- title %||% cast$config$title %||% ""
+  poster_frame <- poster_frame %||% cast$config$poster_frame %||% ""
+  poster_text <- poster_text %||% cast$config$poster_text %||% title
+  theme <- theme %||% cast$config$theme %||% "asciinema"
+  idle_time_limit <- idle_time_limit %||% cast$config$idle_time_limit
 
   tmp <- tempfile()
   on.exit(unlink(tmp), add = TRUE)
@@ -52,13 +59,14 @@ asciinema_player <- function(cast, from = 0, height = NULL, width = NULL,
   htmlwidgets::createWidget(
     name = "asciinema_player",
     list(
-      src = src, cols = width, rows = height,
-      autoplay = autoplay, loop = loop,
-      start_at = from,
-      speed = speed,
-      poster = poster(poster_text, poster_frame, from),
+      src = src, cols = cols, rows = rows,
+      autoplay = autoplay %||% cast$config$autoplay,
+      loop = loop %||% cast$config$loop,
+      start_at = start_at,
+      speed = speed %||% cast$config$speed %||% 1,
+      poster = poster(poster_text, poster_frame, start_at),
       theme = theme,
-      font_size = font_size,
+      font_size = font_size %||% cast$config$font_size %||% NULL,
       title = title,
       author = author %||% "",
       author_url = author_url %||% "",

@@ -1,5 +1,5 @@
 
-#' Height: 15
+#' Rows: 15
 
 # Demonstrate that errors are handled well
 

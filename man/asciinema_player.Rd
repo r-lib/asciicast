@@ -4,22 +4,22 @@
 \alias{asciinema_player}
 \title{asciinema player HTML widget}
 \usage{
-asciinema_player(cast, from = 0, height = NULL, width = NULL,
-  autoplay = FALSE, loop = FALSE, speed = 1, title = NULL,
+asciinema_player(cast, start_at = 0, rows = NULL, cols = NULL,
+  autoplay = NULL, loop = NULL, speed = NULL, title = NULL,
   author = NULL, author_url = NULL, author_img_url = NULL,
-  poster_text = title, poster_frame = "", font_size = "small",
-  theme = "asciinema", html_height = NULL, html_width = NULL,
-  element_id = NULL)
+  poster_text = NULL, poster_frame = NULL, font_size = NULL,
+  theme = NULL, idle_time_limit = NULL, html_height = NULL,
+  html_width = NULL, element_id = NULL)
 }
 \arguments{
 \item{cast}{\code{asciicast} object.}
 
-\item{from}{Where to start the playback from, in seconds.}
+\item{start_at}{Where to start the playback from, in seconds.}
 
-\item{height}{Number of rows, defaults to the number of rows in the
+\item{rows}{Number of rows, defaults to the number of rows in the
 recording, or 24 if not specified in the cast.}
 
-\item{width}{Number of columns, defaults to the number columns in the
+\item{cols}{Number of columns, defaults to the number columns in the
 recording, or 80 if not specified in the cast.}
 
 \item{autoplay}{Whether to start playing the cast automatically.}
@@ -41,13 +41,16 @@ titlebar in fullscreen mode.}
 \item{poster_text}{if not \code{NULL}, used as the text of the poster
 (preview).}
 
-\item{poster_frame}{If not \code{NULL}, used as the image of the poster
-(preview).}
+\item{poster_frame}{Text to use as the preview picture. Defaults to the
+title.}
 
 \item{font_size}{Size of terminal font. Possible values: small, medium,
 big, any css \code{font-size} value (e.g. 15px).}
 
 \item{theme}{Theme.}
+
+\item{idle_time_limit}{Time limit for the cast not printing anything,
+in seconds. By default there is no limit.}
 
 \item{html_height}{HTML height of the widget.}
 

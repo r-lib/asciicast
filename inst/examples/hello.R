@@ -1,4 +1,4 @@
 
-#' Height: 10
+#' Rows: 10
 
 print("Hello world!")

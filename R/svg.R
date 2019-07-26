@@ -4,12 +4,12 @@
 #' @param cast `asciicast` object.
 #' @param path Path to SVG file to create.
 #' @param window Render with window decorations.
-#' @param from Lower range of timeline to render in seconds.
-#' @param to Upper range of timeline to render in seconds.
-#' @param at Timestamp of frame to render in seconds.
+#' @param start_at Lower range of timeline to render in seconds.
+#' @param end_at Upper range of timeline to render in seconds.
+#' @param at Timestamp of single frame to render, in seconds.
 #' @param cursor Enable cursor rendering.
-#' @param height Height in lines.
-#' @param width Width in columns.
+#' @param rows Height in lines.
+#' @param cols Width in columns.
 #' @param padding Distance between text and image bounds.
 #' @param padding_x Distance between text and image bounds on x axis.
 #' @param padding_y Distance between text and image bounds on y axis.
@@ -18,13 +18,9 @@
 #' @family rsciinema functions
 #' @importFrom V8 v8 JS
 
-write_svg <- function(cast, path, window = TRUE, from = NULL, to = NULL,
-                      at = NULL, cursor = TRUE, height = NULL, width = NULL,
+write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
+                      at = NULL, cursor = NULL, rows = NULL, cols = NULL,
                       padding = NULL, padding_x = NULL, padding_y = NULL) {
-
-  if (!is.null(from)) from <- from * 1000
-  if (!is.null(to)) to <- to * 1000
-  if (!is.null(at)) at <- at * 1000
 
   ct <- v8(c("global", "window", "document"))
   ct$assign("setTimeout", JS("function(callback, after) { callback(); }"))
@@ -39,10 +35,24 @@ write_svg <- function(cast, path, window = TRUE, from = NULL, to = NULL,
 
   json <- readChar(tmp, nchars = file.size(tmp))
 
+  window <- window %||% cast$config$window %||% TRUE
+  start_at <- start_at %||% cast$config$start_at
+  end_at <- end_at %||% cast$config$end_at
+  at <- at %||% cast$config$at
+  cursor <- cursor %||% cast$config$cursor %||% TRUE
+  rows <- rows %||% cast$config$rows %||% cast$config$height
+  cols <- cols %||% cast$config$cols %||% cast$config$width
+  padding <- padding %||% cast$config$padding
+  padding_x <- padding_x %||% cast$config$padding_x %||% padding
+  padding_y <- padding_y %||% cast$config$padding_y %||% padding
+
+  if (!is.null(start_at)) start_at <- start_at * 1000
+  if (!is.null(end_at)) end_at <- end_at * 1000
+  if (!is.null(at)) at <- at * 1000
+
   options <- not_null(list(
-    window = window, from = from, to = to, at = at, cursor = cursor,
-    paddingX = padding_x %||% padding, paddingY = padding_y %||% padding,
-    height = height, width = width))
+    window = window, from = start_at, to = end_at, at = at, cursor = cursor,
+    paddingX = padding_x, paddingY = padding_y, height = rows, width = cols))
 
   svg <- ct$call("svgterm.render", json, options)
   cat(svg, file = path)
@@ -59,7 +69,7 @@ write_svg <- function(cast, path, window = TRUE, from = NULL, to = NULL,
 #' @param cast `asciicast` object
 #' @param ... Additional arguments are passed to [write_svg()].
 #' @return The path of the temporary SVG file, invisibly.
-#' 
+#'
 #' @export
 #' @family rsciinema functions
 

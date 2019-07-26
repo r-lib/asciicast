@@ -4,8 +4,8 @@
 \alias{write_svg}
 \title{Create animated SVG from an asciicast}
 \usage{
-write_svg(cast, path, window = TRUE, from = NULL, to = NULL,
-  at = NULL, cursor = TRUE, height = NULL, width = NULL,
+write_svg(cast, path, window = NULL, start_at = NULL, end_at = NULL,
+  at = NULL, cursor = NULL, rows = NULL, cols = NULL,
   padding = NULL, padding_x = NULL, padding_y = NULL)
 }
 \arguments{
@@ -15,17 +15,17 @@ write_svg(cast, path, window = TRUE, from = NULL, to = NULL,
 
 \item{window}{Render with window decorations.}
 
-\item{from}{Lower range of timeline to render in seconds.}
+\item{start_at}{Lower range of timeline to render in seconds.}
 
-\item{to}{Upper range of timeline to render in seconds.}
+\item{end_at}{Upper range of timeline to render in seconds.}
 
-\item{at}{Timestamp of frame to render in seconds.}
+\item{at}{Timestamp of single frame to render, in seconds.}
 
 \item{cursor}{Enable cursor rendering.}
 
-\item{height}{Height in lines.}
+\item{rows}{Height in lines.}
 
-\item{width}{Width in columns.}
+\item{cols}{Width in columns.}
 
 \item{padding}{Distance between text and image bounds.}
 

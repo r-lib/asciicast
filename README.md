@@ -72,7 +72,7 @@ The input script:
 
 ``` 
 
-#' Height: 10
+#' Rows: 10
 
 print("Hello world!")
 ```
@@ -90,10 +90,10 @@ Input script that uses rsciinema itself:
 ``` 
 
 #' Title: rsciinema example recorded in rsciinema
-#' Width: 80
-#' Height: 40
+#' Cols: 80
+#' Rows: 40
 #' Empty_wait: 3
-#' End_delay: 20
+#' End_wait: 20
 
 # <<
 # An example for using rsciinema, recorded in rsciinema itself!
@@ -138,7 +138,7 @@ Input script with errors:
 
 ``` 
 
-#' Height: 15
+#' Rows: 15
 
 # Demonstrate that errors are handled well
 

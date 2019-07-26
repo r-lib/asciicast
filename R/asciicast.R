@@ -2,11 +2,11 @@
 #' Record an asciinema screencast
 #'
 #' @param script Path of an R script to record.
-#' @param speed Average typing speed, per keypress, in seconds.
+#' @param typing_speed Average typing speed, per keypress, in seconds.
 #' @param empty_wait How long to wait for empty lines in the script file,
 #'   in seconds.
-#' @param width Width of the terminal, in number of characters.
-#' @param height Height of the terminal, in number of characters.
+#' @param cols Width of the terminal, in number of characters.
+#' @param rows Height of the terminal, in number of characters.
 #' @param title Title of the cast, this is included in the cast JSON file.
 #' @param timestamp Time stamp of the recording, defaults to `Sys.time()`,
 #'   this is included in the cast JSON file.
@@ -21,8 +21,8 @@
 #'   the recording does not answer within this limit, it is killed and the
 #'   recording stops. Update this for slow running code, that produces no
 #'   output as it runs.
-#' @param start_delay Delay at the beginning, in seconds.
-#' @param end_delay Delay at the very end, in seconds.
+#' @param start_wait Delay at the beginning, in seconds.
+#' @param end_wait Delay at the very end, in seconds.
 #' @param record_env Environment variables to set for the R subprocess.
 #'
 #' @return An `asciicast` object, write this to
@@ -35,10 +35,10 @@
 #' cast <- record(script)
 #' cast
 
-record <- function(script, speed = NULL, empty_wait = NULL, width = NULL,
-                   height = NULL, title = NULL, timestamp = NULL,
+record <- function(script, typing_speed = NULL, empty_wait = NULL,
+                   cols = NULL, rows = NULL, title = NULL, timestamp = NULL,
                    env = NULL, idle_time_limit = NULL, allow_errors = TRUE,
-                   timeout = NULL, start_delay = NULL, end_delay = NULL,
+                   timeout = NULL, start_wait = NULL, end_wait = NULL,
                    record_env = NULL) {
 
   lines <- readLines(script)
@@ -46,20 +46,26 @@ record <- function(script, speed = NULL, empty_wait = NULL, width = NULL,
   header <- parsed$header
   body <- parsed$body
 
-  speed <- as.numeric(speed %||% header$speed %||% 0.05)
+  typing_speed <- as.numeric(typing_speed %||% header$typing_speed %||% 0.05)
   empty_wait <- as.numeric(empty_wait %||% header$empty_wait %||% 1L)
-  start_delay <- as.numeric(start_delay %||% header$start_delay %||% 2L)
-  end_delay <- as.numeric(end_delay %||% header$end_delay %||% 5L)
+  start_wait <- as.numeric(start_wait %||% header$start_wait %||% 2L)
+  end_wait <- as.numeric(end_wait %||% header$end_wait %||% 5L)
   timeout <- as.numeric(timeout %||% header$timeout %||% 10)
-  record_env <- record_env %||% header$record_env %||% NULL
+  if (is.null(record_env) && !is.null(header$record_env)) {
+    record_env <- eval(parse(record_env))
+  }
 
   ## Default values for attributes
+  cols <- cols %||% header$cols %||% 80L
+  rows <- rows %||% header$rows %||% 24L
   config <- not_null(list(
     version = 2L,
     command = "R -q",
-    width = width %||% header$width %||% 80L,
-    height = height %||% header$height %||% 24L,
-    title = title %||% header$title,
+    cols = cols,
+    rows = rows,
+    width = cols,
+    height = rows,
+    width = title %||% header$title,
     timestamp = as.integer(timestamp %||% header$timestamp %||% Sys.time()),
     env = env %||%
       (if (!is.null(header$env)) eval(parse(text = header$env))) %||%
@@ -67,10 +73,12 @@ record <- function(script, speed = NULL, empty_wait = NULL, width = NULL,
     idle_time_limit = idle_time_limit %||% header$idle_time_limit
   ))
 
-  output <- record_commands(body, speed, timeout, empty_wait, allow_errors,
-                            start_delay, end_delay, record_env)
+  header[names(config)] <- config
 
-  new_cast(config, output)
+  output <- record_commands(body, typing_speed, timeout, empty_wait,
+                            allow_errors, start_wait, end_wait, record_env)
+
+  new_cast(header, output)
 }
 
 new_cast <- function(config, output) {

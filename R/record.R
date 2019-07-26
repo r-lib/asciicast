@@ -1,6 +1,6 @@
 
-record_commands <- function(lines, speed, timeout, empty_wait,
-                            allow_errors, start_delay, end_delay,
+record_commands <- function(lines, typing_speed, timeout, empty_wait,
+                            allow_errors, start_wait, end_wait,
                             record_env) {
 
   env <- Sys.getenv()
@@ -20,8 +20,8 @@ record_commands <- function(lines, speed, timeout, empty_wait,
   start <- Sys.time()
   next_line <- 1L
   output <- list()
-  speed <- c(speed, 0)
-  this_speed <- NULL
+  typing_speed <- c(typing_speed, 0)
+  this_typing_speed <- NULL
   this_callback <- NULL
 
   record_setup_subprocess(px, timeout, allow_errors)
@@ -52,19 +52,19 @@ record_commands <- function(lines, speed, timeout, empty_wait,
   run_command_line <- function(line) {
     line <- str_trim(sub("^# <<", "", line))
     if (line == "") {
-      speed <<- rev(speed)
-      this_speed <<- speed[1]
+      typing_speed <<- rev(typing_speed)
+      this_typing_speed <<- typing_speed[1]
 
     } else if (line == "setup") {
-      this_speed <<- 0L
+      this_typing_speed <<- 0L
       this_callback <<- NULL
     }
   }
 
   cat("--> ...\n")
-  poll_wait(px, start_delay, output_callback)
+  poll_wait(px, start_wait, output_callback)
 
-  this_speed <- speed[1]
+  this_typing_speed <- typing_speed[1]
   this_callback <- output_callback
 
   while (next_line <= length(lines)) {
@@ -74,13 +74,13 @@ record_commands <- function(lines, speed, timeout, empty_wait,
         cat("--> ...\n")
         type_input(px, "\n", 0L, this_callback)
         poll_wait(px, empty_wait, this_callback)
-        this_speed <- speed[1]
+        this_typing_speed <- typing_speed[1]
         this_callback <- output_callback
       } else if (is_command_line(line)) {
         run_command_line(line)
       } else {
         linenl <- paste0(line, "\n")
-        type_input(px, linenl, this_speed, this_callback)
+        type_input(px, linenl, this_typing_speed, this_callback)
       }
     }
     wait_for_done(px, timeout, this_callback)
@@ -91,7 +91,7 @@ record_commands <- function(lines, speed, timeout, empty_wait,
   px$wait(timeout)
   if (px$is_alive()) stop("R subprocess did not finish")
 
-  output <- append(output, list(list(Sys.time() - start + end_delay, "")))
+  output <- append(output, list(list(Sys.time() - start + end_wait, "")))
 
   tibble::tibble(
     time = as.double(vapply(output, "[[", double(1), 1), units = "secs"),

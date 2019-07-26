@@ -1,9 +1,9 @@
 
 #' Title: rsciinema example recorded in rsciinema
-#' Width: 80
-#' Height: 40
+#' Cols: 80
+#' Rows: 40
 #' Empty_wait: 3
-#' End_delay: 20
+#' End_wait: 20
 
 # <<
 # An example for using rsciinema, recorded in rsciinema itself!

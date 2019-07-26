@@ -4,22 +4,22 @@
 \alias{record}
 \title{Record an asciinema screencast}
 \usage{
-record(script, speed = NULL, empty_wait = NULL, width = NULL,
-  height = NULL, title = NULL, timestamp = NULL, env = NULL,
+record(script, typing_speed = NULL, empty_wait = NULL, cols = NULL,
+  rows = NULL, title = NULL, timestamp = NULL, env = NULL,
   idle_time_limit = NULL, allow_errors = TRUE, timeout = NULL,
-  start_delay = NULL, end_delay = NULL, record_env = NULL)
+  start_wait = NULL, end_wait = NULL, record_env = NULL)
 }
 \arguments{
 \item{script}{Path of an R script to record.}
 
-\item{speed}{Average typing speed, per keypress, in seconds.}
+\item{typing_speed}{Average typing speed, per keypress, in seconds.}
 
 \item{empty_wait}{How long to wait for empty lines in the script file,
 in seconds.}
 
-\item{width}{Width of the terminal, in number of characters.}
+\item{cols}{Width of the terminal, in number of characters.}
 
-\item{height}{Height of the terminal, in number of characters.}
+\item{rows}{Height of the terminal, in number of characters.}
 
 \item{title}{Title of the cast, this is included in the cast JSON file.}
 
@@ -41,9 +41,9 @@ the recording does not answer within this limit, it is killed and the
 recording stops. Update this for slow running code, that produces no
 output as it runs.}
 
-\item{start_delay}{Delay at the beginning, in seconds.}
+\item{start_wait}{Delay at the beginning, in seconds.}
 
-\item{end_delay}{Delay at the very end, in seconds.}
+\item{end_wait}{Delay at the very end, in seconds.}
 
 \item{record_env}{Environment variables to set for the R subprocess.}
 }
