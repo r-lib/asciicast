@@ -65,7 +65,7 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
     rows = rows,
     width = cols,
     height = rows,
-    width = title %||% header$title,
+    title = title %||% header$title,
     timestamp = as.integer(timestamp %||% header$timestamp %||% Sys.time()),
     env = env %||%
       (if (!is.null(header$env)) eval(parse(text = header$env))) %||%
