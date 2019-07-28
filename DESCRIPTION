@@ -1,5 +1,5 @@
 Package: asciicast
-Title: Create R Screencasts
+Title: Create 'Ascii' Screencasts from R Scripts
 Version: 0.0.0.9000
 Authors@R: c(
     person(given = "Gábor",
@@ -8,13 +8,19 @@ Authors@R: c(
            email = "csardi.gabor@gmail.com"),
     person(given = "Romain",
            family = "Francois",
-           role = c("aut")),
+           role = "aut"),
     person(given = "Mario",
            family = "Nebl",
-           role = c("aut"),
-           comment = "https://github.com/marionebl/svg-term author"))
-Description: Create 'asciinema' screencasts from R scripts, and convert them
-    to SVG images, that can be used in 'README' files, or blog posts.
+           role = "aut",
+           comment = "https://github.com/marionebl/svg-term author"),
+    person(given = "Marcin",
+           family = "Kulik",
+           role = "aut",
+           comment = "https://github.com/asciinema/asciinema-player author"))
+Description: Record 'asciicast' screencasts from R scripts. Convert them
+    to animated SVG images, to be used in 'README' files, or blog posts.
+    Includes 'asciinema-player' as an 'HTML' widget, and an 'asciicast'
+    'knitr' engine, to embed 'ascii' screencasts in 'Rmarkdown' documents.
 License: MIT + file LICENSE
 Imports:
     curl,
