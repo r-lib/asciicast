@@ -11,8 +11,6 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/asciicast)](https://cran.r-project.org/package=asciicast)
-[![Linux Build
-Status](https://travis-ci.org/gaborcsardi/asciicast.svg?branch=master)](https://travis-ci.org/gaborcsardi/asciicast)
 <!-- badges: end -->
 
 asciicast takes an R script and turns it into an
