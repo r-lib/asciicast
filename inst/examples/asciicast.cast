@@ -1,5 +1,5 @@
-{"title":"rsciinema example recorded in rsciinema","cols":"80","rows":"40","empty_wait":"3","end_wait":"20","version":2,"command":"R -q","width":"80","height":"40","timestamp":1564224260,"env":{"TERM":"xterm-256color","SHELL":"/bin/zsh"}}
-[2.0695469379425, "o", "# An example for using rsciinema, recorded in rsciinema itself!\r\n"]
+{"title":"asciicast example recorded in asciicast","cols":"80","rows":"40","empty_wait":"3","end_wait":"20","version":2,"command":"R -q","width":"80","height":"40","timestamp":1564224260,"env":{"TERM":"xterm-256color","SHELL":"/bin/zsh"}}
+[2.0695469379425, "o", "# An example for using asciicast, recorded in asciicast itself!\r\n"]
 [2.07041597366333, "o", "> \r\n"]
 [2.07098388671875, "o", "> "]
 [5.10356903076172, "o", "# First, save the R code you want to run, in a script file.\r\n"]

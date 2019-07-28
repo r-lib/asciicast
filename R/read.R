@@ -16,13 +16,13 @@
 #' c2 <- read_cast(258660)
 #' play(c2)
 #'
-#' c3 <- read_cast(system.file("examples", "hello.cast", package = "rsciinema"))
+#' c3 <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
 #' play(c3)
 #' ```
 #'
 #' @export
 #' @importFrom jsonlite fromJSON
-#' @family rsciinema functions
+#' @family asciicast functions
 
 read_cast <- function(json) {
   if (is.numeric(json)) {

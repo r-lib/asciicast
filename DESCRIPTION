@@ -1,4 +1,4 @@
-Package: rsciinema
+Package: asciicast
 Title: Create R Screencasts
 Version: 0.0.0.9000
 Authors@R: c(

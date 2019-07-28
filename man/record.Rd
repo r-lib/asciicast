@@ -33,7 +33,7 @@ Defaults to \code{list(TERM = "xterm-256color", SHELL = "/bin/zsh")}.}
 in seconds. By default there is no limit.}
 
 \item{allow_errors}{Whether to cast errors properly. If this is set to
-\code{TRUE}, then rsciinema overwrites the \code{"error"} option. Only change
+\code{TRUE}, then asciicast overwrites the \code{"error"} option. Only change
 this if you know what you are doing.}
 
 \item{timeout}{Idle timeout, in seconds If the R subprocess running
@@ -55,13 +55,13 @@ file with \code{\link[=write_json]{write_json()}}.
 Record an asciinema screencast
 }
 \examples{
-script <- system.file("examples", "hello.R", package = "rsciinema")
+script <- system.file("examples", "hello.R", package = "asciicast")
 cast <- record(script)
 cast
 }
 \seealso{
-Other rsciinema functions: \code{\link{play}},
-  \code{\link{read_cast}}, \code{\link{write_json}},
-  \code{\link{write_svg}}
+Other asciicast functions: \code{\link{asciicast-package}},
+  \code{\link{play}}, \code{\link{read_cast}},
+  \code{\link{write_json}}, \code{\link{write_svg}}
 }
-\concept{rsciinema functions}
+\concept{asciicast functions}

@@ -73,7 +73,7 @@ asciinema_player <- function(cast, start_at = 0, rows = NULL, cols = NULL,
       author_img_url = author_img_url %||% ""),
     width = html_width,
     height = html_height,
-    package = "rsciinema",
+    package = "asciicast",
     elementId = element_id,
     sizingPolicy = htmlwidgets::sizingPolicy(
       viewer.suppress = TRUE,

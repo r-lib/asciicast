@@ -1,9 +1,9 @@
 ---
-title: "rsciinema example vignette"
+title: "asciicast example vignette"
 author: "Gábor Csárdi"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{rsciinema example vignette}
+  %\VignetteIndexEntry{asciicast example vignette}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,12 +16,12 @@ The first is to initialize the asciicast engine:
 
 ````
 ```{r echo = FALSE, results = "hide"}`r ''`
-rsciinema::init_knitr_engine()
+asciicast::init_knitr_engine()
 ```
 ````
 
 ```{r echo = FALSE, results = "hide"}
-rsciinema::init_knitr_engine()
+asciicast::init_knitr_engine()
 ```
 
 After this, for the chunks that you want to display in an asciinema

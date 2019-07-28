@@ -15,7 +15,7 @@
 #' @param padding_y Distance between text and image bounds on y axis.
 #'
 #' @export
-#' @family rsciinema functions
+#' @family asciicast functions
 #' @importFrom V8 v8 JS
 
 write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
@@ -25,7 +25,7 @@ write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
   ct <- v8(c("global", "window", "document"))
   ct$assign("setTimeout", JS("function(callback, after) { callback(); }"))
   ct$assign("clearTimeout", JS("function(timer) { }"))
-  jsfile <- gzfile(system.file("svg-term.js.gz", package = "rsciinema"))
+  jsfile <- gzfile(system.file("svg-term.js.gz", package = "asciicast"))
   on.exit(close(jsfile), add = TRUE)
   ct$source(jsfile)
 
@@ -71,7 +71,7 @@ write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
 #' @return The path of the temporary SVG file, invisibly.
 #'
 #' @export
-#' @family rsciinema functions
+#' @family asciicast functions
 
 play <- function(cast, ...) {
   tmpsvg <- tempfile(fileext = ".svg")

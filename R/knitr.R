@@ -9,7 +9,7 @@
 init_knitr_engine <- function() {
   knitr::knit_engines$set("asciicast" = eng_asciicast)
   knitr::cache_engines$set("asciicast" = cache_eng_asciicast)
-  deps <- htmlwidgets::getDependency("asciinema_player", "rsciinema")
+  deps <- htmlwidgets::getDependency("asciinema_player", "asciicast")
   knitr::knit_meta_add(deps)
 }
 

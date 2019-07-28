@@ -1,4 +1,4 @@
-{"title":"Simple rsciinema example","depends":"processx (>= 3.4.0), dplyr","version":2,"command":"R -q","cols":80,"rows":24,"width":80,"height":24,"timestamp":1564224222,"env":{"TERM":"xterm-256color","SHELL":"/bin/zsh"}}
+{"title":"Simple asciicast example","depends":"processx (>= 3.4.0), dplyr","version":2,"command":"R -q","cols":80,"rows":24,"width":80,"height":24,"timestamp":1564224222,"env":{"TERM":"xterm-256color","SHELL":"/bin/zsh"}}
 [2.05872392654419, "o", "#"]
 [2.12892508506775, "o", " "]
 [2.15622901916504, "o", "C"]

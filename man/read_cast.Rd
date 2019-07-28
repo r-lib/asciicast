@@ -26,14 +26,14 @@ play(c1)
 c2 <- read_cast(258660)
 play(c2)
 
-c3 <- read_cast(system.file("examples", "hello.cast", package = "rsciinema"))
+c3 <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
 play(c3)
 }
 }
 
 \seealso{
-Other rsciinema functions: \code{\link{play}},
-  \code{\link{record}}, \code{\link{write_json}},
-  \code{\link{write_svg}}
+Other asciicast functions: \code{\link{asciicast-package}},
+  \code{\link{play}}, \code{\link{record}},
+  \code{\link{write_json}}, \code{\link{write_svg}}
 }
-\concept{rsciinema functions}
+\concept{asciicast functions}

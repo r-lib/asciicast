@@ -20,8 +20,8 @@ file, and then previews a minimal HTML file with the SVG image,
 in the default browser.
 }
 \seealso{
-Other rsciinema functions: \code{\link{read_cast}},
-  \code{\link{record}}, \code{\link{write_json}},
-  \code{\link{write_svg}}
+Other asciicast functions: \code{\link{asciicast-package}},
+  \code{\link{read_cast}}, \code{\link{record}},
+  \code{\link{write_json}}, \code{\link{write_svg}}
 }
-\concept{rsciinema functions}
+\concept{asciicast functions}

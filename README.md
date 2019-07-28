@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# rsciinema
+# asciicast
 
 > Turn R scripts into terminal screencasts
 
@@ -10,12 +10,12 @@
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![CRAN
-status](https://www.r-pkg.org/badges/version/rsciinema)](https://cran.r-project.org/package=rsciinema)
+status](https://www.r-pkg.org/badges/version/asciicast)](https://cran.r-project.org/package=asciicast)
 [![Linux Build
-Status](https://travis-ci.org/gaborcsardi/rsciinema.svg?branch=master)](https://travis-ci.org/gaborcsardi/rsciinema)
+Status](https://travis-ci.org/gaborcsardi/asciicast.svg?branch=master)](https://travis-ci.org/gaborcsardi/asciicast)
 <!-- badges: end -->
 
-rsciinema takes an R script and turns it into an
+asciicast takes an R script and turns it into an
 [asciinema](https://asciinema.org/) cast. It can simulate typing, and
 records all terminal output in real time as it happens.
 
@@ -39,31 +39,31 @@ records all terminal output in real time as it happens.
   - Read casts from asciinema JSON files (version 2), or from
     <https://asciinema.org> directly.
   - Special knitr engine to create R markdown files with ascii casts.
-    See the `rsciinema-demo` vignette.
+    See the `asciicast-demo` vignette.
 
 ## Limitations
 
-  - rsciinema does not work in Windows yet, because of a the lack of a
+  - asciicast does not work in Windows yet, because of a the lack of a
     pseudo terminal. Maybe you can try running it on Linux in Docker?
   - Recordings are currently real time, so if you “type in” a lot of
     code/text, that might take a while to record.
   - Only syntactically correct R script files can be recorded.
-  - rsciinema redefines `option("error")` currently, so if you want to
+  - asciicast redefines `option("error")` currently, so if you want to
     set this option in your demo, that won’t work.
 
 ## Installation
 
-You can install the released version of rsciinema from
+You can install the released version of asciicast from
 [CRAN](https://CRAN.R-project.org):
 
 ``` r
-install.packages("rsciinema")
+install.packages("asciicast")
 ```
 
 ## Examples
 
 See the [`inst/examples`
-directory](https://github.com/gaborcsardi/rsciinema/tree/master/inst/examples)
+directory](https://github.com/gaborcsardi/asciicast/tree/master/inst/examples)
 for these examples.
 
 ### Hello world
@@ -79,24 +79,24 @@ print("Hello world!")
 
 <p align="center">
 
-<img width="1000" src="https://cdn.jsdelivr.net/gh/gaborcsardi/rsciinema@master/tools/images/hello.svg">
+<img width="1000" src="https://cdn.jsdelivr.net/gh/gaborcsardi/asciicast@master/tools/images/hello.svg">
 
 </p>
 
-### Rsciinema demo in rsciinema
+### Asciicast demo in asciicast
 
-Input script that uses rsciinema itself:
+Input script that uses asciicast itself:
 
 ``` 
 
-#' Title: rsciinema example recorded in rsciinema
+#' Title: asciicast example recorded in asciicast
 #' Cols: 80
 #' Rows: 40
 #' Empty_wait: 3
 #' End_wait: 20
 
 # <<
-# An example for using rsciinema, recorded in rsciinema itself!
+# An example for using asciicast, recorded in asciicast itself!
 
 # First, save the R code you want to run, in a script file.
 # The file can contain any code, including interactive code,
@@ -106,8 +106,8 @@ Input script that uses rsciinema itself:
 # We are recording an example file now, that comes with the package.
 # <<
 
-src <- system.file("examples", "hello.R", package = "rsciinema")
-cast <- rsciinema::record(src)
+src <- system.file("examples", "hello.R", package = "asciicast")
+cast <- asciicast::record(src)
 
 # <<
 # `cast` is an `asciicast` object, which has some metadata and the
@@ -123,12 +123,12 @@ cast
 # <<
 
 svg <- tempfile(fileext = ".svg")
-rsciinema::write_svg(cast, svg, window = TRUE)
+asciicast::write_svg(cast, svg, window = TRUE)
 ```
 
 <p align="center">
 
-<img width="1000" src="https://cdn.jsdelivr.net/gh/gaborcsardi/rsciinema@master/tools/images/rsciinema.svg">
+<img width="1000" src="https://cdn.jsdelivr.net/gh/gaborcsardi/asciicast@master/tools/images/asciicast.svg">
 
 </p>
 
@@ -151,7 +151,7 @@ traceback()
 
 <p align="center">
 
-<img width="1000" src="https://cdn.jsdelivr.net/gh/gaborcsardi/rsciinema@master/tools/images/errors.svg">
+<img width="1000" src="https://cdn.jsdelivr.net/gh/gaborcsardi/asciicast@master/tools/images/errors.svg">
 
 </p>
 

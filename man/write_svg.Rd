@@ -37,8 +37,8 @@ write_svg(cast, path, window = NULL, start_at = NULL, end_at = NULL,
 Create animated SVG from an asciicast
 }
 \seealso{
-Other rsciinema functions: \code{\link{play}},
-  \code{\link{read_cast}}, \code{\link{record}},
-  \code{\link{write_json}}
+Other asciicast functions: \code{\link{asciicast-package}},
+  \code{\link{play}}, \code{\link{read_cast}},
+  \code{\link{record}}, \code{\link{write_json}}
 }
-\concept{rsciinema functions}
+\concept{asciicast functions}

@@ -4,7 +4,7 @@ record_commands <- function(lines, typing_speed, timeout, empty_wait,
                             record_env) {
 
   env <- Sys.getenv()
-  env["RSCIINEMA"] <- "true"
+  env["ASCIICAST"] <- "true"
   env[names(record_env)] <- record_env
 
   px <- processx::process$new("R", "-q", pty = TRUE,
@@ -138,21 +138,21 @@ poll_wait <- function(proc, time, callback = NULL, done = FALSE) {
 
 record_setup_subprocess <- function(proc, timeout, allow_errors) {
   setup <- substitute({
-    while ("tools:rsciinema" %in% search()) detach("tools:rsciinema")
+    while ("tools:asciicast" %in% search()) detach("tools:asciicast")
     env <- readRDS(env_file)
     do.call(
       "attach",
-      list(env, pos = length(search()), name = "tools:rsciinema"))
-    data <- env$`__rsciinema_data__`
+      list(env, pos = length(search()), name = "tools:asciicast"))
+    data <- env$`__asciicast_data__`
     data$pxlib <- data$load_client_lib(data$sofile)
     addTaskCallback(function(...) {
-      env <- as.environment("tools:rsciinema")$`__rsciinema_data__`
+      env <- as.environment("tools:asciicast")$`__asciicast_data__`
       env$pxlib$write_fd(3L, "OK\n")
       TRUE
     })
     if (allow_errors) {
       options(error = function() {
-        env <- as.environment("tools:rsciinema")$`__rsciinema_data__`
+        env <- as.environment("tools:asciicast")$`__asciicast_data__`
         env$pxlib$write_fd(3L, "OK\n")
       })
     }

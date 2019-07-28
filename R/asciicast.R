@@ -15,7 +15,7 @@
 #' @param idle_time_limit Time limit for the cast not printing anything,
 #'   in seconds. By default there is no limit.
 #' @param allow_errors Whether to cast errors properly. If this is set to
-#'   `TRUE`, then rsciinema overwrites the `"error"` option. Only change
+#'   `TRUE`, then asciicast overwrites the `"error"` option. Only change
 #'   this if you know what you are doing.
 #' @param timeout Idle timeout, in seconds If the R subprocess running
 #'   the recording does not answer within this limit, it is killed and the
@@ -29,9 +29,9 @@
 #'   file with [write_json()].
 #'
 #' @export
-#' @family rsciinema functions
+#' @family asciicast functions
 #' @examples
-#' script <- system.file("examples", "hello.R", package = "rsciinema")
+#' script <- system.file("examples", "hello.R", package = "asciicast")
 #' cast <- record(script)
 #' cast
 
@@ -112,7 +112,7 @@ print.asciicast <- function(x, ...) {
 #' @param path Path to write to.
 #'
 #' @export
-#' @family rsciinema functions
+#' @family asciicast functions
 
 write_json <- function(cast, path) {
   stopifnot(inherits(cast, "asciicast"))

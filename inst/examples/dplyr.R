@@ -1,5 +1,5 @@
 
-#' Title: Simple rsciinema example
+#' Title: Simple asciicast example
 #' Depends: processx (>= 3.4.0), dplyr
 
 # Comments are simply "typed in"

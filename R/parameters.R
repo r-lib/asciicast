@@ -6,12 +6,12 @@
 #' with `#'` comments.
 #'
 #' The DCF header may specify arbitrary parameters. We list here the
-#' parameters that are interpreted by the rsciinema functions.
+#' parameters that are interpreted by the asciicast functions.
 #'
 #' Recording parameters:
 #'
 #' * `allow_errors`: Whether to cast errors properly. If this is set to
-#'   `TRUE`, then rsciinema overwrites the `"error"` option. Only change
+#'   `TRUE`, then asciicast overwrites the `"error"` option. Only change
 #'   this if you know what you are doing.
 #' * `cols`: Width of the terminal, in number of characters.
 #' * `empty_wait`: How long to wait for empty lines in the script file,
@@ -70,6 +70,6 @@
 #' * `start_at`: Where to start the playback from, in seconds.
 #' * `window`: Render with window decorations.
 #'
-#' @name rsciinema
-#' @family rsciinema
+#' @name asciicast-package
+#' @family asciicast functions
 NULL
