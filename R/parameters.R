@@ -1,7 +1,7 @@
 
-#' rsciicast parameters
+#' asciicast parameters
 #'
-#' You can set rsciicast parameters in the header of the recorded R script.
+#' You can set asciicast parameters in the header of the recorded R script.
 #' The header is in DCF format (see [read.dcf()]), but all lines are prefixed
 #' with `#'` comments.
 #'

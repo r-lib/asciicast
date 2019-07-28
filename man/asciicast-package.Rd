@@ -2,9 +2,9 @@
 % Please edit documentation in R/parameters.R
 \name{asciicast-package}
 \alias{asciicast-package}
-\title{rsciicast parameters}
+\title{asciicast parameters}
 \description{
-You can set rsciicast parameters in the header of the recorded R script.
+You can set asciicast parameters in the header of the recorded R script.
 The header is in DCF format (see \code{\link[=read.dcf]{read.dcf()}}), but all lines are prefixed
 with \code{#'} comments.
 }
