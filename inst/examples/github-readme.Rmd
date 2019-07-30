@@ -1,0 +1,28 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+GitHub READMEs do not allow custom JavaScript code, so we cannot use
+HTML widgets in them. But they do allow SVG images, which can also be
+animated. This is file is an example README.
+
+````
+```{r echo = FALSE, results = "hide"}`r ''`
+asciicast::init_knitr_engine()
+```
+````
+
+```{r echo = FALSE, results = "hide"}
+asciicast::init_knitr_engine()
+```

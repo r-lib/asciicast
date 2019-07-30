@@ -6,7 +6,9 @@
 #' @param window Render with window decorations.
 #' @param start_at Lower range of timeline to render in seconds.
 #' @param end_at Upper range of timeline to render in seconds.
-#' @param at Timestamp of single frame to render, in seconds.
+#' @param at Timestamp of single frame to render, in seconds. Alternatively
+#'   it can be `"end"`, to take a snapshot at the end of the cast, after
+#'   all output is done.
 #' @param cursor Enable cursor rendering.
 #' @param rows Height in lines.
 #' @param cols Width in columns.
@@ -39,6 +41,7 @@ write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
   start_at <- start_at %||% cast$config$start_at
   end_at <- end_at %||% cast$config$end_at
   at <- at %||% cast$config$at
+  if (identical(at, "end")) at <- utils::tail(cast$output$time, 1)
   cursor <- cursor %||% cast$config$cursor %||% TRUE
   rows <- rows %||% cast$config$rows %||% cast$config$height
   cols <- cols %||% cast$config$cols %||% cast$config$width
