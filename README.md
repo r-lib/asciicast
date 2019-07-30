@@ -38,6 +38,9 @@ records all terminal output in real time as it happens.
     <https://asciinema.org> directly.
   - Special knitr engine to create R markdown files with ascii casts.
     See the `asciicast-demo` vignette.
+  - Create ascii casts in GitHub READMEs via animated SVG files. See an
+    example in `inst/examples` or the `README.Rmd` source of the README
+    file you are reading.
 
 ## Limitations
 
@@ -75,11 +78,7 @@ The input script:
 print("Hello world!")
 ```
 
-<p align="center">
-
-<img width="1000" src="https://cdn.jsdelivr.net/gh/gaborcsardi/asciicast@master/tools/images/hello.svg">
-
-</p>
+<img src="man/figures/README-/unnamed-chunk-3.svg" width="100%" />
 
 ### Asciicast demo in asciicast
 
@@ -124,11 +123,7 @@ svg <- tempfile(fileext = ".svg")
 asciicast::write_svg(cast, svg, window = TRUE)
 ```
 
-<p align="center">
-
-<img width="1000" src="https://cdn.jsdelivr.net/gh/gaborcsardi/asciicast@master/tools/images/asciicast.svg">
-
-</p>
+<img src="man/figures/README-/unnamed-chunk-5.svg" width="100%" />
 
 ### Errors are recorded
 
@@ -147,13 +142,7 @@ traceback()
 1+1
 ```
 
-<p align="center">
-
-<img width="1000" src="https://cdn.jsdelivr.net/gh/gaborcsardi/asciicast@master/tools/images/errors.svg">
-
-</p>
-
-### 
+<img src="man/figures/README-/unnamed-chunk-7.svg" width="100%" />
 
 ## Related tools
 

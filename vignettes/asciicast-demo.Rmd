@@ -98,5 +98,53 @@ Unfortunately caching does not work well for external files, the knitr
 cache does not know that it needs to re-record a chunk when the file
 changes.
 
+## Using SVG files
+
+Sometimes the asciinema player widget cannot be used, because custom
+JavaScript code is forbidden on the page. A common example is README
+(and other) markdown files on GitHub. acsiicast can also use animated SVG
+images instead of the asciinema player HTML widget. For this set the
+`asciicast_knitr_svg` option to `TRUE`, or the `ASCIICAST_KNITR_SVG`
+environment variable to `TRUE`. (The former takes precedence if both are
+set.)
+
+```{r}
+options(asciicast_knitr_svg = TRUE)
+```
+
+````
+```{asciicast}`r ''`
+#' Rows: 3
+cli::rule(center = "TITLE", line = "~-", line_col = "blue")
+```
+````
+
+```{asciicast, cache = TRUE}
+#' Rows: 3
+cli::rule(center = "TITLE", line = "~-", line_col = "blue")
+```
+
+You can also use SVG files to show still screenshots, with the state of
+the screen after running the R code.
+
+````
+```{asciicast}`r ''`
+#' Rows: 3
+#' At: end
+#' Window: FALSE
+#' Padding: 10
+cli::rule(center = "TITLE", line = "~-", line_col = "blue")
+```
+````
+
+```{asciicast, cache = TRUE, fig.with = 15}
+#' Rows: 4
+#' Cols: 82
+#' At: end
+#' Window: FALSE
+#' Padding: 10
+cli::rule(center = "TITLE", line = "~-", line_col = "blue")
+```
+
 See the documentation for the other parameters that you can set in the
 header. Enjoy!

@@ -30,6 +30,7 @@ Imports:
     utils,
     V8
 Suggests:
+    cli,
     covr,
     htmlwidgets,
     knitr,

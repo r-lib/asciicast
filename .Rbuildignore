@@ -11,3 +11,5 @@
 ^doc$
 ^Meta$
 ^vignettes/.*_cache$
+^README_cache$
+^inst/examples/github-readme_cache$

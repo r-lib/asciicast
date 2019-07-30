@@ -33,15 +33,38 @@ eng_asciicast <- function(options) {
 
   if (options$cache > 0) cache_asciicast(cast, options$hash)
 
-  knitr::knit_print(asciinema_player(cast), options = options)
+  eng_asciicast_print(cast, options)
 }
 
 cache_eng_asciicast <- function(options) {
   options$echo <- FALSE
   cast <- readRDS(paste0(options$hash, ".cast"))
-  knitr::knit_print(asciinema_player(cast), options = options)
+  eng_asciicast_print(cast, options)
+}
+
+eng_asciicast_print <- function(cast, options) {
+  svg <-
+    getOption("asciicast_knitr_svg", NULL) %||%
+    Sys.getenv("ASCIICAST_KNITR_SVG", "")
+  obj <- if (isTRUE(as.logical(svg))) {
+    asciicast_knitr_svg(cast, options)
+  } else {
+    asciinema_player(cast)
+  }
+
+  knitr::knit_print(obj, options = options)
 }
 
 cache_asciicast <- function(cast, path) {
   saveRDS(cast, paste0(path, ".cast"))
+}
+
+asciicast_knitr_svg <- function(cast, options) {
+  filename <- file.path(
+    knitr::opts_chunk$get("fig.path"),
+    paste0(options$label, ".svg"))
+  mkdirp(dirname(filename))
+  write_svg(cast, filename)
+  extra = knitr::knit_hooks$get('plot')(filename, options)
+  knitr::engine_output(options, options$code, '', extra)
 }

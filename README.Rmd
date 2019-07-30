@@ -1,5 +1,6 @@
 ---
 output: github_document
+always_allow_html: yes
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -11,6 +12,8 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+asciicast::init_knitr_engine()
+options(asciicast_knitr_svg = TRUE)
 ```
 # asciicast
 
@@ -44,6 +47,9 @@ records all terminal output in real time as it happens.
   <https://asciinema.org> directly.
 * Special knitr engine to create R markdown files with ascii casts. See
   the `asciicast-demo` vignette.
+* Create ascii casts in GitHub READMEs via animated SVG files. See an
+  example in `inst/examples` or the `README.Rmd` source of the README
+  file you are reading.
 
 ## Limitations
 
@@ -79,9 +85,8 @@ cat(readLines("inst/examples/hello.R"), sep = "\n")
 cat("```\n")
 ```
 
-<p align="center">
-	<img width="1000" src="https://cdn.jsdelivr.net/gh/gaborcsardi/asciicast@master/tools/images/hello.svg">
-</p>
+```{asciicast, file = "inst/examples/hello.R", cache = TRUE}
+```
 
 ### Asciicast demo in asciicast
 
@@ -93,9 +98,8 @@ cat(readLines("inst/examples/asciicast.R"), sep = "\n")
 cat("```\n")
 ```
 
-<p align="center">
-	<img width="1000" src="https://cdn.jsdelivr.net/gh/gaborcsardi/asciicast@master/tools/images/asciicast.svg">
-</p>
+```{asciicast, file = "inst/examples/asciicast.R", cache = TRUE}
+```
 
 ### Errors are recorded
 
@@ -107,11 +111,8 @@ cat(readLines("inst/examples/errors.R"), sep = "\n")
 cat("```\n")
 ```
 
-<p align="center">
-	<img width="1000" src="https://cdn.jsdelivr.net/gh/gaborcsardi/asciicast@master/tools/images/errors.svg">
-</p>
-
-### 
+```{asciicast, file = "inst/examples/errors.R", cache = TRUE}
+```
 
 ## Related tools
 
