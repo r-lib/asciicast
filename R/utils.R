@@ -16,3 +16,7 @@ encode_str <- function(x) {
 str_trim <- function(x) {
   sub("^\\s+", "", sub("\\s+$", "", x))
 }
+
+mkdirp <- function(x) {
+  dir.create(x, showWarnings = FALSE, recursive = TRUE)
+}
