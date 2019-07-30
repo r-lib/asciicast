@@ -38,6 +38,7 @@ write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
   json <- readChar(tmp, nchars = file.size(tmp))
 
   window <- window %||% cast$config$window %||% TRUE
+  window <- as.logical(window)
   start_at <- start_at %||% cast$config$start_at
   end_at <- end_at %||% cast$config$end_at
   at <- at %||% cast$config$at
