@@ -20,3 +20,12 @@ str_trim <- function(x) {
 mkdirp <- function(x) {
   dir.create(x, showWarnings = FALSE, recursive = TRUE)
 }
+
+get_param <- function(x, default = NULL) {
+  x <- tolower(x)
+  env <- parent.frame()
+  env[[x]] %||%
+    env$cast$config[[x]] %||%
+    getOption(paste0("asciicast_", x)) %||%
+    default
+}

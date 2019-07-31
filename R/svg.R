@@ -34,23 +34,21 @@ write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
   on.exit(close(jsfile), add = TRUE)
   ct$source(jsfile)
 
-  window <- window %||% cast$config$window %||% TRUE
-  window <- as.logical(window)
-  start_at <- start_at %||% cast$config$start_at
-  end_at <- end_at %||% cast$config$end_at
-  at <- at %||% cast$config$at
+  window <- as.logical(get_param("window", TRUE))
+  start_at <- get_param("start_at")
+  end_at <- get_param("end_at")
+  at <- get_param("at")
   if (identical(at, "end")) at <- utils::tail(cast$output$time, 1)
-  cursor <- as.logical(cursor %||% cast$config$cursor %||% TRUE)
-  rows <- rows %||% cast$config$rows %||% cast$config$height
-  cols <- cols %||% cast$config$cols %||% cast$config$width
-  padding <- padding %||% cast$config$padding
-  padding_x <- padding_x %||% cast$config$padding_x %||% padding
-  padding_y <- padding_y %||% cast$config$padding_y %||% padding
+  cursor <- as.logical(get_param("cursor"))
+  rows <- get_param("rows") %||% cast$config$height
+  cols <- get_param("cols") %||% cast$config$width
+  padding <- get_param("padding")
+  padding_x <- get_param("padding_x") %||% padding
+  padding_y <- get_param("padding_y") %||% padding
   if (!is.null(padding_x)) padding_x <- as.numeric(padding_x)
   if (!is.null(padding_y)) padding_y <- as.numeric(padding_y)
 
-  omit_last_line <- as.logical(
-    omit_last_line %||% cast$config$omit_last_line %||% FALSE)
+  omit_last_line <- as.logical(get_param("omit_last_line", FALSE))
 
   if (!is.null(start_at)) start_at <- start_at * 1000
   if (!is.null(end_at)) end_at <- end_at * 1000
@@ -100,7 +98,7 @@ play <- function(cast, ...) {
 }
 
 remove_last_line <- function(cast) {
-  last <- tail(which(
+  last <- utils::tail(which(
     grepl("\n", cast$output$data, fixed = TRUE) &
     cast$output$type == "o"), 1)
   if (!length(last)) return(cast)
