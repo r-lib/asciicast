@@ -49,6 +49,8 @@ write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
   padding <- padding %||% cast$config$padding
   padding_x <- padding_x %||% cast$config$padding_x %||% padding
   padding_y <- padding_y %||% cast$config$padding_y %||% padding
+  if (!is.null(padding_x)) padding_x <- as.numeric(padding_x)
+  if (!is.null(padding_y)) padding_y <- as.numeric(padding_y)
 
   if (!is.null(start_at)) start_at <- start_at * 1000
   if (!is.null(end_at)) end_at <- end_at * 1000
