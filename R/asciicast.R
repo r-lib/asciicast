@@ -46,18 +46,18 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
   header <- parsed$header
   body <- parsed$body
 
-  typing_speed <- as.numeric(typing_speed %||% header$typing_speed %||% 0.05)
-  empty_wait <- as.numeric(empty_wait %||% header$empty_wait %||% 1L)
-  start_wait <- as.numeric(start_wait %||% header$start_wait %||% 2L)
-  end_wait <- as.numeric(end_wait %||% header$end_wait %||% 5L)
-  timeout <- as.numeric(timeout %||% header$timeout %||% 10)
+  typing_speed <- as.numeric(get_param("typing_speed", 0.05, header))
+  empty_wait <- as.numeric(get_param("empty_wait", 1L, header))
+  start_wait <- as.numeric(get_param("start_wait", 2L, header))
+  end_wait <- as.numeric(get_param("end_wait", 5L, header))
+  timeout <- as.numeric(get_param("timeout", 10, header))
   if (is.null(record_env) && !is.null(header$record_env)) {
-    record_env <- eval(parse(record_env))
+    record_env <- eval(parse(header$record_env))
   }
 
   ## Default values for attributes
-  cols <- cols %||% header$cols %||% 80L
-  rows <- rows %||% header$rows %||% 24L
+  cols <- as.integer(get_param("cols", 80L, header))
+  rows <- as.integer(get_param("rows", 24L, header))
   config <- not_null(list(
     version = 2L,
     command = "R -q",
@@ -65,12 +65,12 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
     rows = rows,
     width = cols,
     height = rows,
-    title = title %||% header$title,
-    timestamp = as.integer(timestamp %||% header$timestamp %||% Sys.time()),
+    title = get_param("title", config = header),
+    timestamp = as.integer(get_param("timestamp", Sys.time(), header)),
     env = env %||%
       (if (!is.null(header$env)) eval(parse(text = header$env))) %||%
       list(TERM = "xterm-256color", SHELL = "/bin/zsh"),
-    idle_time_limit = idle_time_limit %||% header$idle_time_limit
+    idle_time_limit = get_param("idle_time_limit", config = header)
   ))
 
   header[names(config)] <- config

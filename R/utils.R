@@ -21,11 +21,12 @@ mkdirp <- function(x) {
   dir.create(x, showWarnings = FALSE, recursive = TRUE)
 }
 
-get_param <- function(x, default = NULL) {
+get_param <- function(x, default = NULL,
+                      config = parent.frame()$cast$config) {
   x <- tolower(x)
   env <- parent.frame()
   env[[x]] %||%
-    env$cast$config[[x]] %||%
+    config[[x]] %||%
     getOption(paste0("asciicast_", x)) %||%
     default
 }
