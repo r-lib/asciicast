@@ -6,7 +6,8 @@
 \usage{
 write_svg(cast, path, window = NULL, start_at = NULL, end_at = NULL,
   at = NULL, cursor = NULL, rows = NULL, cols = NULL,
-  padding = NULL, padding_x = NULL, padding_y = NULL)
+  padding = NULL, padding_x = NULL, padding_y = NULL,
+  omit_last_line = NULL)
 }
 \arguments{
 \item{cast}{\code{asciicast} object.}
@@ -34,6 +35,9 @@ all output is done.}
 \item{padding_x}{Distance between text and image bounds on x axis.}
 
 \item{padding_y}{Distance between text and image bounds on y axis.}
+
+\item{omit_last_line}{Whether to omit the last line of the cast. This
+often just the prompt, and sometimes it is not worth showing.}
 }
 \description{
 Create animated SVG from an asciicast

@@ -15,6 +15,8 @@
 #' @param padding Distance between text and image bounds.
 #' @param padding_x Distance between text and image bounds on x axis.
 #' @param padding_y Distance between text and image bounds on y axis.
+#' @param omit_last_line Whether to omit the last line of the cast. This
+#'   often just the prompt, and sometimes it is not worth showing.
 #'
 #' @export
 #' @family asciicast functions
@@ -22,7 +24,8 @@
 
 write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
                       at = NULL, cursor = NULL, rows = NULL, cols = NULL,
-                      padding = NULL, padding_x = NULL, padding_y = NULL) {
+                      padding = NULL, padding_x = NULL, padding_y = NULL,
+                      omit_last_line = NULL) {
 
   ct <- v8(c("global", "window", "document"))
   ct$assign("setTimeout", JS("function(callback, after) { callback(); }"))
@@ -30,12 +33,6 @@ write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
   jsfile <- gzfile(system.file("svg-term.js.gz", package = "asciicast"))
   on.exit(close(jsfile), add = TRUE)
   ct$source(jsfile)
-
-  tmp <- tempfile()
-  on.exit(unlink(tmp), add = TRUE)
-  write_json(cast, tmp)
-
-  json <- readChar(tmp, nchars = file.size(tmp))
 
   window <- window %||% cast$config$window %||% TRUE
   window <- as.logical(window)
@@ -52,9 +49,19 @@ write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
   if (!is.null(padding_x)) padding_x <- as.numeric(padding_x)
   if (!is.null(padding_y)) padding_y <- as.numeric(padding_y)
 
+  omit_last_line <- as.logical(
+    omit_last_line %||% cast$config$omit_last_line %||% FALSE)
+
   if (!is.null(start_at)) start_at <- start_at * 1000
   if (!is.null(end_at)) end_at <- end_at * 1000
   if (!is.null(at)) at <- at * 1000
+
+  if (omit_last_line) cast <- remove_last_line(cast)
+
+  tmp <- tempfile()
+  on.exit(unlink(tmp), add = TRUE)
+  write_json(cast, tmp)
+  json <- readChar(tmp, nchars = file.size(tmp))
 
   options <- not_null(list(
     window = window, from = start_at, to = end_at, at = at, cursor = cursor,
@@ -90,4 +97,17 @@ play <- function(cast, ...) {
 
   utils::browseURL(tmphtml)
   invisible(tmpsvg)
+}
+
+remove_last_line <- function(cast) {
+  last <- tail(which(
+    grepl("\n", cast$output$data, fixed = TRUE) &
+    cast$output$type == "o"), 1)
+  if (!length(last)) return(cast)
+
+  cast$output$data[last] <- sub("\r?\n[^\n]*$", "", cast$output$data[last])
+  toremove <- last < seq_len(nrow(cast$output)) & cast$output$type == "o"
+  cast$output$data[toremove] <- ""
+
+  cast
 }
