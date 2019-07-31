@@ -43,7 +43,7 @@ write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
   end_at <- end_at %||% cast$config$end_at
   at <- at %||% cast$config$at
   if (identical(at, "end")) at <- utils::tail(cast$output$time, 1)
-  cursor <- cursor %||% cast$config$cursor %||% TRUE
+  cursor <- as.logical(cursor %||% cast$config$cursor %||% TRUE)
   rows <- rows %||% cast$config$rows %||% cast$config$height
   cols <- cols %||% cast$config$cols %||% cast$config$width
   padding <- padding %||% cast$config$padding
