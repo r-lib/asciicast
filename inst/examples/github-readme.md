@@ -33,7 +33,7 @@ SVG files:
 
 ## Still screenshots
 
-To include a snapshot instead of an animation, use `At: FALSE` in the
+To include a snapshot instead of an animation, use `At: end` in the
 asciicast header.
 
     ```{asciicast, cache = TRUE}

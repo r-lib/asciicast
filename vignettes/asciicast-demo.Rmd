@@ -50,7 +50,7 @@ the height of the widget.
 
 ````
 ```{asciicast}`r ''`
-#' Rows: 10
+#' Rows: 5
 
 # No much here, so avoid a big widget
 1 + 2 + 3 + 4
@@ -133,18 +133,41 @@ the screen after running the R code.
 #' At: end
 #' Window: FALSE
 #' Padding: 10
+#' Cursor: FALSE
 cli::rule(center = "TITLE", line = "~-", line_col = "blue")
 ```
 ````
 
 ```{asciicast, cache = TRUE, fig.with = 15}
-#' Rows: 4
+#' Rows: 3
 #' Cols: 82
 #' At: end
 #' Window: FALSE
 #' Padding: 10
+#' Cursor: FALSE
 cli::rule(center = "TITLE", line = "~-", line_col = "blue")
 ```
 
-See the documentation for the other parameters that you can set in the
-header. Enjoy!
+## Showing the code
+
+By default asciicast code chunks do not show the code, i.e. the `echo`
+kntr option is set to `FALSE` for them. You can override this locally
+for a code chunk, or globally, by supplying the `echo` argument to
+`asciicast::init_knitr_engine()`.
+
+````
+```{asciicast echo = TRUE}`r ''`
+#' Rows: 5
+#' At: end
+# This code will be shown
+head(mtcars, 3)
+```
+````
+
+This will show the code above the SVG image. The header is not shown:
+
+```{asciicast, echo = TRUE, cache = TRUE}
+#' Rows: 5
+# This code will be shown
+head(mtcars, 3)
+```
