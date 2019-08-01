@@ -30,6 +30,7 @@ eng_asciicast <- function(options) {
       warning("asciicast file and code both given, code will be ignored")
     }
     options$code <- ""
+    if (options$echo) options$code <- parse_header(readLines(cast_file))$body
 
   } else {
     cast_file <- tempfile()
@@ -37,6 +38,7 @@ eng_asciicast <- function(options) {
     writeLines(options$code %||% "", cast_file, useBytes = TRUE)
   }
 
+  if (options$echo) options$code <- parse_header(options$code)$body
   cast <- record(cast_file)
 
   if (options$cache > 0) cache_asciicast(cast, options$hash)
