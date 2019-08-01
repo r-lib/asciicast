@@ -52,7 +52,7 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
   end_wait <- as.numeric(get_param("end_wait", 5L, header))
   timeout <- as.numeric(get_param("timeout", 10, header))
   if (is.null(record_env) && !is.null(header$record_env)) {
-    record_env <- eval(parse(header$record_env))
+    record_env <- eval(parse(text = header$record_env))
   }
 
   ## Default values for attributes
