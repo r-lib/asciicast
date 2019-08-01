@@ -1,7 +1,7 @@
 
 record_commands <- function(lines, typing_speed, timeout, empty_wait,
                             allow_errors, start_wait, end_wait,
-                            record_env) {
+                            record_env, startup) {
 
   env <- Sys.getenv()
   env["ASCIICAST"] <- "true"
@@ -24,7 +24,7 @@ record_commands <- function(lines, typing_speed, timeout, empty_wait,
   this_typing_speed <- NULL
   this_callback <- NULL
 
-  record_setup_subprocess(px, timeout, allow_errors)
+  record_setup_subprocess(px, timeout, allow_errors, startup)
 
   next_expression <- function() {
     end <- next_line
@@ -51,14 +51,8 @@ record_commands <- function(lines, typing_speed, timeout, empty_wait,
 
   run_command_line <- function(line) {
     line <- str_trim(sub("^# <<", "", line))
-    if (line == "") {
-      typing_speed <<- rev(typing_speed)
-      this_typing_speed <<- typing_speed[1]
-
-    } else if (line == "setup") {
-      this_typing_speed <<- 0L
-      this_callback <<- NULL
-    }
+    typing_speed <<- rev(typing_speed)
+    this_typing_speed <<- typing_speed[1]
   }
 
   cat("--> ...\n")
@@ -136,7 +130,7 @@ poll_wait <- function(proc, time, callback = NULL, done = FALSE) {
   }
 }
 
-record_setup_subprocess <- function(proc, timeout, allow_errors) {
+record_setup_subprocess <- function(proc, timeout, allow_errors, startup) {
   setup <- substitute({
     while ("tools:asciicast" %in% search()) detach("tools:asciicast")
     env <- readRDS(env_file)
@@ -156,7 +150,8 @@ record_setup_subprocess <- function(proc, timeout, allow_errors) {
         env$pxlib$write_fd(3L, "OK\n")
       })
     }
-  }, list(allow_errors = allow_errors, env_file = env_file))
+    startup
+  }, list(allow_errors = allow_errors, env_file = env_file, startup = startup))
 
   setupstr <- paste0(deparse(setup), "\n", collapse = "")
   write_for_sure(proc, setupstr)

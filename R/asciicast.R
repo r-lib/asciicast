@@ -75,8 +75,11 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
 
   header[names(config)] <- config
 
+  startup <- if (!is.null(header$startup)) str2lang(header$startup)
+
   output <- record_commands(body, typing_speed, timeout, empty_wait,
-                            allow_errors, start_wait, end_wait, record_env)
+                            allow_errors, start_wait, end_wait, record_env,
+                            startup = startup)
 
   new_cast(header, output)
 }
