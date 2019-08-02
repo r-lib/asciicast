@@ -33,6 +33,7 @@ play(c3)
 
 \seealso{
 Other asciicast functions: \code{\link{asciicast-package}},
+  \code{\link{asciicast_start_process}},
   \code{\link{play}}, \code{\link{record}},
   \code{\link{write_json}}, \code{\link{write_svg}}
 }

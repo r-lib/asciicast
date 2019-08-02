@@ -5,17 +5,34 @@
 #' casts from code chunks.
 #'
 #' @param echo Whether to print the code of asciicast chunks.
+#' @param same_process Whether to run all asciicast chunks _in the same_
+#'   R process. To restart this R process, call `init_knitr_engine()`
+#'   again.
+#' @inheritParams asciicast_start_process
 #'
 #' @export
 
-init_knitr_engine <- function(echo = FALSE) {
+init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
+                              timeout = 10, allow_errors = TRUE,
+                              startup = NULL, record_env = NULL) {
+
   knitr::knit_engines$set("asciicast" = eng_asciicast)
   knitr::cache_engines$set("asciicast" = cache_eng_asciicast)
+
   deps <- htmlwidgets::getDependency("asciinema_player", "asciicast")
   knitr::knit_meta_add(deps)
+
   default_echo <- knitr::opts_chunk$get("echo")
   attr(default_echo, "asciicast") <- echo
   knitr::opts_chunk$set(echo = default_echo)
+
+  if (same_process) {
+    proc <- asciicast_start_process(timeout, allow_errors, startup,
+                                    record_env)
+    oldproc <- knitr::opts_chunk$get("asciicast_process")
+    if (!is.null(oldproc)) oldproc$kill()
+    knitr::opts_chunk$set(asciicast_process = proc)
+  }
 }
 
 eng_asciicast <- function(options) {
@@ -39,7 +56,11 @@ eng_asciicast <- function(options) {
   }
 
   if (options$echo) options$code <- parse_header(options$code)$body
-  cast <- record(cast_file)
+  proc <- knitr::opts_chunk$get("asciicast_process")
+  if (!is.null(proc) && !proc$is_alive()) {
+    stop("asciicast subprocess crashed")
+  }
+  cast <- record(cast_file, process = proc)
 
   if (options$cache > 0) cache_asciicast(cast, options$hash)
 

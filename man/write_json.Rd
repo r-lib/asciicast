@@ -17,6 +17,7 @@ The file uses the asciinema file format, version 2:
 }
 \seealso{
 Other asciicast functions: \code{\link{asciicast-package}},
+  \code{\link{asciicast_start_process}},
   \code{\link{play}}, \code{\link{read_cast}},
   \code{\link{record}}, \code{\link{write_svg}}
 }

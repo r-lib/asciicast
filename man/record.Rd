@@ -7,7 +7,8 @@
 record(script, typing_speed = NULL, empty_wait = NULL, cols = NULL,
   rows = NULL, title = NULL, timestamp = NULL, env = NULL,
   idle_time_limit = NULL, allow_errors = TRUE, timeout = NULL,
-  start_wait = NULL, end_wait = NULL, record_env = NULL)
+  start_wait = NULL, end_wait = NULL, record_env = NULL,
+  startup = NULL, process = NULL)
 }
 \arguments{
 \item{script}{Path of an R script to record.}
@@ -46,6 +47,14 @@ output as it runs.}
 \item{end_wait}{Delay at the very end, in seconds.}
 
 \item{record_env}{Environment variables to set for the R subprocess.}
+
+\item{startup}{Quoted language object to run in the subprocess before
+starting the recording.}
+
+\item{process}{A processx subprocess to run the cast in. By default a
+new subprocess is started. You can reuse a process by calling
+\code{\link[=asciicast_start_process]{asciicast_start_process()}} first, and supplying the returned process
+here.}
 }
 \value{
 An \code{asciicast} object, write this to
@@ -61,6 +70,7 @@ cast
 }
 \seealso{
 Other asciicast functions: \code{\link{asciicast-package}},
+  \code{\link{asciicast_start_process}},
   \code{\link{play}}, \code{\link{read_cast}},
   \code{\link{write_json}}, \code{\link{write_svg}}
 }

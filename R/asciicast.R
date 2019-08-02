@@ -24,6 +24,12 @@
 #' @param start_wait Delay at the beginning, in seconds.
 #' @param end_wait Delay at the very end, in seconds.
 #' @param record_env Environment variables to set for the R subprocess.
+#' @param startup Quoted language object to run in the subprocess before
+#'   starting the recording.
+#' @param process A processx subprocess to run the cast in. By default a
+#'   new subprocess is started. You can reuse a process by calling
+#'   [asciicast_start_process()] first, and supplying the returned process
+#'   here.
 #'
 #' @return An `asciicast` object, write this to
 #'   file with [write_json()].
@@ -39,7 +45,7 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
                    cols = NULL, rows = NULL, title = NULL, timestamp = NULL,
                    env = NULL, idle_time_limit = NULL, allow_errors = TRUE,
                    timeout = NULL, start_wait = NULL, end_wait = NULL,
-                   record_env = NULL) {
+                   record_env = NULL, startup = NULL, process = NULL) {
 
   lines <- readLines(script)
   parsed <- parse_header(lines)
@@ -79,7 +85,7 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
 
   output <- record_commands(body, typing_speed, timeout, empty_wait,
                             allow_errors, start_wait, end_wait, record_env,
-                            startup = startup)
+                            startup, process)
 
   new_cast(header, output)
 }

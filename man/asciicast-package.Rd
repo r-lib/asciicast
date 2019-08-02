@@ -79,8 +79,9 @@ Parameters for SVG files:
 }
 }
 \seealso{
-Other asciicast functions: \code{\link{play}},
-  \code{\link{read_cast}}, \code{\link{record}},
-  \code{\link{write_json}}, \code{\link{write_svg}}
+Other asciicast functions: \code{\link{asciicast_start_process}},
+  \code{\link{play}}, \code{\link{read_cast}},
+  \code{\link{record}}, \code{\link{write_json}},
+  \code{\link{write_svg}}
 }
 \concept{asciicast functions}

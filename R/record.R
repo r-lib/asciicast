@@ -1,20 +1,12 @@
 
 record_commands <- function(lines, typing_speed, timeout, empty_wait,
                             allow_errors, start_wait, end_wait,
-                            record_env, startup) {
+                            record_env, startup, process) {
 
-  env <- Sys.getenv()
-  env["ASCIICAST"] <- "true"
-  env[names(record_env)] <- record_env
-
-  px <- processx::process$new("R", "-q", pty = TRUE,
-                              pty_options = list(echo = TRUE),
-                              poll_connection = TRUE, env = env)
-  on.exit({ close(px$get_input_connection()); px$kill() }, add = TRUE)
-
-  ready <- px$poll_io(5000)
-  if (!px$is_alive() || ready["output"] != "ready") {
-    stop("R subprocess is not ready after 5s")
+  px <- process
+  if (is.null(px)) {
+    px <- asciicast_start_process(timeout, allow_errors, startup, record_env)
+    on.exit({ close(px$get_input_connection()); px$kill() }, add = TRUE)
   }
 
   start <- Sys.time()
@@ -23,8 +15,6 @@ record_commands <- function(lines, typing_speed, timeout, empty_wait,
   typing_speed <- c(typing_speed, 0)
   this_typing_speed <- NULL
   this_callback <- NULL
-
-  record_setup_subprocess(px, timeout, allow_errors, startup)
 
   next_expression <- function() {
     end <- next_line
@@ -80,10 +70,12 @@ record_commands <- function(lines, typing_speed, timeout, empty_wait,
     wait_for_done(px, timeout, this_callback)
   }
 
-  close(px$get_input_connection())
-  poll_wait(px, timeout, output_callback, done = TRUE)
-  px$wait(timeout)
-  if (px$is_alive()) stop("R subprocess did not finish")
+  if (is.null(process)) {
+    close(px$get_input_connection())
+    poll_wait(px, timeout, output_callback, done = TRUE)
+    px$wait(timeout)
+    if (px$is_alive()) stop("R subprocess did not finish")
+  }
 
   output <- append(output, list(list(Sys.time() - start + end_wait, "")))
 
@@ -91,6 +83,44 @@ record_commands <- function(lines, typing_speed, timeout, empty_wait,
     time = as.double(vapply(output, "[[", double(1), 1), units = "secs"),
     type = "o",
     data = vapply(output, "[[", character(1), 2))
+}
+
+#' Start an asciicast background process
+#'
+#' This is for expert use, if you want to run multiple recordings in the
+#' same process.
+#'
+#' @param timeout Idle timeout, in seconds If the R subprocess running
+#'   the recording does not answer within this limit, it is killed and the
+#'   recording stops. Update this for slow running code, that produces no
+#'   output as it runs.
+#' @param allow_errors Whether to cast errors properly. If this is set to
+#'   `TRUE`, then asciicast overwrites the `"error"` option. Only change
+#'   this if you know what you are doing.
+#' @param startup Quoted language object to run in the subprocess before
+#'   starting the recording.
+#' @param record_env Environment variables to set for the R subprocess.
+#'
+#' @family asciicast functions
+#' @export
+
+asciicast_start_process <- function(timeout = 10, allow_errors = TRUE,
+                                    startup = NULL, record_env = NULL) {
+  env <- Sys.getenv()
+  env["ASCIICAST"] <- "true"
+  env[names(record_env)] <- record_env
+
+  px <- processx::process$new("R", "-q", pty = TRUE,
+                              pty_options = list(echo = TRUE),
+                              poll_connection = TRUE, env = env)
+
+  ready <- px$poll_io(5000)
+  if (!px$is_alive() || ready["output"] != "ready") {
+    stop("R subprocess is not ready after 5s")
+  }
+  record_setup_subprocess(px, timeout, allow_errors, startup)
+
+  px
 }
 
 #' @importFrom stats runif
@@ -150,6 +180,7 @@ record_setup_subprocess <- function(proc, timeout, allow_errors, startup) {
         env$pxlib$write_fd(3L, "OK\n")
       })
     }
+    rm(env, data)
     startup
   }, list(allow_errors = allow_errors, env_file = env_file, startup = startup))
 
