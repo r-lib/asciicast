@@ -30,3 +30,8 @@ get_param <- function(x, default = NULL,
     getOption(paste0("asciicast_", x)) %||%
     default
 }
+
+modify_list <- function(l, upd) {
+  l[names(upd)] <- upd
+  l
+}

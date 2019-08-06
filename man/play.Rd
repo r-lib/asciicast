@@ -22,7 +22,8 @@ in the default browser.
 \seealso{
 Other asciicast functions: \code{\link{asciicast-package}},
   \code{\link{asciicast_start_process}},
-  \code{\link{read_cast}}, \code{\link{record}},
-  \code{\link{write_json}}, \code{\link{write_svg}}
+  \code{\link{default_theme}}, \code{\link{read_cast}},
+  \code{\link{record}}, \code{\link{write_json}},
+  \code{\link{write_svg}}
 }
 \concept{asciicast functions}

@@ -7,7 +7,7 @@
 write_svg(cast, path, window = NULL, start_at = NULL, end_at = NULL,
   at = NULL, cursor = NULL, rows = NULL, cols = NULL,
   padding = NULL, padding_x = NULL, padding_y = NULL,
-  omit_last_line = NULL)
+  omit_last_line = NULL, theme = NULL)
 }
 \arguments{
 \item{cast}{\code{asciicast} object.}
@@ -38,6 +38,9 @@ all output is done.}
 
 \item{omit_last_line}{Whether to omit the last line of the cast. This
 often just the prompt, and sometimes it is not worth showing.}
+
+\item{theme}{A named list to override the default theme
+(see \code{\link[=default_theme]{default_theme()}}).}
 }
 \description{
 Create animated SVG from an asciicast
@@ -45,7 +48,8 @@ Create animated SVG from an asciicast
 \seealso{
 Other asciicast functions: \code{\link{asciicast-package}},
   \code{\link{asciicast_start_process}},
-  \code{\link{play}}, \code{\link{read_cast}},
-  \code{\link{record}}, \code{\link{write_json}}
+  \code{\link{default_theme}}, \code{\link{play}},
+  \code{\link{read_cast}}, \code{\link{record}},
+  \code{\link{write_json}}
 }
 \concept{asciicast functions}

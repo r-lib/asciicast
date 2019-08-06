@@ -17,6 +17,8 @@
 #' @param padding_y Distance between text and image bounds on y axis.
 #' @param omit_last_line Whether to omit the last line of the cast. This
 #'   often just the prompt, and sometimes it is not worth showing.
+#' @param theme A named list to override the default theme
+#'   (see [default_theme()]).
 #'
 #' @export
 #' @family asciicast functions
@@ -25,7 +27,7 @@
 write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
                       at = NULL, cursor = NULL, rows = NULL, cols = NULL,
                       padding = NULL, padding_x = NULL, padding_y = NULL,
-                      omit_last_line = NULL) {
+                      omit_last_line = NULL, theme = NULL) {
 
   ct <- v8(c("global", "window", "document"))
   ct$assign("setTimeout", JS("function(callback, after) { callback(); }"))
@@ -56,6 +58,8 @@ write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
 
   if (omit_last_line) cast <- remove_last_line(cast)
 
+  theme <- rename_theme(modify_list(default_theme(), theme))
+
   tmp <- tempfile()
   on.exit(unlink(tmp), add = TRUE)
   write_json(cast, tmp)
@@ -63,12 +67,83 @@ write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
 
   options <- not_null(list(
     window = window, from = start_at, to = end_at, at = at, cursor = cursor,
-    paddingX = padding_x, paddingY = padding_y, height = rows, width = cols))
+    paddingX = padding_x, paddingY = padding_y, height = rows, width = cols,
+    theme = theme))
 
   svg <- ct$call("svgterm.render", json, options)
   cat(svg, file = path)
 
   invisible()
+}
+
+rename_theme <- function(theme) {
+  recode <- c(
+    "black" = "0",
+    "red" = "1",
+    "green" = "2",
+    "yellow" = "3",
+    "blue" = "4",
+    "magenta" = "5",
+    "cyan" = "6",
+    "white" = "7",
+    "light_black" = "8",
+    "light_red" = "9",
+    "light_green" = "10",
+    "light_yellow" = "11",
+    "light_blue" = "12",
+    "light_magenta" = "13",
+    "light_cyan" = "14",
+    "light_white" = "15",
+    "background" = "background",
+    "bold" = "bold",
+    "cursor" = "cursor",
+    "text" = "text",
+    "font_size" = "fontSize",
+    "line_height" = "lineHeight",
+    "font_family" = "fontFamily"
+  )
+  diff <- names(theme) %in% names(recode)
+  names(theme)[diff] <- recode[names(theme)[diff]]
+  theme
+}
+
+#' The default asciicast theme
+#'
+#' Currently only used for [write_svg()]
+#'
+#' @return A named list.
+#'
+#' @family asciicast functions
+#' @export
+
+default_theme <- function() {
+  list(
+    "black"         = c(40, 45, 53),
+    "red"           = c(232, 131, 136),
+    "green"         = c(168, 204, 140),
+    "yellow"        = c(219, 171, 121),
+    "blue"          = c(113, 190, 242),
+    "magenta"       = c(210, 144, 228),
+    "cyan"          = c(102, 194, 205),
+    "white"         = c(185, 191, 202),
+    "light_black"   = c(111, 119, 131),
+    "light_red"     = c(232, 131, 136),
+    "light_green"   = c(168, 204, 140),
+    "light_yellow"  = c(219, 171, 121),
+    "light_blue"    = c(115, 190, 243),
+    "light_magenta" = c(210, 144, 227),
+    "light_cyan"    = c(102, 194, 205),
+    "light_white"   = c(255, 255, 255),
+    "background"    = c(40, 45, 53),
+    "bold"          = c(185, 192, 203),
+    "cursor"        = c(111, 118, 131),
+    "text"          = c(185, 192, 203),
+    "font_size"     = 1.67,
+    "line_height"   = 1.3,
+    "font_family"   = paste(sep = ",",
+       "'Fira Code'", "Monaco", "Consolas", "Menlo",
+       "'Bitstream Vera Sans Mono'", "'Powerline Symbols'", "monospace")
+  )
 }
 
 #' Play asciinema cast as an SVG image in the default browser

@@ -3,6 +3,7 @@
 S3method(print,asciicast)
 export(asciicast_start_process)
 export(asciinema_player)
+export(default_theme)
 export(init_knitr_engine)
 export(play)
 export(read_cast)
