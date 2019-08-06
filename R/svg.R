@@ -58,6 +58,7 @@ write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
 
   if (omit_last_line) cast <- remove_last_line(cast)
 
+  theme <- theme %||% getOption("asciicast_theme")
   theme <- rename_theme(modify_list(default_theme(), theme))
 
   tmp <- tempfile()
