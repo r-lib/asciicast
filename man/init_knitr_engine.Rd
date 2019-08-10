@@ -5,7 +5,8 @@
 \title{Initialize the asciicast knitr engine}
 \usage{
 init_knitr_engine(echo = FALSE, same_process = TRUE, timeout = 10,
-  allow_errors = TRUE, startup = NULL, record_env = NULL)
+  allow_errors = TRUE, startup = NULL, record_env = NULL,
+  echo_input = TRUE)
 }
 \arguments{
 \item{echo}{Whether to print the code of asciicast chunks.}
@@ -27,6 +28,8 @@ this if you know what you are doing.}
 starting the recording.}
 
 \item{record_env}{Environment variables to set for the R subprocess.}
+
+\item{echo_input}{Whether to echo the input in the asciicast recording.}
 }
 \description{
 Call this function in your Rmd file, to enable creating asciinema

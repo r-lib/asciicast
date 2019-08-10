@@ -8,13 +8,15 @@
 #' @param same_process Whether to run all asciicast chunks _in the same_
 #'   R process. To restart this R process, call `init_knitr_engine()`
 #'   again.
+#' @param echo_input Whether to echo the input in the asciicast recording.
 #' @inheritParams asciicast_start_process
 #'
 #' @export
 
 init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
                               timeout = 10, allow_errors = TRUE,
-                              startup = NULL, record_env = NULL) {
+                              startup = NULL, record_env = NULL,
+                              echo_input = TRUE) {
 
   knitr::knit_engines$set("asciicast" = eng_asciicast)
   knitr::cache_engines$set("asciicast" = cache_eng_asciicast)
@@ -28,7 +30,7 @@ init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
 
   if (same_process) {
     proc <- asciicast_start_process(timeout, allow_errors, startup,
-                                    record_env)
+                                    record_env, echo_input)
     oldproc <- .GlobalEnv$.knitr_asciicast_process
     if (!is.null(oldproc)) oldproc$kill()
     .GlobalEnv$.knitr_asciicast_process <- proc

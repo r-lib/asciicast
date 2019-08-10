@@ -28,6 +28,7 @@ Imports:
     processx (>= 3.4.0),
     tibble,
     utils,
+    uuid,
     V8
 Suggests:
     cli,

@@ -3,19 +3,28 @@ record_commands <- function(lines, typing_speed, timeout, empty_wait,
                             allow_errors, start_wait, end_wait,
                             record_env, startup, echo, process) {
 
-  px <- process
-  if (is.null(px)) {
-    px <- asciicast_start_process(
-      timeout, allow_errors, startup, record_env, echo)
-    on.exit({ close(px$get_input_connection()); px$kill() }, add = TRUE)
-  }
-
-  start <- Sys.time()
   next_line <- 1L
   output <- list()
   typing_speed <- c(typing_speed, 0)
   this_typing_speed <- NULL
   this_callback <- NULL
+
+  start_callback <- function(out) {
+    output <<- append(output, list(list(0, out)))
+  }
+
+  px <- process
+  if (is.null(px)) {
+    px <- asciicast_start_process2(
+      timeout, allow_errors, startup, record_env, echo, start_callback)
+    on.exit({ close(px$get_input_connection()); px$kill() }, add = TRUE)
+  }
+
+  start <- Sys.time()
+
+  output_callback <- function(out) {
+    output <<- append(output, list(list(Sys.time() - start, out)))
+  }
 
   next_expression <- function() {
     end <- next_line
@@ -30,10 +39,6 @@ record_commands <- function(lines, typing_speed, timeout, empty_wait,
     expr <- lines[next_line:end]
     next_line <<- end + 1L
     expr
-  }
-
-  output_callback <- function(out) {
-    output <<- append(output, list(list(Sys.time() - start, out)))
   }
 
   is_command_line <- function(line) {
@@ -110,6 +115,13 @@ record_commands <- function(lines, typing_speed, timeout, empty_wait,
 asciicast_start_process <- function(timeout = 10, allow_errors = TRUE,
                                     startup = NULL, record_env = NULL,
                                     echo = TRUE) {
+  asciicast_start_process2(timeout, allow_errors, startup, record_env,
+                           echo, callback = NULL)
+}
+
+asciicast_start_process2 <- function(timeout, allow_errors, startup,
+                                     record_env = NULL, echo, callback) {
+
   env <- Sys.getenv()
   env["ASCIICAST"] <- "true"
   env[names(record_env)] <- record_env
@@ -122,7 +134,7 @@ asciicast_start_process <- function(timeout = 10, allow_errors = TRUE,
   if (!px$is_alive() || ready["output"] != "ready") {
     stop("R subprocess is not ready after 5s")
   }
-  record_setup_subprocess(px, timeout, allow_errors, startup)
+  record_setup_subprocess(px, timeout, allow_errors, startup, callback)
 
   px
 }
@@ -164,7 +176,17 @@ poll_wait <- function(proc, time, callback = NULL, done = FALSE) {
   }
 }
 
-record_setup_subprocess <- function(proc, timeout, allow_errors, startup) {
+#' @importFrom uuid UUIDgenerate
+
+record_setup_subprocess <- function(proc, timeout, allow_errors, startup,
+                                    callback) {
+  id <- UUIDgenerate()
+  substs <- list(
+    allow_errors = allow_errors,
+    env_file = env_file,
+    startup = startup,
+    id = id)
+
   setup <- substitute({
     while ("tools:asciicast" %in% search()) detach("tools:asciicast")
     env <- readRDS(env_file)
@@ -186,11 +208,26 @@ record_setup_subprocess <- function(proc, timeout, allow_errors, startup) {
     }
     rm(env, data)
     startup
-  }, list(allow_errors = allow_errors, env_file = env_file, startup = startup))
+    cat(id, " done", "\n", sep = "")
+  }, substs)
 
   setupstr <- paste0(deparse(setup), "\n", collapse = "")
   write_for_sure(proc, setupstr)
-  wait_for_done(proc, timeout)
+
+  ## Wait until 'id' shows up in the output, and after that use the
+  ## proper callback
+  done <- FALSE
+  output <- ""
+  str <- paste0(id, " done\r\n")
+  wait_for_done(proc, timeout, function(out) {
+    if (done) return(callback(out))
+    output <<- paste0(output, out)
+    if (grepl(str, output, fixed = TRUE, useBytes = TRUE)) {
+      out <- strsplit(output, str, fixed = TRUE)[[1]][2]
+      done <<- TRUE
+      if (!is.na(out)) callback(out)
+    }
+  })
 }
 
 write_for_sure <- function(proc, text) {

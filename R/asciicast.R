@@ -57,7 +57,7 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
 
   typing_speed <- as.numeric(get_param("typing_speed", 0.05, header))
   empty_wait <- as.numeric(get_param("empty_wait", 1L, header))
-  start_wait <- as.numeric(get_param("start_wait", 2L, header))
+  start_wait <- as.numeric(get_param("start_wait", 0L, header))
   end_wait <- as.numeric(get_param("end_wait", 5L, header))
   timeout <- as.numeric(get_param("timeout", 10, header))
   if (is.null(record_env) && !is.null(header$record_env)) {
