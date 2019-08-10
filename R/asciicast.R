@@ -26,6 +26,8 @@
 #' @param record_env Environment variables to set for the R subprocess.
 #' @param startup Quoted language object to run in the subprocess before
 #'   starting the recording.
+#' @param echo Whether to echo the input to the terminal. If `FALSE`, then
+#'   only the output is shown.
 #' @param process A processx subprocess to run the cast in. By default a
 #'   new subprocess is started. You can reuse a process by calling
 #'   [asciicast_start_process()] first, and supplying the returned process
@@ -45,7 +47,8 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
                    cols = NULL, rows = NULL, title = NULL, timestamp = NULL,
                    env = NULL, idle_time_limit = NULL, allow_errors = TRUE,
                    timeout = NULL, start_wait = NULL, end_wait = NULL,
-                   record_env = NULL, startup = NULL, process = NULL) {
+                   record_env = NULL, startup = NULL, echo = TRUE,
+                   process = NULL) {
 
   lines <- readLines(script)
   parsed <- parse_header(lines)
@@ -85,7 +88,7 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
 
   output <- record_commands(body, typing_speed, timeout, empty_wait,
                             allow_errors, start_wait, end_wait, record_env,
-                            startup, process)
+                            startup, echo, process)
 
   new_cast(header, output)
 }

@@ -8,7 +8,7 @@ record(script, typing_speed = NULL, empty_wait = NULL, cols = NULL,
   rows = NULL, title = NULL, timestamp = NULL, env = NULL,
   idle_time_limit = NULL, allow_errors = TRUE, timeout = NULL,
   start_wait = NULL, end_wait = NULL, record_env = NULL,
-  startup = NULL, process = NULL)
+  startup = NULL, echo = TRUE, process = NULL)
 }
 \arguments{
 \item{script}{Path of an R script to record.}
@@ -50,6 +50,9 @@ output as it runs.}
 
 \item{startup}{Quoted language object to run in the subprocess before
 starting the recording.}
+
+\item{echo}{Whether to echo the input to the terminal. If \code{FALSE}, then
+only the output is shown.}
 
 \item{process}{A processx subprocess to run the cast in. By default a
 new subprocess is started. You can reuse a process by calling

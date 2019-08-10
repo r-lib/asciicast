@@ -5,7 +5,7 @@
 \title{Start an asciicast background process}
 \usage{
 asciicast_start_process(timeout = 10, allow_errors = TRUE,
-  startup = NULL, record_env = NULL)
+  startup = NULL, record_env = NULL, echo = TRUE)
 }
 \arguments{
 \item{timeout}{Idle timeout, in seconds If the R subprocess running
@@ -21,6 +21,9 @@ this if you know what you are doing.}
 starting the recording.}
 
 \item{record_env}{Environment variables to set for the R subprocess.}
+
+\item{echo}{Whether to echo the input to the terminal. If \code{FALSE}, then
+only the output is shown.}
 }
 \description{
 This is for expert use, if you want to run multiple recordings in the

@@ -1,11 +1,12 @@
 
 record_commands <- function(lines, typing_speed, timeout, empty_wait,
                             allow_errors, start_wait, end_wait,
-                            record_env, startup, process) {
+                            record_env, startup, echo, process) {
 
   px <- process
   if (is.null(px)) {
-    px <- asciicast_start_process(timeout, allow_errors, startup, record_env)
+    px <- asciicast_start_process(
+      timeout, allow_errors, startup, record_env, echo)
     on.exit({ close(px$get_input_connection()); px$kill() }, add = TRUE)
   }
 
@@ -100,18 +101,21 @@ record_commands <- function(lines, typing_speed, timeout, empty_wait,
 #' @param startup Quoted language object to run in the subprocess before
 #'   starting the recording.
 #' @param record_env Environment variables to set for the R subprocess.
+#' @param echo Whether to echo the input to the terminal. If `FALSE`, then
+#'   only the output is shown.
 #'
 #' @family asciicast functions
 #' @export
 
 asciicast_start_process <- function(timeout = 10, allow_errors = TRUE,
-                                    startup = NULL, record_env = NULL) {
+                                    startup = NULL, record_env = NULL,
+                                    echo = TRUE) {
   env <- Sys.getenv()
   env["ASCIICAST"] <- "true"
   env[names(record_env)] <- record_env
 
-  px <- processx::process$new("R", "-q", pty = TRUE,
-                              pty_options = list(echo = TRUE),
+  px <- processx::process$new("R", c("-q", if (!echo) "--slave"),
+                              pty = TRUE, pty_options = list(echo = echo),
                               poll_connection = TRUE, env = env)
 
   ready <- px$poll_io(5000)
