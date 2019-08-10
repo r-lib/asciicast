@@ -87,16 +87,12 @@ specifying it in the code chunk. The advantage of this is that it is easier
 to use the code in the R scripts for other purposes.
 
 ````
-```{asciicast file = "../inst/examples/hello.R"}`r ''`
+```{asciicast code = readLines("../inst/examples/hello.R")}`r ''`
 ```
 ````
 
-```{asciicast file = "../inst/examples/hello.R", cache = TRUE}
+```{asciicast code = readLines("../inst/examples/hello.R"), cache = TRUE}
 ```
-
-Unfortunately caching does not work well for external files, the knitr
-cache does not know that it needs to re-record a chunk when the file
-changes.
 
 ## Using SVG files
 

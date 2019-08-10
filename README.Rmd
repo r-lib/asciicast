@@ -85,7 +85,7 @@ cat(readLines("inst/examples/hello.R"), sep = "\n")
 cat("```\n")
 ```
 
-```{asciicast, file = "inst/examples/hello.R", cache = TRUE}
+```{asciicast, code = readLines("inst/examples/hello.R"), cache = TRUE}
 ```
 
 ### Asciicast demo in asciicast
@@ -98,7 +98,7 @@ cat(readLines("inst/examples/asciicast.R"), sep = "\n")
 cat("```\n")
 ```
 
-```{asciicast, file = "inst/examples/asciicast.R", cache = TRUE}
+```{asciicast, code = readLines("inst/examples/asciicast.R"), cache = TRUE}
 ```
 
 ### Errors are recorded
@@ -111,7 +111,7 @@ cat(readLines("inst/examples/errors.R"), sep = "\n")
 cat("```\n")
 ```
 
-```{asciicast, file = "inst/examples/errors.R", cache = TRUE}
+```{asciicast, code = readLines("inst/examples/errors.R"), cache = TRUE}
 ```
 
 ## Related tools

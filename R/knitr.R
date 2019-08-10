@@ -29,9 +29,9 @@ init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
   if (same_process) {
     proc <- asciicast_start_process(timeout, allow_errors, startup,
                                     record_env)
-    oldproc <- knitr::opts_chunk$get("asciicast_process")
+    oldproc <- .GlobalEnv$.knitr_asciicast_process
     if (!is.null(oldproc)) oldproc$kill()
-    knitr::opts_chunk$set(asciicast_process = proc)
+    .GlobalEnv$.knitr_asciicast_process <- proc
   }
 }
 
@@ -41,22 +41,12 @@ eng_asciicast <- function(options) {
   # otherwise we use the asciicast default, which is FALSE
   options$echo <- attr(options$echo, "asciicast") %||% options$echo
 
-  if (!is.null(options$file)) {
-    cast_file <- options$file
-    if (!is.null(options$code)) {
-      warning("asciicast file and code both given, code will be ignored")
-    }
-    options$code <- ""
-    if (options$echo) options$code <- parse_header(readLines(cast_file))$body
-
-  } else {
-    cast_file <- tempfile()
-    on.exit(unlink(cast_file), add = TRUE)
-    writeLines(options$code %||% "", cast_file, useBytes = TRUE)
-  }
+  cast_file <- tempfile()
+  on.exit(unlink(cast_file), add = TRUE)
+  writeLines(options$code %||% "", cast_file, useBytes = TRUE)
 
   if (options$echo) options$code <- parse_header(options$code)$body
-  proc <- knitr::opts_chunk$get("asciicast_process")
+  proc <- .GlobalEnv$.knitr_asciicast_process
   if (!is.null(proc) && !proc$is_alive()) {
     stop("asciicast subprocess crashed")
   }
@@ -73,11 +63,15 @@ cache_eng_asciicast <- function(options) {
   eng_asciicast_print(cast, options)
 }
 
-eng_asciicast_print <- function(cast, options) {
-  svg <-
-    getOption("asciicast_knitr_svg", NULL) %||%
+eng_asciicast_is_svg <- function() {
+  svg <- getOption("asciicast_knitr_svg", NULL) %||%
     Sys.getenv("ASCIICAST_KNITR_SVG", "")
-  extra <- if (isTRUE(as.logical(svg))) {
+  isTRUE(as.logical(svg))
+}
+
+eng_asciicast_print <- function(cast, options) {
+  svg <- eng_asciicast_is_svg()
+  extra <- if (svg) {
     asciicast_knitr_svg(cast, options)
   } else {
     knitr::knit_print(asciinema_player(cast), options = options)
