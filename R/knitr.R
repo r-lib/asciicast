@@ -80,8 +80,11 @@ eng_asciicast_print <- function(cast, options) {
   knitr::engine_output(options, options$code, '', extra)
 }
 
+## Caching support. We cache both the cast and the SVG file as well,
+## if the output is SVG
 cache_asciicast <- function(cast, path) {
   saveRDS(cast, paste0(path, ".cast"))
+  if (eng_asciicast_is_svg()) write_svg(cast, paste0(path, ".svg"))
 }
 
 asciicast_knitr_svg <- function(cast, options) {
@@ -89,6 +92,15 @@ asciicast_knitr_svg <- function(cast, options) {
     knitr::opts_chunk$get("fig.path"),
     paste0(options$label, ".svg"))
   mkdirp(dirname(filename))
-  write_svg(cast, filename)
+
+  ## This might be cached already. If not cached, we cache it now.
+  cached <- paste0(options$hash, ".svg")
+  if (options$cache > 0 && file.exists(cached)) {
+    file.copy(cached, filename, overwrite = TRUE)
+  } else {
+    write_svg(cast, filename)
+    if (options$cache > 0) file.copy(filename, cached)
+  }
+
   knitr::knit_hooks$get('plot')(filename, options)
 }
