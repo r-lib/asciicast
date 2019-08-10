@@ -6,7 +6,9 @@
 #' @param empty_wait How long to wait for empty lines in the script file,
 #'   in seconds.
 #' @param cols Width of the terminal, in number of characters.
-#' @param rows Height of the terminal, in number of characters.
+#' @param rows Height of the terminal, in number of characters. If it the
+#'   string `"auto"`, then it will be determined automatically, by including
+#'   all output on the screen.
 #' @param title Title of the cast, this is included in the cast JSON file.
 #' @param timestamp Time stamp of the recording, defaults to `Sys.time()`,
 #'   this is included in the cast JSON file.
@@ -65,15 +67,11 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
   }
 
   ## Default values for attributes
-  cols <- as.integer(get_param("cols", 80L, header))
-  rows <- as.integer(get_param("rows", 24L, header))
+  cols <- get_param("cols", 80L, header)
+  rows <- get_param("rows", 24L, header)
   config <- not_null(list(
     version = 2L,
     command = "R -q",
-    cols = cols,
-    rows = rows,
-    width = cols,
-    height = rows,
     title = get_param("title", config = header),
     timestamp = as.integer(get_param("timestamp", Sys.time(), header)),
     env = env %||%
@@ -89,6 +87,13 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
   output <- record_commands(body, typing_speed, timeout, empty_wait,
                             allow_errors, start_wait, end_wait, record_env,
                             startup, echo, process)
+
+  if (rows == "auto") {
+    rows <- sum(unlist(strsplit(output$data, "")) == "\n")
+  }
+
+  header$rows <- header$height <- as.integer(rows)
+  header$cols <- header$width <- as.integer(cols)
 
   new_cast(header, output)
 }

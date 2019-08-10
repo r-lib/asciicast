@@ -20,7 +20,9 @@ in seconds.}
 
 \item{cols}{Width of the terminal, in number of characters.}
 
-\item{rows}{Height of the terminal, in number of characters.}
+\item{rows}{Height of the terminal, in number of characters. If it the
+string \code{"auto"}, then it will be determined automatically, by including
+all output on the screen.}
 
 \item{title}{Title of the cast, this is included in the cast JSON file.}
 
