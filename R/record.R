@@ -220,12 +220,15 @@ record_setup_subprocess <- function(proc, timeout, allow_errors, startup,
   output <- ""
   str <- paste0(id, " done\r\n")
   wait_for_done(proc, timeout, function(out) {
-    if (done) return(callback(out))
+    if (done) {
+      if (!is.null(callback)) callback(out)
+      return()
+    }
     output <<- paste0(output, out)
     if (grepl(str, output, fixed = TRUE, useBytes = TRUE)) {
       out <- strsplit(output, str, fixed = TRUE)[[1]][2]
       done <<- TRUE
-      if (!is.na(out)) callback(out)
+      if (!is.na(out) && !is.null(callback)) callback(out)
     }
   })
 }
