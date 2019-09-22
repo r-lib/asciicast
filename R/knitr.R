@@ -1,4 +1,34 @@
 
+#' Default R options to set in the background R process for knits
+#'
+#' You can pass these options to [init_knitr_engine()], after possibly
+#' overriding some of them.
+#'
+#' @return List of options.
+#'
+#' @export
+#' @examples
+#' asciicast_knitr_options
+
+asciicast_knitr_options <- function() {
+  list(
+    asciicast_knitr_svg = TRUE,
+    asciicast_at = "end",
+    asciicast_typing_speed = 0,
+    asciicast_padding = 20,
+    asciicast_window = FALSE,
+    asciicast_omit_last_line = FALSE,
+    asciicast_cursor = FALSE,
+    width = 100,
+    asciicast_rows = "auto",
+    asciicast_cols = 100,
+    asciicast_end_wait = 0,
+    crayon.enabled = TRUE,
+    crayon.colors = 256
+  )
+}
+
+
 #' Initialize the asciicast knitr engine
 #'
 #' Call this function in your Rmd file, to enable creating asciinema
@@ -9,6 +39,9 @@
 #'   R process. To restart this R process, call `init_knitr_engine()`
 #'   again.
 #' @param echo_input Whether to echo the input in the asciicast recording.
+#' @param options R options to set (via [base::options()], in the background
+#'   R process that performs the recording. See `asciicast_knitr_options()`
+#'   for the defaults.
 #' @inheritParams asciicast_start_process
 #'
 #' @export
@@ -16,7 +49,8 @@
 init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
                               timeout = 10, allow_errors = TRUE,
                               startup = NULL, record_env = NULL,
-                              echo_input = TRUE) {
+                              echo_input = TRUE,
+                              options = asciicast_knitr_options()) {
 
   knitr::knit_engines$set("asciicast" = eng_asciicast)
   knitr::cache_engines$set("asciicast" = cache_eng_asciicast)
@@ -27,6 +61,8 @@ init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
   default_echo <- knitr::opts_chunk$get("echo")
   attr(default_echo, "asciicast") <- echo
   knitr::opts_chunk$set(echo = default_echo)
+
+  do.call(base::options, options)
 
   if (same_process) {
     proc <- asciicast_start_process(timeout, allow_errors, startup,
