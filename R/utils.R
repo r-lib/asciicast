@@ -35,3 +35,11 @@ modify_list <- function(l, upd) {
   l[names(upd)] <- upd
   l
 }
+
+map_chr <- function(.x, .f, ...) {
+  vapply(.x, .f, FUN.VALUE = character(1), ...)
+}
+
+map_dbl <- function(.x, .f, ...) {
+  vapply(.x, .f, FUN.VALUE = double(1), ...)
+}
