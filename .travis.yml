@@ -5,7 +5,10 @@ cache: packages
 dist: xenial
 addons:
   apt:
-    packages: libnode-dev
+    sources:
+      - sourceline: 'ppa:cran/v8'
+    packages:
+      - libnode-dev
 
 matrix:
   include:
