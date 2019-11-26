@@ -126,7 +126,9 @@ asciicast_start_process2 <- function(timeout, allow_errors, startup,
   env["ASCIICAST"] <- "true"
   env[names(record_env)] <- record_env
 
-  px <- processx::process$new("R", c("-q", if (!echo) "--slave"),
+  exec_name <- if (.Platform$OS.type == "windows") "Rterm" else "R"
+  R <- file.path(R.home("bin"), exec_name)
+  px <- processx::process$new(R, c("-q", if (!echo) "--slave"),
                               pty = TRUE, pty_options = list(echo = echo),
                               poll_connection = TRUE, env = env)
 
