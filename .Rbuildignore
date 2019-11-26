@@ -13,3 +13,4 @@
 ^vignettes/.*_cache$
 ^README_cache$
 ^inst/examples/github-readme_cache$
+^appveyor\.R$
