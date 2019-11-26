@@ -21,8 +21,13 @@
 #'   (see [default_theme()]).
 #'
 #' @export
-#' @family asciicast functions
+#' @family SVG functions
 #' @importFrom V8 v8 JS
+#' @examples
+#' cast <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
+#' svg_file <- tempfile(fileext = ".svg")
+#' write_svg(cast, svg_file)
+#' \dontshow{unlink(svg_file, recursive = TRUE)}
 
 write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
                       at = NULL, cursor = NULL, rows = NULL, cols = NULL,
@@ -114,8 +119,14 @@ rename_theme <- function(theme) {
 #'
 #' @return A named list.
 #'
-#' @family asciicast functions
+#' @family SVG functions
 #' @export
+#' @examples
+#' cast <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
+#' svg_file <- tempfile(fileext = ".svg")
+#' mytheme <- modifyList(default_theme(), list(cursor = c(255, 0, 0)))
+#' write_svg(cast, svg_file, theme = mytheme)
+#' \dontshow{unlink(svg_file, recursive = TRUE)}
 
 default_theme <- function() {
   list(
@@ -158,7 +169,10 @@ default_theme <- function() {
 #' @return The path of the temporary SVG file, invisibly.
 #'
 #' @export
-#' @family asciicast functions
+#' @family SVG functions
+#' @examplesIf interactive()
+#' cast <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
+#' play(cast)
 
 play <- function(cast, ...) {
   tmpsvg <- tempfile(fileext = ".svg")

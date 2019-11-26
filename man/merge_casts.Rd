@@ -22,8 +22,21 @@ provide a way to insert pause, clear the screen, etc., between casts.}
 An \code{asciicast} object.
 }
 \description{
-\code{pause()} inserts a pause of the specified seconds between the casts.
+The new cast will inherit its options (screen size, etc.) from the
+first cast in the argument list. The options of the rest of the casts
+are ignored.
 }
 \details{
+\code{pause()} inserts a pause of the specified seconds between the casts.
+
 \code{clear_screen()} clears the screen between two casts.
+}
+\examples{
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# merge two casts, with a pause, and clear screen between them
+cast1 <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
+cast2 <- read_cast(system.file("examples", "dplyr.cast", package = "asciicast"))
+cast <- merge_casts(cast1, pause(3), clear_screen(), cast2)
+play(cast)
+\dontshow{\}) # examplesIf}
 }

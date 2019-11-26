@@ -19,26 +19,24 @@ recording id, that is downloaded. It can also be a URL of private
 \description{
 Import an asciicast from an asciicast JSON file
 }
-\section{Examples}{
-\preformatted{c1 <- read_cast("https://asciinema.org/a/uHQwIVpiZvu0Ioio8KYx6Uwlj.cast?dl=1")
+\examples{
+\dontshow{if (interactive() && curl::has_internet()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+c1 <- read_cast("https://asciinema.org/a/uHQwIVpiZvu0Ioio8KYx6Uwlj.cast?dl=1")
 play(c1)
 
 c2 <- read_cast(258660)
 play(c2)
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 c3 <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
 play(c3)
+\dontshow{\}) # examplesIf}
 }
-}
-
 \seealso{
 Other asciicast functions: 
 \code{\link{asciicast-package}},
 \code{\link{asciicast_start_process}()},
-\code{\link{default_theme}()},
-\code{\link{play}()},
 \code{\link{record}()},
-\code{\link{write_json}()},
-\code{\link{write_svg}()}
+\code{\link{write_json}()}
 }
 \concept{asciicast functions}

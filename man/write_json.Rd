@@ -15,14 +15,20 @@ write_json(cast, path)
 The file uses the asciinema file format, version 2:
 \url{https://github.com/asciinema/asciinema/blob/master/doc/asciicast-v2.md}.
 }
+\examples{
+\dontshow{if (asciicast:::is_recording_supported()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+script <- system.file("examples", "hello.R", package = "asciicast")
+cast <- record(script)
+json <- tempfile(fileext = ".json")
+write_json(cast, json)
+\dontshow{unlink(json, recursive = TRUE)}
+\dontshow{\}) # examplesIf}
+}
 \seealso{
 Other asciicast functions: 
 \code{\link{asciicast-package}},
 \code{\link{asciicast_start_process}()},
-\code{\link{default_theme}()},
-\code{\link{play}()},
 \code{\link{read_cast}()},
-\code{\link{record}()},
-\code{\link{write_svg}()}
+\code{\link{record}()}
 }
 \concept{asciicast functions}

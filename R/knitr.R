@@ -7,8 +7,9 @@
 #' @return List of options.
 #'
 #' @export
+#' @family asciicast in Rmd
 #' @examples
-#' asciicast_knitr_options
+#' asciicast_knitr_options()
 
 asciicast_knitr_options <- function() {
   list(
@@ -45,6 +46,23 @@ asciicast_knitr_options <- function() {
 #' @inheritParams asciicast_start_process
 #'
 #' @export
+#' @family asciicast in Rmd
+#' @section Examples:
+#' Call this function from an Rmd chunk and then you can use the asciicast
+#' knitr engine:
+#' ````
+#' ```{r echo = FALSE, results = "hide"}
+#' asciicast::init_knitr_engine()
+#' ```
+#' ````
+#'
+#' ````
+#' ```{asciicast, cache = TRUE}`
+#' #' Rows: 10
+#' # This is an asciicast example
+#' loadedNamespaces()
+#' ```
+#' ````
 
 init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
                               timeout = 10, allow_errors = TRUE,

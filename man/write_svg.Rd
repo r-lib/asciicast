@@ -57,14 +57,15 @@ often just the prompt, and sometimes it is not worth showing.}
 \description{
 Create animated SVG from an asciicast
 }
-\seealso{
-Other asciicast functions: 
-\code{\link{asciicast-package}},
-\code{\link{asciicast_start_process}()},
-\code{\link{default_theme}()},
-\code{\link{play}()},
-\code{\link{read_cast}()},
-\code{\link{record}()},
-\code{\link{write_json}()}
+\examples{
+cast <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
+svg_file <- tempfile(fileext = ".svg")
+write_svg(cast, svg_file)
+\dontshow{unlink(svg_file, recursive = TRUE)}
 }
-\concept{asciicast functions}
+\seealso{
+Other SVG functions: 
+\code{\link{default_theme}()},
+\code{\link{play}()}
+}
+\concept{SVG functions}

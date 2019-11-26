@@ -1,6 +1,9 @@
 
 #' asciinema player HTML widget
 #'
+#' You can use this widget in Rmd files or Shiny applications, the
+#' same way as [other HTML widgets](http://www.htmlwidgets.org/).
+#'
 #' @param cast `asciicast` object.
 #' @param start_at Where to start the playback from, in seconds.
 #' @param rows Number of rows, defaults to the number of rows in the
@@ -31,6 +34,9 @@
 #'   id is generated randomly.
 #'
 #' @export
+#' @examplesIf interactive()
+#' cast <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
+#' asciinema_player(cast)
 
 asciinema_player <- function(cast, start_at = 0, rows = NULL, cols = NULL,
                              autoplay = NULL, loop = NULL, speed = NULL,

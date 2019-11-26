@@ -1,7 +1,8 @@
 
 #' Record an asciinema screencast
 #'
-#' @param script Path of an R script to record.
+#' @param script Path of an R script to record. It can also be a readable
+#'   R connection or URL, as it is passed to [base::readLines()].
 #' @param typing_speed Average typing speed, per keypress, in seconds.
 #' @param empty_wait How long to wait for empty lines in the script file,
 #'   in seconds.
@@ -40,10 +41,10 @@
 #'
 #' @export
 #' @family asciicast functions
-#' @examples
+#' @examplesIf asciicast:::is_recording_supported() && interactive()
 #' script <- system.file("examples", "hello.R", package = "asciicast")
 #' cast <- record(script)
-#' cast
+#' play(cast)
 
 record <- function(script, typing_speed = NULL, empty_wait = NULL,
                    cols = NULL, rows = NULL, title = NULL, timestamp = NULL,
@@ -98,6 +99,10 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
   new_cast(header, output)
 }
 
+is_recording_supported <- function() {
+  Sys.info()[["sysname"]] %in% c("Linux", "Darwin")
+}
+
 new_cast <- function(config, output) {
   structure(
     list(config = config, output = output),
@@ -130,6 +135,12 @@ print.asciicast <- function(x, ...) {
 #'
 #' @export
 #' @family asciicast functions
+#' @examplesIf asciicast:::is_recording_supported()
+#' script <- system.file("examples", "hello.R", package = "asciicast")
+#' cast <- record(script)
+#' json <- tempfile(fileext = ".json")
+#' write_json(cast, json)
+#' \dontshow{unlink(json, recursive = TRUE)}
 
 write_json <- function(cast, path) {
   stopifnot(inherits(cast, "asciicast"))

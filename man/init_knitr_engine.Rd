@@ -46,3 +46,22 @@ for the defaults.}
 Call this function in your Rmd file, to enable creating asciinema
 casts from code chunks.
 }
+\section{Examples}{
+
+Call this function from an Rmd chunk and then you can use the asciicast
+knitr engine:\preformatted{```\{r echo = FALSE, results = "hide"\}
+asciicast::init_knitr_engine()
+```
+}\preformatted{```\{asciicast, cache = TRUE\}`
+#' Rows: 10
+# This is an asciicast example
+loadedNamespaces()
+```
+}
+}
+
+\seealso{
+Other asciicast in Rmd: 
+\code{\link{asciicast_knitr_options}()}
+}
+\concept{asciicast in Rmd}

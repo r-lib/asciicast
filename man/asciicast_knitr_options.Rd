@@ -14,5 +14,10 @@ You can pass these options to \code{\link[=init_knitr_engine]{init_knitr_engine(
 overriding some of them.
 }
 \examples{
-asciicast_knitr_options
+asciicast_knitr_options()
 }
+\seealso{
+Other asciicast in Rmd: 
+\code{\link{init_knitr_engine}()}
+}
+\concept{asciicast in Rmd}

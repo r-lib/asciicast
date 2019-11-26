@@ -8,21 +8,19 @@
 #'   <https://asciinema.org> link.
 #' @return `asciicast` object.
 #'
-#' @section Examples:
-#' ```
+#' @export
+#' @importFrom jsonlite fromJSON
+#' @family asciicast functions
+#' @examplesIf interactive() && curl::has_internet()
 #' c1 <- read_cast("https://asciinema.org/a/uHQwIVpiZvu0Ioio8KYx6Uwlj.cast?dl=1")
 #' play(c1)
 #'
 #' c2 <- read_cast(258660)
 #' play(c2)
 #'
+#' @examplesIf interactive()
 #' c3 <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
 #' play(c3)
-#' ```
-#'
-#' @export
-#' @importFrom jsonlite fromJSON
-#' @family asciicast functions
 
 read_cast <- function(json) {
   if (is.numeric(json)) {

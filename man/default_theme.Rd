@@ -12,14 +12,16 @@ A named list.
 \description{
 Currently only used for \code{\link[=write_svg]{write_svg()}}
 }
+\examples{
+cast <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
+svg_file <- tempfile(fileext = ".svg")
+mytheme <- modifyList(default_theme(), list(cursor = c(255, 0, 0)))
+write_svg(cast, svg_file, theme = mytheme)
+\dontshow{unlink(svg_file, recursive = TRUE)}
+}
 \seealso{
-Other asciicast functions: 
-\code{\link{asciicast-package}},
-\code{\link{asciicast_start_process}()},
+Other SVG functions: 
 \code{\link{play}()},
-\code{\link{read_cast}()},
-\code{\link{record}()},
-\code{\link{write_json}()},
 \code{\link{write_svg}()}
 }
-\concept{asciicast functions}
+\concept{SVG functions}

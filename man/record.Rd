@@ -25,7 +25,8 @@ record(
 )
 }
 \arguments{
-\item{script}{Path of an R script to record.}
+\item{script}{Path of an R script to record. It can also be a readable
+R connection or URL, as it is passed to \code{\link[base:readLines]{base::readLines()}}.}
 
 \item{typing_speed}{Average typing speed, per keypress, in seconds.}
 
@@ -83,18 +84,17 @@ file with \code{\link[=write_json]{write_json()}}.
 Record an asciinema screencast
 }
 \examples{
+\dontshow{if (asciicast:::is_recording_supported() && interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 script <- system.file("examples", "hello.R", package = "asciicast")
 cast <- record(script)
-cast
+play(cast)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other asciicast functions: 
 \code{\link{asciicast-package}},
 \code{\link{asciicast_start_process}()},
-\code{\link{default_theme}()},
-\code{\link{play}()},
 \code{\link{read_cast}()},
-\code{\link{write_json}()},
-\code{\link{write_svg}()}
+\code{\link{write_json}()}
 }
 \concept{asciicast functions}

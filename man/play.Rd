@@ -19,14 +19,15 @@ Uses \code{\link[=write_svg]{write_svg()}} to create an SVG image for a cast, in
 file, and then previews a minimal HTML file with the SVG image,
 in the default browser.
 }
+\examples{
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+cast <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
+play(cast)
+\dontshow{\}) # examplesIf}
+}
 \seealso{
-Other asciicast functions: 
-\code{\link{asciicast-package}},
-\code{\link{asciicast_start_process}()},
+Other SVG functions: 
 \code{\link{default_theme}()},
-\code{\link{read_cast}()},
-\code{\link{record}()},
-\code{\link{write_json}()},
 \code{\link{write_svg}()}
 }
-\concept{asciicast functions}
+\concept{SVG functions}
