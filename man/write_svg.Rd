@@ -4,10 +4,22 @@
 \alias{write_svg}
 \title{Create animated SVG from an asciicast}
 \usage{
-write_svg(cast, path, window = NULL, start_at = NULL, end_at = NULL,
-  at = NULL, cursor = NULL, rows = NULL, cols = NULL,
-  padding = NULL, padding_x = NULL, padding_y = NULL,
-  omit_last_line = NULL, theme = NULL)
+write_svg(
+  cast,
+  path,
+  window = NULL,
+  start_at = NULL,
+  end_at = NULL,
+  at = NULL,
+  cursor = NULL,
+  rows = NULL,
+  cols = NULL,
+  padding = NULL,
+  padding_x = NULL,
+  padding_y = NULL,
+  omit_last_line = NULL,
+  theme = NULL
+)
 }
 \arguments{
 \item{cast}{\code{asciicast} object.}
@@ -46,10 +58,13 @@ often just the prompt, and sometimes it is not worth showing.}
 Create animated SVG from an asciicast
 }
 \seealso{
-Other asciicast functions: \code{\link{asciicast-package}},
-  \code{\link{asciicast_start_process}},
-  \code{\link{default_theme}}, \code{\link{play}},
-  \code{\link{read_cast}}, \code{\link{record}},
-  \code{\link{write_json}}
+Other asciicast functions: 
+\code{\link{asciicast-package}},
+\code{\link{asciicast_start_process}()},
+\code{\link{default_theme}()},
+\code{\link{play}()},
+\code{\link{read_cast}()},
+\code{\link{record}()},
+\code{\link{write_json}()}
 }
 \concept{asciicast functions}

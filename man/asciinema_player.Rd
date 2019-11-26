@@ -4,12 +4,27 @@
 \alias{asciinema_player}
 \title{asciinema player HTML widget}
 \usage{
-asciinema_player(cast, start_at = 0, rows = NULL, cols = NULL,
-  autoplay = NULL, loop = NULL, speed = NULL, title = NULL,
-  author = NULL, author_url = NULL, author_img_url = NULL,
-  poster_text = NULL, poster_frame = NULL, font_size = NULL,
-  theme = NULL, idle_time_limit = NULL, html_height = NULL,
-  html_width = NULL, element_id = NULL)
+asciinema_player(
+  cast,
+  start_at = 0,
+  rows = NULL,
+  cols = NULL,
+  autoplay = NULL,
+  loop = NULL,
+  speed = NULL,
+  title = NULL,
+  author = NULL,
+  author_url = NULL,
+  author_img_url = NULL,
+  poster_text = NULL,
+  poster_frame = NULL,
+  font_size = NULL,
+  theme = NULL,
+  idle_time_limit = NULL,
+  html_height = NULL,
+  html_width = NULL,
+  element_id = NULL
+)
 }
 \arguments{
 \item{cast}{\code{asciicast} object.}

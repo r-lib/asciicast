@@ -20,10 +20,13 @@ file, and then previews a minimal HTML file with the SVG image,
 in the default browser.
 }
 \seealso{
-Other asciicast functions: \code{\link{asciicast-package}},
-  \code{\link{asciicast_start_process}},
-  \code{\link{default_theme}}, \code{\link{read_cast}},
-  \code{\link{record}}, \code{\link{write_json}},
-  \code{\link{write_svg}}
+Other asciicast functions: 
+\code{\link{asciicast-package}},
+\code{\link{asciicast_start_process}()},
+\code{\link{default_theme}()},
+\code{\link{read_cast}()},
+\code{\link{record}()},
+\code{\link{write_json}()},
+\code{\link{write_svg}()}
 }
 \concept{asciicast functions}

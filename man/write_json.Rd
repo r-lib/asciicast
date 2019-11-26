@@ -16,10 +16,13 @@ The file uses the asciinema file format, version 2:
 \url{https://github.com/asciinema/asciinema/blob/master/doc/asciicast-v2.md}.
 }
 \seealso{
-Other asciicast functions: \code{\link{asciicast-package}},
-  \code{\link{asciicast_start_process}},
-  \code{\link{default_theme}}, \code{\link{play}},
-  \code{\link{read_cast}}, \code{\link{record}},
-  \code{\link{write_svg}}
+Other asciicast functions: 
+\code{\link{asciicast-package}},
+\code{\link{asciicast_start_process}()},
+\code{\link{default_theme}()},
+\code{\link{play}()},
+\code{\link{read_cast}()},
+\code{\link{record}()},
+\code{\link{write_svg}()}
 }
 \concept{asciicast functions}

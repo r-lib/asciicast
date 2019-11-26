@@ -6,7 +6,7 @@
 \description{
 You can set asciicast parameters in the header of the recorded R script.
 The header is in DCF format (see \code{\link[=read.dcf]{read.dcf()}}), but all lines are prefixed
-with \code{#'} comments.
+with \verb{#'} comments.
 }
 \details{
 The DCF header may specify arbitrary parameters. We list here the
@@ -79,9 +79,13 @@ Parameters for SVG files:
 }
 }
 \seealso{
-Other asciicast functions: \code{\link{asciicast_start_process}},
-  \code{\link{default_theme}}, \code{\link{play}},
-  \code{\link{read_cast}}, \code{\link{record}},
-  \code{\link{write_json}}, \code{\link{write_svg}}
+Other asciicast functions: 
+\code{\link{asciicast_start_process}()},
+\code{\link{default_theme}()},
+\code{\link{play}()},
+\code{\link{read_cast}()},
+\code{\link{record}()},
+\code{\link{write_json}()},
+\code{\link{write_svg}()}
 }
 \concept{asciicast functions}

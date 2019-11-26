@@ -4,8 +4,13 @@
 \alias{asciicast_start_process}
 \title{Start an asciicast background process}
 \usage{
-asciicast_start_process(timeout = 10, allow_errors = TRUE,
-  startup = NULL, record_env = NULL, echo = TRUE)
+asciicast_start_process(
+  timeout = 10,
+  allow_errors = TRUE,
+  startup = NULL,
+  record_env = NULL,
+  echo = TRUE
+)
 }
 \arguments{
 \item{timeout}{Idle timeout, in seconds If the R subprocess running
@@ -30,9 +35,13 @@ This is for expert use, if you want to run multiple recordings in the
 same process.
 }
 \seealso{
-Other asciicast functions: \code{\link{asciicast-package}},
-  \code{\link{default_theme}}, \code{\link{play}},
-  \code{\link{read_cast}}, \code{\link{record}},
-  \code{\link{write_json}}, \code{\link{write_svg}}
+Other asciicast functions: 
+\code{\link{asciicast-package}},
+\code{\link{default_theme}()},
+\code{\link{play}()},
+\code{\link{read_cast}()},
+\code{\link{record}()},
+\code{\link{write_json}()},
+\code{\link{write_svg}()}
 }
 \concept{asciicast functions}

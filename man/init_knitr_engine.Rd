@@ -4,9 +4,16 @@
 \alias{init_knitr_engine}
 \title{Initialize the asciicast knitr engine}
 \usage{
-init_knitr_engine(echo = FALSE, same_process = TRUE, timeout = 10,
-  allow_errors = TRUE, startup = NULL, record_env = NULL,
-  echo_input = TRUE, options = asciicast_knitr_options())
+init_knitr_engine(
+  echo = FALSE,
+  same_process = TRUE,
+  timeout = 10,
+  allow_errors = TRUE,
+  startup = NULL,
+  record_env = NULL,
+  echo_input = TRUE,
+  options = asciicast_knitr_options()
+)
 }
 \arguments{
 \item{echo}{Whether to print the code of asciicast chunks.}

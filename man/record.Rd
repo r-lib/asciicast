@@ -4,11 +4,25 @@
 \alias{record}
 \title{Record an asciinema screencast}
 \usage{
-record(script, typing_speed = NULL, empty_wait = NULL, cols = NULL,
-  rows = NULL, title = NULL, timestamp = NULL, env = NULL,
-  idle_time_limit = NULL, allow_errors = TRUE, timeout = NULL,
-  start_wait = NULL, end_wait = NULL, record_env = NULL,
-  startup = NULL, echo = TRUE, process = NULL)
+record(
+  script,
+  typing_speed = NULL,
+  empty_wait = NULL,
+  cols = NULL,
+  rows = NULL,
+  title = NULL,
+  timestamp = NULL,
+  env = NULL,
+  idle_time_limit = NULL,
+  allow_errors = TRUE,
+  timeout = NULL,
+  start_wait = NULL,
+  end_wait = NULL,
+  record_env = NULL,
+  startup = NULL,
+  echo = TRUE,
+  process = NULL
+)
 }
 \arguments{
 \item{script}{Path of an R script to record.}
@@ -74,10 +88,13 @@ cast <- record(script)
 cast
 }
 \seealso{
-Other asciicast functions: \code{\link{asciicast-package}},
-  \code{\link{asciicast_start_process}},
-  \code{\link{default_theme}}, \code{\link{play}},
-  \code{\link{read_cast}}, \code{\link{write_json}},
-  \code{\link{write_svg}}
+Other asciicast functions: 
+\code{\link{asciicast-package}},
+\code{\link{asciicast_start_process}()},
+\code{\link{default_theme}()},
+\code{\link{play}()},
+\code{\link{read_cast}()},
+\code{\link{write_json}()},
+\code{\link{write_svg}()}
 }
 \concept{asciicast functions}
