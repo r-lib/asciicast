@@ -1,5 +1,5 @@
 Package: asciicast
-Title: Create 'Ascii' Screencasts from R Scripts
+Title: Create 'Ascii' Screen Casts from R Scripts
 Version: 0.0.0.9001
 Authors@R: c(
     person(given = "Gábor",
@@ -17,10 +17,10 @@ Authors@R: c(
            family = "Kulik",
            role = "aut",
            comment = "https://github.com/asciinema/asciinema-player author"))
-Description: Record 'asciicast' screencasts from R scripts. Convert them
+Description: Record 'asciicast' screen casts from R scripts. Convert them
     to animated SVG images, to be used in 'README' files, or blog posts.
     Includes 'asciinema-player' as an 'HTML' widget, and an 'asciicast'
-    'knitr' engine, to embed 'ascii' screencasts in 'Rmarkdown' documents.
+    'knitr' engine, to embed 'ascii' screen casts in 'Rmarkdown' documents.
 License: MIT + file LICENSE
 Imports:
     curl,
