@@ -58,10 +58,12 @@ often just the prompt, and sometimes it is not worth showing.}
 Create animated SVG from an asciicast
 }
 \examples{
+\dontshow{if (asciicast:::is_svg_supported()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 cast <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
 svg_file <- tempfile(fileext = ".svg")
 write_svg(cast, svg_file)
 \dontshow{unlink(svg_file, recursive = TRUE)}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other SVG functions: 
