@@ -13,11 +13,13 @@ A named list.
 Currently only used for \code{\link[=write_svg]{write_svg()}}
 }
 \examples{
+\dontshow{if (asciicast:::is_svg_supported()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 cast <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
 svg_file <- tempfile(fileext = ".svg")
 mytheme <- modifyList(default_theme(), list(cursor = c(255, 0, 0)))
 write_svg(cast, svg_file, theme = mytheme)
 \dontshow{unlink(svg_file, recursive = TRUE)}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other SVG functions: 

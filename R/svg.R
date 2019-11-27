@@ -23,7 +23,7 @@
 #' @export
 #' @family SVG functions
 #' @importFrom V8 v8 JS
-#' @examples
+#' @examplesIf asciicast:::is_svg_supported()
 #' cast <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
 #' svg_file <- tempfile(fileext = ".svg")
 #' write_svg(cast, svg_file)
@@ -33,6 +33,8 @@ write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
                       at = NULL, cursor = NULL, rows = NULL, cols = NULL,
                       padding = NULL, padding_x = NULL, padding_y = NULL,
                       omit_last_line = NULL, theme = NULL) {
+
+  check_svg_support()
 
   ct <- v8(c("global", "window", "document"))
   ct$assign("setTimeout", JS("function(callback, after) { callback(); }"))
@@ -82,6 +84,18 @@ write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
   invisible()
 }
 
+is_svg_supported <- function() {
+  package_version(V8::engine_info()$version) >= "6.0"
+}
+
+check_svg_support <- function() {
+  if (! is_svg_supported()) {
+    stop("Writing SVG files needs a more recent Node library, see the ",
+         "documentation of the V8 package, e.g. ",
+         "https://github.com/jeroen/v8#readme")
+  }
+}
+
 rename_theme <- function(theme) {
   recode <- c(
     "black" = "0",
@@ -121,7 +135,7 @@ rename_theme <- function(theme) {
 #'
 #' @family SVG functions
 #' @export
-#' @examples
+#' @examplesIf asciicast:::is_svg_supported()
 #' cast <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
 #' svg_file <- tempfile(fileext = ".svg")
 #' mytheme <- modifyList(default_theme(), list(cursor = c(255, 0, 0)))
