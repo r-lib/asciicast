@@ -4,7 +4,7 @@ author: "Gábor Csárdi"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{asciicast example vignette}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{asciicast::lazyrmd}
   %\VignetteEncoding{UTF-8}
 ---
 

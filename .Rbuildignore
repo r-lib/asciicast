@@ -11,6 +11,7 @@
 ^doc$
 ^Meta$
 ^vignettes/.*_cache$
+^vignettes/.*_files$
 ^README_cache$
 ^inst/examples/github-readme_cache$
 ^appveyor\.yml$
