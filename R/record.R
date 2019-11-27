@@ -141,10 +141,17 @@ asciicast_start_process2 <- function(timeout, allow_errors, startup,
                               pty = TRUE, pty_options = list(echo = echo),
                               poll_connection = TRUE, env = env)
 
+  # If there is no echo, then we need to know if the process is ready
+  # somehow, so we just write some dummy input, and then we also read
+  # out its output. In theory it is not guaranteed that we read out all
+  # output, but in practive we always do. If echo == TRUE, then all this
+  # is not needed, because R will produce some output.
+  if (!echo) px$write_input("1\n")
   ready <- px$poll_io(5000)
   if (!px$is_alive() || ready["output"] != "ready") {
     stop("R subprocess is not ready after 5s")
   }
+  if (!echo) px$read_output()
   record_setup_subprocess(px, timeout, allow_errors, startup, callback)
 
   px
