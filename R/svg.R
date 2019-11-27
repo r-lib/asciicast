@@ -85,7 +85,9 @@ write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
 }
 
 is_svg_supported <- function() {
-  package_version(V8::engine_info()$version) >= "6.0"
+  nodever <- V8::engine_info()$version
+  major <- as.numeric(strsplit(nodever, ".", fixed = TRUE)[[1]][[1]])
+  !is.na(major) && major >= 6
 }
 
 check_svg_support <- function() {
