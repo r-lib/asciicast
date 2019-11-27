@@ -10,6 +10,8 @@ addons:
     packages:
       - libnode-dev
 
+before_cache: Rscript -e 'remotes::install_github("r-lib/asciicast")'
+
 matrix:
   include:
    - r: 3.2
