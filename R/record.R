@@ -51,7 +51,7 @@ record_commands <- function(lines, typing_speed, timeout, empty_wait,
     this_typing_speed <<- typing_speed[1]
   }
 
-  cat("--> ...\n")
+  messagex("--> ...")
   poll_wait(px, start_wait, output_callback)
 
   this_typing_speed <- typing_speed[1]
@@ -61,7 +61,7 @@ record_commands <- function(lines, typing_speed, timeout, empty_wait,
     expr <- next_expression()
     for (line in expr) {
       if (is_empty_line(line)) {
-        cat("--> ...\n")
+        messagex("--> ...")
         type_input(px, "\n", 0L, this_callback)
         poll_wait(px, empty_wait, this_callback)
         this_typing_speed <- typing_speed[1]
@@ -165,16 +165,16 @@ rtime <- function(n, speed){
 }
 
 type_input <- function(proc, text, speed, callback) {
-  cat("--> ")
+  messagex("--> ", appendLF = FALSE)
   if (speed == 0) {
     write_for_sure(proc, text)
-    cat(text)
+    messagex(text, appendLF = FALSE)
   } else {
     chars <- strsplit(text, "")[[1]]
     time <- rtime(length(chars), speed)
     for (i in seq_along(chars)) {
       write_for_sure(proc, chars[i])
-      cat(chars[i])
+      messagex(chars[i], appendLF = FALSE)
       poll_wait(proc, time[i], callback)
     }
   }
@@ -227,7 +227,7 @@ record_setup_subprocess <- function(proc, timeout, allow_errors, startup,
     }
     rm(env, data)
     startup
-    cat(id, " done", "\n", sep = "")
+    messagex(id, " done")
   }, substs)
 
   setupstr <- paste0(deparse(setup), "\n", collapse = "")

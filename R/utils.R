@@ -43,3 +43,38 @@ map_chr <- function(.x, .f, ...) {
 map_dbl <- function(.x, .f, ...) {
   vapply(.x, .f, FUN.VALUE = double(1), ...)
 }
+
+messagex <- function (..., domain = NULL, appendLF = TRUE) {
+  args <- list(...)
+  msg  <- .makeMessage(..., domain = domain, appendLF = appendLF)
+  call <- sys.call()
+  cond <- simpleMessage(msg, call)
+
+  defaultHandler <- function(c) {
+    output <- if (is_interactive()) stdout() else stderr()
+    cat(conditionMessage(c), file = output, sep = "")
+  }
+
+  withRestarts({
+    signalCondition(cond)
+    defaultHandler(cond)
+  }, muffleMessage = function() NULL)
+  invisible()
+}
+
+is_interactive <- function() {
+  opt <- getOption("rlib_interactive")
+  if (isTRUE(opt)) {
+    TRUE
+  } else if (identical(opt, FALSE)) {
+    FALSE
+  } else if (tolower(getOption("knitr.in.progress", "false")) == "true") {
+    FALSE
+  } else if (tolower(getOption("rstudio.notebook.executing", "false")) == "true") {
+    FALSE
+  } else if (identical(Sys.getenv("TESTTHAT"), "true")) {
+    FALSE
+  } else {
+    interactive()
+  }
+}
