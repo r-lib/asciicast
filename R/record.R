@@ -108,6 +108,7 @@ record_commands <- function(lines, typing_speed, timeout, empty_wait,
 #' @param record_env Environment variables to set for the R subprocess.
 #' @param echo Whether to echo the input to the terminal. If `FALSE`, then
 #'   only the output is shown.
+#' @return The R process, a [processx::process] object.
 #'
 #' @family asciicast functions
 #' @export

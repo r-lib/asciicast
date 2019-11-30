@@ -30,6 +30,9 @@ starting the recording.}
 \item{echo}{Whether to echo the input to the terminal. If \code{FALSE}, then
 only the output is shown.}
 }
+\value{
+The R process, a \link[processx:process]{processx::process} object.
+}
 \description{
 This is for expert use, if you want to run multiple recordings in the
 same process.
