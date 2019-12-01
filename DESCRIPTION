@@ -32,10 +32,8 @@ Imports:
     V8
 Suggests:
     cli,
-    covr,
     htmlwidgets,
     knitr,
-    testthat,
     rmarkdown
 Encoding: UTF-8
 LazyData: true
