@@ -15,12 +15,12 @@ To include a screencast in your document, you need to do two steps.
 The first is to initialize the asciicast engine:
 
 ````
-```{r echo = FALSE, results = "hide"}`r ''`
+```{r echo = FALSE, results = "hide", purl = FALSE}`r ''`
 asciicast::init_knitr_engine()
 ```
 ````
 
-```{r echo = FALSE, results = "hide"}
+```{r echo = FALSE, results = "hide", purl = FALSE}
 asciicast::init_knitr_engine()
 ```
 
