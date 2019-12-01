@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Gábor Csárdi" />
+
+
+<title>asciicast example vignette</title>
+
+<script>(function() {
+  // If window.HTMLWidgets is already defined, then use it; otherwise create a
+  // new object. This allows preceding code to set options that affect the
+  // initialization process (though none currently exist).
+  window.HTMLWidgets = window.HTMLWidgets || {};
+
+  // See if we're running in a viewer pane. If not, we're in a web browser.
+  var viewerMode = window.HTMLWidgets.viewerMode =
+      /\bviewer_pane=1\b/.test(window.location);
+
+  // See if we're running in Shiny mode. If not, it's a static document.
+  // Note that static widgets can appear in both Shiny and static modes, but
+  // obviously, Shiny widgets can only appear in Shiny apps/documents.
+  var shinyMode = window.HTMLWidgets.shinyMode =
+      typeof(window.Shiny) !== "undefined" && !!window.Shiny.outputBindings;
+
+  // We can't count on jQuery being available, so we implement our own
+  // version if necessary.
+  function querySelectorAll(scope, selector) {
+    if (typeof(jQuery) !== "undefined" && scope instanceof jQuery) {
+      return scope.find(selector);
+    }
+    if (scope.querySelectorAll) {
+      return scope.querySelectorAll(selector);
+    }
+  }
+
+  function asArray(value) {
+    if (value === null)
+      return [];
+    if ($.isArray(value))
+      return value;
+    return [value];
+  }
+
+  // Implement jQuery's extend
+  function extend(target /*, ... */) {
+    if (arguments.length == 1) {
+      return target;
+    }
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var prop in source) {
+        if (source.hasOwnProperty(prop)) {
+          target[prop] = source[prop];
+        }
+      }
+    }
+    return target;
+  }
+
+  // IE8 doesn't support Array.forEach.
+  function forEach(values, callback, thisArg) {
+    if (values.forEach) {
+      values.forEach(callback, thisArg);
+    } else {
+      for (var i = 0; i < values.length; i++) {
+        callback.call(thisArg, values[i], i, values);
+      }
+    }
+  }
+
+  // Replaces the specified method with the return value of funcSource.
+  //
+  // Note that funcSource should not BE the new method, it should be a function
+  // that RETURNS the new method. funcSource receives a single argument that is
+  // the overridden method, it can be called from the new method. The overridden
+  // method can be called like a regular function, it has the target permanently
+  // bound to it so "this" will work correctly.
+  function overrideMethod(target, methodName, funcSource) {
+    var superFunc = target[methodName] || function() {};
+    var superFuncBound = function() {
+      return superFunc.apply(target, arguments);
+    };
+    target[methodName] = funcSource(superFuncBound);
+  }
+
+  // Add a method to delegator that, when invoked, calls
+  // delegatee.methodName. If there is no such method on
+  // the delegatee, but there was one on delegator before
+  // delegateMethod was called, then the original version
+  // is invoked instead.
+  // For example:
+  //
+  // var a = {
+  //   method1: function() { console.log('a1'); }
+  //   method2: function() { console.log('a2'); }
+  // };
+  // var b = {
+  //   method1: function() { console.log('b1'); }
+  // };
+  // delegateMethod(a, b, "method1");
+  // delegateMethod(a, b, "method2");
+  // a.method1();
+  // a.method2();
+  //
+  // The output would be "b1", "a2".
+  function delegateMethod(delegator, delegatee, methodName) {
+    var inherited = delegator[methodName];
+    delegator[methodName] = function() {
+      var target = delegatee;
+      var method = delegatee[methodName];
+
+      // The method doesn't exist on the delegatee. Instead,
+      // call the method on the delegator, if it exists.
+      if (!method) {
+        target = delegator;
+        method = inherited;
+      }
+
+      if (method) {
+        return method.apply(target, arguments);
+      }
+    };
+  }
+
+  // Implement a vague facsimilie of jQuery's data method
+  function elementData(el, name, value) {
+    if (arguments.length == 2) {
+      return el["htmlwidget_data_" + name];
+    } else if (arguments.length == 3) {
+      el["htmlwidget_data_" + name] = value;
+      return el;
+    } else {
+      throw new Error("Wrong number of arguments for elementData: " +
+        arguments.length);
+    }
+  }
+
+  // http://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
+  function escapeRegExp(str) {
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+  }
+
+  function hasClass(el, className) {
+    var re = new RegExp("\\b" + escapeRegExp(className) + "\\b");
+    return re.test(el.className);
+  }
+
+  // elements - array (or array-like object) of HTML elements
+  // className - class name to test for
+  // include - if true, only return elements with given className;
+  //   if false, only return elements *without* given className
+  function filterByClass(elements, className, include) {
+    var results = [];
+    for (var i = 0; i < elements.length; i++) {
+      if (hasClass(elements[i], className) == include)
+        results.push(elements[i]);
+    }
+    return results;
+  }
+
+  function on(obj, eventName, func) {
+    if (obj.addEventListener) {
+      obj.addEventListener(eventName, func, false);
+    } else if (obj.attachEvent) {
+      obj.attachEvent(eventName, func);
+    }
+  }
+
+  function off(obj, eventName, func) {
+    if (obj.removeEventListener)
+      obj.removeEventListener(eventName, func, false);
+    else if (obj.detachEvent) {
+      obj.detachEvent(eventName, func);
+    }
+  }
+
+  // Translate array of values to top/right/bottom/left, as usual with
+  // the "padding" CSS property
+  // https://developer.mozilla.org/en-US/docs/Web/CSS/padding
+  function unpackPadding(value) {
+    if (typeof(value) === "number")
+      value = [value];
+    if (value.length === 1) {
+      return {top: value[0], right: value[0], bottom: value[0], left: value[0]};
+    }
+    if (value.length === 2) {
+      return {top: value[0], right: value[1], bottom: value[0], left: value[1]};
+    }
+    if (value.length === 3) {
+      return {top: value[0], right: value[1], bottom: value[2], left: value[1]};
+    }
+    if (value.length === 4) {
+      return {top: value[0], right: value[1], bottom: value[2], left: value[3]};
+    }
+  }
+
+  // Convert an unpacked padding object to a CSS value
+  function paddingToCss(paddingObj) {
+    return paddingObj.top + "px " + paddingObj.right + "px " + paddingObj.bottom + "px " + paddingObj.left + "px";
+  }
+
+  // Makes a number suitable for CSS
+  function px(x) {
+    if (typeof(x) === "number")
+      return x + "px";
+    else
+      return x;
+  }
+
+  // Retrieves runtime widget sizing information for an element.
+  // The return value is either null, or an object with fill, padding,
+  // defaultWidth, defaultHeight fields.
+  function sizingPolicy(el) {
+    var sizingEl = document.querySelector("script[data-for='" + el.id + "'][type='application/htmlwidget-sizing']");
+    if (!sizingEl)
+      return null;
+    var sp = JSON.parse(sizingEl.textContent || sizingEl.text || "{}");
+    if (viewerMode) {
+      return sp.viewer;
+    } else {
+      return sp.browser;
+    }
+  }
+
+  // @param tasks Array of strings (or falsy value, in which case no-op).
+  //   Each element must be a valid JavaScript expression that yields a
+  //   function. Or, can be an array of objects with "code" and "data"
+  //   properties; in this case, the "code" property should be a string
+  //   of JS that's an expr that yields a function, and "data" should be
+  //   an object that will be added as an additional argument when that
+  //   function is called.
+  // @param target The object that will be "this" for each function
+  //   execution.
+  // @param args Array of arguments to be passed to the functions. (The
+  //   same arguments will be passed to all functions.)
+  function evalAndRun(tasks, target, args) {
+    if (tasks) {
+      forEach(tasks, function(task) {
+        var theseArgs = args;
+        if (typeof(task) === "object") {
+          theseArgs = theseArgs.concat([task.data]);
+          task = task.code;
+        }
+        var taskFunc = eval("(" + task + ")");
+        if (typeof(taskFunc) !== "function") {
+          throw new Error("Task must be a function! Source:\n" + task);
+        }
+        taskFunc.apply(target, theseArgs);
+      });
+    }
+  }
+
+  function initSizing(el) {
+    var sizing = sizingPolicy(el);
+    if (!sizing)
+      return;
+
+    var cel = document.getElementById("htmlwidget_container");
+    if (!cel)
+      return;
+
+    if (typeof(sizing.padding) !== "undefined") {
+      document.body.style.margin = "0";
+      document.body.style.padding = paddingToCss(unpackPadding(sizing.padding));
+    }
+
+    if (sizing.fill) {
+      document.body.style.overflow = "hidden";
+      document.body.style.width = "100%";
+      document.body.style.height = "100%";
+      document.documentElement.style.width = "100%";
+      document.documentElement.style.height = "100%";
+      if (cel) {
+        cel.style.position = "absolute";
+        var pad = unpackPadding(sizing.padding);
+        cel.style.top = pad.top + "px";
+        cel.style.right = pad.right + "px";
+        cel.style.bottom = pad.bottom + "px";
+        cel.style.left = pad.left + "px";
+        el.style.width = "100%";
+        el.style.height = "100%";
+      }
+
+      return {
+        getWidth: function() { return cel.offsetWidth; },
+        getHeight: function() { return cel.offsetHeight; }
+      };
+
+    } else {
+      el.style.width = px(sizing.width);
+      el.style.height = px(sizing.height);
+
+      return {
+        getWidth: function() { return el.offsetWidth; },
+        getHeight: function() { return el.offsetHeight; }
+      };
+    }
+  }
+
+  // Default implementations for methods
+  var defaults = {
+    find: function(scope) {
+      return querySelectorAll(scope, "." + this.name);
+    },
+    renderError: function(el, err) {
+      var $el = $(el);
+
+      this.clearError(el);
+
+      // Add all these error classes, as Shiny does
+      var errClass = "shiny-output-error";
+      if (err.type !== null) {
+        // use the classes of the error condition as CSS class names
+        errClass = errClass + " " + $.map(asArray(err.type), function(type) {
+          return errClass + "-" + type;
+        }).join(" ");
+      }
+      errClass = errClass + " htmlwidgets-error";
+
+      // Is el inline or block? If inline or inline-block, just display:none it
+      // and add an inline error.
+      var display = $el.css("display");
+      $el.data("restore-display-mode", display);
+
+      if (display === "inline" || display === "inline-block") {
+        $el.hide();
+        if (err.message !== "") {
+          var errorSpan = $("<span>").addClass(errClass);
+          errorSpan.text(err.message);
+          $el.after(errorSpan);
+        }
+      } else if (display === "block") {
+        // If block, add an error just after the el, set visibility:none on the
+        // el, and position the error to be on top of the el.
+        // Mark it with a unique ID and CSS class so we can remove it later.
+        $el.css("visibility", "hidden");
+        if (err.message !== "") {
+          var errorDiv = $("<div>").addClass(errClass).css("position", "absolute")
+            .css("top", el.offsetTop)
+            .css("left", el.offsetLeft)
+            // setting width can push out the page size, forcing otherwise
+            // unnecessary scrollbars to appear and making it impossible for
+            // the element to shrink; so use max-width instead
+            .css("maxWidth", el.offsetWidth)
+            .css("height", el.offsetHeight);
+          errorDiv.text(err.message);
+          $el.after(errorDiv);
+
+          // Really dumb way to keep the size/position of the error in sync with
+          // the parent element as the window is resized or whatever.
+          var intId = setInterval(function() {
+            if (!errorDiv[0].parentElement) {
+              clearInterval(intId);
+              return;
+            }
+            errorDiv
+              .css("top", el.offsetTop)
+              .css("left", el.offsetLeft)
+              .css("maxWidth", el.offsetWidth)
+              .css("height", el.offsetHeight);
+          }, 500);
+        }
+      }
+    },
+    clearError: function(el) {
+      var $el = $(el);
+      var display = $el.data("restore-display-mode");
+      $el.data("restore-display-mode", null);
+
+      if (display === "inline" || display === "inline-block") {
+        if (display)
+          $el.css("display", display);
+        $(el.nextSibling).filter(".htmlwidgets-error").remove();
+      } else if (display === "block"){
+        $el.css("visibility", "inherit");
+        $(el.nextSibling).filter(".htmlwidgets-error").remove();
+      }
+    },
+    sizing: {}
+  };
+
+  // Called by widget bindings to register a new type of widget. The definition
+  // object can contain the following properties:
+  // - name (required) - A string indicating the binding name, which will be
+  //   used by default as the CSS classname to look for.
+  // - initialize (optional) - A function(el) that will be called once per
+  //   widget element; if a value is returned, it will be passed as the third
+  //   value to renderValue.
+  // - renderValue (required) - A function(el, data, initValue) that will be
+  //   called with data. Static contexts will cause this to be called once per
+  //   element; Shiny apps will cause this to be called multiple times per
+  //   element, as the data changes.
+  window.HTMLWidgets.widget = function(definition) {
+    if (!definition.name) {
+      throw new Error("Widget must have a name");
+    }
+    if (!definition.type) {
+      throw new Error("Widget must have a type");
+    }
+    // Currently we only support output widgets
+    if (definition.type !== "output") {
+      throw new Error("Unrecognized widget type '" + definition.type + "'");
+    }
+    // TODO: Verify that .name is a valid CSS classname
+
+    // Support new-style instance-bound definitions. Old-style class-bound
+    // definitions have one widget "object" per widget per type/class of
+    // widget; the renderValue and resize methods on such widget objects
+    // take el and instance arguments, because the widget object can't
+    // store them. New-style instance-bound definitions have one widget
+    // object per widget instance; the definition that's passed in doesn't
+    // provide renderValue or resize methods at all, just the single method
+    //   factory(el, width, height)
+    // which returns an object that has renderValue(x) and resize(w, h).
+    // This enables a far more natural programming style for the widget
+    // author, who can store per-instance state using either OO-style
+    // instance fields or functional-style closure variables (I guess this
+    // is in contrast to what can only be called C-style pseudo-OO which is
+    // what we required before).
+    if (definition.factory) {
+      definition = createLegacyDefinitionAdapter(definition);
+    }
+
+    if (!definition.renderValue) {
+      throw new Error("Widget must have a renderValue function");
+    }
+
+    // For static rendering (non-Shiny), use a simple widget registration
+    // scheme. We also use this scheme for Shiny apps/documents that also
+    // contain static widgets.
+    window.HTMLWidgets.widgets = window.HTMLWidgets.widgets || [];
+    // Merge defaults into the definition; don't mutate the original definition.
+    var staticBinding = extend({}, defaults, definition);
+    overrideMethod(staticBinding, "find", function(superfunc) {
+      return function(scope) {
+        var results = superfunc(scope);
+        // Filter out Shiny outputs, we only want the static kind
+        return filterByClass(results, "html-widget-output", false);
+      };
+    });
+    window.HTMLWidgets.widgets.push(staticBinding);
+
+    if (shinyMode) {
+      // Shiny is running. Register the definition with an output binding.
+      // The definition itself will not be the output binding, instead
+      // we will make an output binding object that delegates to the
+      // definition. This is because we foolishly used the same method
+      // name (renderValue) for htmlwidgets definition and Shiny bindings
+      // but they actually have quite different semantics (the Shiny
+      // bindings receive data that includes lots of metadata that it
+      // strips off before calling htmlwidgets renderValue). We can't
+      // just ignore the difference because in some widgets it's helpful
+      // to call this.renderValue() from inside of resize(), and if
+      // we're not delegating, then that call will go to the Shiny
+      // version instead of the htmlwidgets version.
+
+      // Merge defaults with definition, without mutating either.
+      var bindingDef = extend({}, defaults, definition);
+
+      // This object will be our actual Shiny binding.
+      var shinyBinding = new Shiny.OutputBinding();
+
+      // With a few exceptions, we'll want to simply use the bindingDef's
+      // version of methods if they are available, otherwise fall back to
+      // Shiny's defaults. NOTE: If Shiny's output bindings gain additional
+      // methods in the future, and we want them to be overrideable by
+      // HTMLWidget binding definitions, then we'll need to add them to this
+      // list.
+      delegateMethod(shinyBinding, bindingDef, "getId");
+      delegateMethod(shinyBinding, bindingDef, "onValueChange");
+      delegateMethod(shinyBinding, bindingDef, "onValueError");
+      delegateMethod(shinyBinding, bindingDef, "renderError");
+      delegateMethod(shinyBinding, bindingDef, "clearError");
+      delegateMethod(shinyBinding, bindingDef, "showProgress");
+
+      // The find, renderValue, and resize are handled differently, because we
+      // want to actually decorate the behavior of the bindingDef methods.
+
+      shinyBinding.find = function(scope) {
+        var results = bindingDef.find(scope);
+
+        // Only return elements that are Shiny outputs, not static ones
+        var dynamicResults = results.filter(".html-widget-output");
+
+        // It's possible that whatever caused Shiny to think there might be
+        // new dynamic outputs, also caused there to be new static outputs.
+        // Since there might be lots of different htmlwidgets bindings, we
+        // schedule execution for later--no need to staticRender multiple
+        // times.
+        if (results.length !== dynamicResults.length)
+          scheduleStaticRender();
+
+        return dynamicResults;
+      };
+
+      // Wrap renderValue to handle initialization, which unfortunately isn't
+      // supported natively by Shiny at the time of this writing.
+
+      shinyBinding.renderValue = function(el, data) {
+        Shiny.renderDependencies(data.deps);
+        // Resolve strings marked as javascript literals to objects
+        if (!(data.evals instanceof Array)) data.evals = [data.evals];
+        for (var i = 0; data.evals && i < data.evals.length; i++) {
+          window.HTMLWidgets.evaluateStringMember(data.x, data.evals[i]);
+        }
+        if (!bindingDef.renderOnNullValue) {
+          if (data.x === null) {
+            el.style.visibility = "hidden";
+            return;
+          } else {
+            el.style.visibility = "inherit";
+          }
+        }
+        if (!elementData(el, "initialized")) {
+          initSizing(el);
+
+          elementData(el, "initialized", true);
+          if (bindingDef.initialize) {
+            var result = bindingDef.initialize(el, el.offsetWidth,
+              el.offsetHeight);
+            elementData(el, "init_result", result);
+          }
+        }
+        bindingDef.renderValue(el, data.x, elementData(el, "init_result"));
+        evalAndRun(data.jsHooks.render, elementData(el, "init_result"), [el, data.x]);
+      };
+
+      // Only override resize if bindingDef implements it
+      if (bindingDef.resize) {
+        shinyBinding.resize = function(el, width, height) {
+          // Shiny can call resize before initialize/renderValue have been
+          // called, which doesn't make sense for widgets.
+          if (elementData(el, "initialized")) {
+            bindingDef.resize(el, width, height, elementData(el, "init_result"));
+          }
+        };
+      }
+
+      Shiny.outputBindings.register(shinyBinding, bindingDef.name);
+    }
+  };
+
+  var scheduleStaticRenderTimerId = null;
+  function scheduleStaticRender() {
+    if (!scheduleStaticRenderTimerId) {
+      scheduleStaticRenderTimerId = setTimeout(function() {
+        scheduleStaticRenderTimerId = null;
+        window.HTMLWidgets.staticRender();
+      }, 1);
+    }
+  }
+
+  // Render static widgets after the document finishes loading
+  // Statically render all elements that are of this widget's class
+  window.HTMLWidgets.staticRender = function() {
+    var bindings = window.HTMLWidgets.widgets || [];
+    forEach(bindings, function(binding) {
+      var matches = binding.find(document.documentElement);
+      forEach(matches, function(el) {
+        var sizeObj = initSizing(el, binding);
+
+        if (hasClass(el, "html-widget-static-bound"))
+          return;
+        el.className = el.className + " html-widget-static-bound";
+
+        var initResult;
+        if (binding.initialize) {
+          initResult = binding.initialize(el,
+            sizeObj ? sizeObj.getWidth() : el.offsetWidth,
+            sizeObj ? sizeObj.getHeight() : el.offsetHeight
+          );
+          elementData(el, "init_result", initResult);
+        }
+
+        if (binding.resize) {
+          var lastSize = {
+            w: sizeObj ? sizeObj.getWidth() : el.offsetWidth,
+            h: sizeObj ? sizeObj.getHeight() : el.offsetHeight
+          };
+          var resizeHandler = function(e) {
+            var size = {
+              w: sizeObj ? sizeObj.getWidth() : el.offsetWidth,
+              h: sizeObj ? sizeObj.getHeight() : el.offsetHeight
+            };
+            if (size.w === 0 && size.h === 0)
+              return;
+            if (size.w === lastSize.w && size.h === lastSize.h)
+              return;
+            lastSize = size;
+            binding.resize(el, size.w, size.h, initResult);
+          };
+
+          on(window, "resize", resizeHandler);
+
+          // This is needed for cases where we're running in a Shiny
+          // app, but the widget itself is not a Shiny output, but
+          // rather a simple static widget. One example of this is
+          // an rmarkdown document that has runtime:shiny and widget
+          // that isn't in a render function. Shiny only knows to
+          // call resize handlers for Shiny outputs, not for static
+          // widgets, so we do it ourselves.
+          if (window.jQuery) {
+            window.jQuery(document).on(
+              "shown.htmlwidgets shown.bs.tab.htmlwidgets shown.bs.collapse.htmlwidgets",
+              resizeHandler
+            );
+            window.jQuery(document).on(
+              "hidden.htmlwidgets hidden.bs.tab.htmlwidgets hidden.bs.collapse.htmlwidgets",
+              resizeHandler
+            );
+          }
+
+          // This is needed for the specific case of ioslides, which
+          // flips slides between display:none and display:block.
+          // Ideally we would not have to have ioslide-specific code
+          // here, but rather have ioslides raise a generic event,
+          // but the rmarkdown package just went to CRAN so the
+          // window to getting that fixed may be long.
+          if (window.addEventListener) {
+            // It's OK to limit this to window.addEventListener
+            // browsers because ioslides itself only supports
+            // such browsers.
+            on(document, "slideenter", resizeHandler);
+            on(document, "slideleave", resizeHandler);
+          }
+        }
+
+        var scriptData = document.querySelector("script[data-for='" + el.id + "'][type='application/json']");
+        if (scriptData) {
+          var data = JSON.parse(scriptData.textContent || scriptData.text);
+          // Resolve strings marked as javascript literals to objects
+          if (!(data.evals instanceof Array)) data.evals = [data.evals];
+          for (var k = 0; data.evals && k < data.evals.length; k++) {
+            window.HTMLWidgets.evaluateStringMember(data.x, data.evals[k]);
+          }
+          binding.renderValue(el, data.x, initResult);
+          evalAndRun(data.jsHooks.render, initResult, [el, data.x]);
+        }
+      });
+    });
+
+    invokePostRenderHandlers();
+  }
+
+  // Wait until after the document has loaded to render the widgets.
+  if (document.addEventListener) {
+    document.addEventListener("DOMContentLoaded", function() {
+      document.removeEventListener("DOMContentLoaded", arguments.callee, false);
+      window.HTMLWidgets.staticRender();
+    }, false);
+  } else if (document.attachEvent) {
+    document.attachEvent("onreadystatechange", function() {
+      if (document.readyState === "complete") {
+        document.detachEvent("onreadystatechange", arguments.callee);
+        window.HTMLWidgets.staticRender();
+      }
+    });
+  }
+
+
+  window.HTMLWidgets.getAttachmentUrl = function(depname, key) {
+    // If no key, default to the first item
+    if (typeof(key) === "undefined")
+      key = 1;
+
+    var link = document.getElementById(depname + "-" + key + "-attachment");
+    if (!link) {
+      throw new Error("Attachment " + depname + "/" + key + " not found in document");
+    }
+    return link.getAttribute("href");
+  };
+
+  window.HTMLWidgets.dataframeToD3 = function(df) {
+    var names = [];
+    var length;
+    for (var name in df) {
+        if (df.hasOwnProperty(name))
+            names.push(name);
+        if (typeof(df[name]) !== "object" || typeof(df[name].length) === "undefined") {
+            throw new Error("All fields must be arrays");
+        } else if (typeof(length) !== "undefined" && length !== df[name].length) {
+            throw new Error("All fields must be arrays of the same length");
+        }
+        length = df[name].length;
+    }
+    var results = [];
+    var item;
+    for (var row = 0; row < length; row++) {
+        item = {};
+        for (var col = 0; col < names.length; col++) {
+            item[names[col]] = df[names[col]][row];
+        }
+        results.push(item);
+    }
+    return results;
+  };
+
+  window.HTMLWidgets.transposeArray2D = function(array) {
+      if (array.length === 0) return array;
+      var newArray = array[0].map(function(col, i) {
+          return array.map(function(row) {
+              return row[i]
+          })
+      });
+      return newArray;
+  };
+  // Split value at splitChar, but allow splitChar to be escaped
+  // using escapeChar. Any other characters escaped by escapeChar
+  // will be included as usual (including escapeChar itself).
+  function splitWithEscape(value, splitChar, escapeChar) {
+    var results = [];
+    var escapeMode = false;
+    var currentResult = "";
+    for (var pos = 0; pos < value.length; pos++) {
+      if (!escapeMode) {
+        if (value[pos] === splitChar) {
+          results.push(currentResult);
+          currentResult = "";
+        } else if (value[pos] === escapeChar) {
+          escapeMode = true;
+        } else {
+          currentResult += value[pos];
+        }
+      } else {
+        currentResult += value[pos];
+        escapeMode = false;
+      }
+    }
+    if (currentResult !== "") {
+      results.push(currentResult);
+    }
+    return results;
+  }
+  // Function authored by Yihui/JJ Allaire
+  window.HTMLWidgets.evaluateStringMember = function(o, member) {
+    var parts = splitWithEscape(member, '.', '\\');
+    for (var i = 0, l = parts.length; i < l; i++) {
+      var part = parts[i];
+      // part may be a character or 'numeric' member name
+      if (o !== null && typeof o === "object" && part in o) {
+        if (i == (l - 1)) { // if we are at the end of the line then evalulate
+          if (typeof o[part] === "string")
+            o[part] = eval("(" + o[part] + ")");
+        } else { // otherwise continue to next embedded object
+          o = o[part];
+        }
+      }
+    }
+  };
+
+  // Retrieve the HTMLWidget instance (i.e. the return value of an
+  // HTMLWidget binding's initialize() or factory() function)
+  // associated with an element, or null if none.
+  window.HTMLWidgets.getInstance = function(el) {
+    return elementData(el, "init_result");
+  };
+
+  // Finds the first element in the scope that matches the selector,
+  // and returns the HTMLWidget instance (i.e. the return value of
+  // an HTMLWidget binding's initialize() or factory() function)
+  // associated with that element, if any. If no element matches the
+  // selector, or the first matching element has no HTMLWidget
+  // instance associated with it, then null is returned.
+  //
+  // The scope argument is optional, and defaults to window.document.
+  window.HTMLWidgets.find = function(scope, selector) {
+    if (arguments.length == 1) {
+      selector = scope;
+      scope = document;
+    }
+
+    var el = scope.querySelector(selector);
+    if (el === null) {
+      return null;
+    } else {
+      return window.HTMLWidgets.getInstance(el);
+    }
+  };
+
+  // Finds all elements in the scope that match the selector, and
+  // returns the HTMLWidget instances (i.e. the return values of
+  // an HTMLWidget binding's initialize() or factory() function)
+  // associated with the elements, in an array. If elements that
+  // match the selector don't have an associated HTMLWidget
+  // instance, the returned array will contain nulls.
+  //
+  // The scope argument is optional, and defaults to window.document.
+  window.HTMLWidgets.findAll = function(scope, selector) {
+    if (arguments.length == 1) {
+      selector = scope;
+      scope = document;
+    }
+
+    var nodes = scope.querySelectorAll(selector);
+    var results = [];
+    for (var i = 0; i < nodes.length; i++) {
+      results.push(window.HTMLWidgets.getInstance(nodes[i]));
+    }
+    return results;
+  };
+
+  var postRenderHandlers = [];
+  function invokePostRenderHandlers() {
+    while (postRenderHandlers.length) {
+      var handler = postRenderHandlers.shift();
+      if (handler) {
+        handler();
+      }
+    }
+  }
+
+  // Register the given callback function to be invoked after the
+  // next time static widgets are rendered.
+  window.HTMLWidgets.addPostRenderHandler = function(callback) {
+    postRenderHandlers.push(callback);
+  };
+
+  // Takes a new-style instance-bound definition, and returns an
+  // old-style class-bound definition. This saves us from having
+  // to rewrite all the logic in this file to accomodate both
+  // types of definitions.
+  function createLegacyDefinitionAdapter(defn) {
+    var result = {
+      name: defn.name,
+      type: defn.type,
+      initialize: function(el, width, height) {
+        return defn.factory(el, width, height);
+      },
+      renderValue: function(el, x, instance) {
+        return instance.renderValue(x);
+      },
+      resize: function(el, width, height, instance) {
+        return instance.resize(width, height);
+      }
+    };
+
+    if (defn.find)
+      result.find = defn.find;
+    if (defn.renderError)
+      result.renderError = defn.renderError;
+    if (defn.clearError)
+      result.clearError = defn.clearError;
+
+    return result;
+  }
+})();
+
+</script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">asciicast example vignette</h1>
+<h4 class="author">Gábor Csárdi</h4>
+
+
+
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>This is an example vignette for creating asciinema screen casts. To include a screencast in your document, you need to do two steps. The first is to initialize the asciicast engine:</p>
+<pre><code>```{r echo = FALSE, results = &quot;hide&quot;, purl = FALSE}
+asciicast::init_knitr_engine()
+```</code></pre>
+<p>After this, for the chunks that you want to display in an asciinema player, use the asciicast engine:</p>
+<pre><code>```{asciicast}
+# This will be an ascii cast
+# Let&#39;s evaluate some code
+head(mtcars)
+```</code></pre>
+<p>This will produce the following cast:</p>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTA0MCIgaGVpZ2h0PSIyNTcuMSI+PHJlY3Qgd2lkdGg9IjEwNDAiIGhlaWdodD0iMjU3LjEiIHJ4PSIwIiByeT0iMCIgY2xhc3M9ImEiPjwvcmVjdD48c3ZnIGhlaWdodD0iMjE3LjEwMDAwMDAwMDAwMDAyIiB2aWV3Qm94PSIwIDAgMTAwIDIxLjcxIiB3aWR0aD0iMTAwMCIgeD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHk9IjIwIj48c3R5bGU+LmF7ZmlsbDpyZ2IoNDAsNDUsNTMpfS5ie2ZvbnQtZmFtaWx5OidGaXJhIENvZGUnLE1vbmFjbyxDb25zb2xhcyxNZW5sbywnQml0c3RyZWFtIFZlcmEgU2FucyBNb25vJywnUG93ZXJsaW5lIFN5bWJvbHMnLG1vbm9zcGFjZX0uY3tmaWxsOnRyYW5zcGFyZW50fS5ke2ZpbGw6cmdiKDE4NSwxOTIsMjAzKTt3aGl0ZS1zcGFjZTpwcmV9PC9zdHlsZT48ZyBmb250LWZhbWlseT0iJiN4Mjc7RmlyYSBDb2RlJiN4Mjc7LE1vbmFjbyxDb25zb2xhcyxNZW5sbywmI3gyNztCaXRzdHJlYW0gVmVyYSBTYW5zIE1vbm8mI3gyNzssJiN4Mjc7UG93ZXJsaW5lIFN5bWJvbHMmI3gyNzssbW9ub3NwYWNlIiBmb250LXNpemU9IjEuNjciIGNsYXNzPSJiIj48ZGVmcz48c3ltYm9sIGlkPSJhIj48cmVjdCBoZWlnaHQ9IjExIiB3aWR0aD0iMTAwIiB4PSIwIiB5PSIwIiBjbGFzcz0iYyI+PC9yZWN0Pjwvc3ltYm9sPjwvZGVmcz48cmVjdCBoZWlnaHQ9IjIxLjcxIiB3aWR0aD0iMTAwIiBjbGFzcz0iYSI+PC9yZWN0PjxzdmcgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCI+PHN2ZyB4PSIwIj48dXNlIHhsaW5rOmhyZWY9IiNhIj48L3VzZT48dGV4dCB4PSIwIiB5PSIxLjY3IiBjbGFzcz0iZCI+IzwvdGV4dD48dGV4dCB4PSIyLjAwNCIgeT0iMS42NyIgY2xhc3M9ImQiPlRoaXM8L3RleHQ+PHRleHQgeD0iNy4wMTM5OTk5OTk5OTk5OTkiIHk9IjEuNjciIGNsYXNzPSJkIj53aWxsPC90ZXh0Pjx0ZXh0IHg9IjEyLjAyNCIgeT0iMS42NyIgY2xhc3M9ImQiPmJlPC90ZXh0Pjx0ZXh0IHg9IjE1LjAyOTk5OTk5OTk5OTk5OCIgeT0iMS42NyIgY2xhc3M9ImQiPmFuPC90ZXh0Pjx0ZXh0IHg9IjE4LjAzNTk5OTk5OTk5OTk5OCIgeT0iMS42NyIgY2xhc3M9ImQiPmFzY2lpPC90ZXh0Pjx0ZXh0IHg9IjI0LjA0OCIgeT0iMS42NyIgY2xhc3M9ImQiPmNhc3Q8L3RleHQ+PHRleHQgeD0iMCIgeT0iMy44NDA5OTk5OTk5OTk5OTk3IiBjbGFzcz0iZCI+Jmd0OzwvdGV4dD48dGV4dCB4PSIyLjAwNCIgeT0iMy44NDA5OTk5OTk5OTk5OTk3IiBjbGFzcz0iZCI+IzwvdGV4dD48dGV4dCB4PSI0LjAwOCIgeT0iMy44NDA5OTk5OTk5OTk5OTk3IiBjbGFzcz0iZCI+TGV0JiN4Mjc7czwvdGV4dD48dGV4dCB4PSIxMC4wMiIgeT0iMy44NDA5OTk5OTk5OTk5OTk3IiBjbGFzcz0iZCI+ZXZhbHVhdGU8L3RleHQ+PHRleHQgeD0iMTkuMDM3OTk5OTk5OTk5OTk3IiB5PSIzLjg0MDk5OTk5OTk5OTk5OTciIGNsYXNzPSJkIj5zb21lPC90ZXh0Pjx0ZXh0IHg9IjI0LjA0OCIgeT0iMy44NDA5OTk5OTk5OTk5OTk3IiBjbGFzcz0iZCI+Y29kZTwvdGV4dD48dGV4dCB4PSIwIiB5PSI2LjAxMiIgY2xhc3M9ImQiPiZndDs8L3RleHQ+PHRleHQgeD0iMi4wMDQiIHk9IjYuMDEyIiBjbGFzcz0iZCI+aGVhZChtdGNhcnMpPC90ZXh0Pjx0ZXh0IHg9IjE5LjAzNzk5OTk5OTk5OTk5NyIgeT0iOC4xODMiIGNsYXNzPSJkIj5tcGc8L3RleHQ+PHRleHQgeD0iMjMuMDQ1OTk5OTk5OTk5OTk2IiB5PSI4LjE4MyIgY2xhc3M9ImQiPmN5bDwvdGV4dD48dGV4dCB4PSIyNy4wNTQiIHk9IjguMTgzIiBjbGFzcz0iZCI+ZGlzcDwvdGV4dD48dGV4dCB4PSIzMy4wNjU5OTk5OTk5OTk5OTUiIHk9IjguMTgzIiBjbGFzcz0iZCI+aHA8L3RleHQ+PHRleHQgeD0iMzYuMDcxOTk5OTk5OTk5OTk2IiB5PSI4LjE4MyIgY2xhc3M9ImQiPmRyYXQ8L3RleHQ+PHRleHQgeD0iNDQuMDg3OTk5OTk5OTk5OTk0IiB5PSI4LjE4MyIgY2xhc3M9ImQiPnd0PC90ZXh0Pjx0ZXh0IHg9IjQ4LjA5NiIgeT0iOC4xODMiIGNsYXNzPSJkIj5xc2VjPC90ZXh0Pjx0ZXh0IHg9IjUzLjEwNTk5OTk5OTk5OTk5NSIgeT0iOC4xODMiIGNsYXNzPSJkIj52czwvdGV4dD48dGV4dCB4PSI1Ni4xMTE5OTk5OTk5OTk5OTUiIHk9IjguMTgzIiBjbGFzcz0iZCI+YW08L3RleHQ+PHRleHQgeD0iNTkuMTE3OTk5OTk5OTk5OTk1IiB5PSI4LjE4MyIgY2xhc3M9ImQiPmdlYXI8L3RleHQ+PHRleHQgeD0iNjQuMTI4IiB5PSI4LjE4MyIgY2xhc3M9ImQiPmNhcmI8L3RleHQ+PHRleHQgeD0iMCIgeT0iMTAuMzU0IiBjbGFzcz0iZCI+TWF6ZGE8L3RleHQ+PHRleHQgeD0iNi4wMTIiIHk9IjEwLjM1NCIgY2xhc3M9ImQiPlJYNDwvdGV4dD48dGV4dCB4PSIxOC4wMzU5OTk5OTk5OTk5OTgiIHk9IjEwLjM1NCIgY2xhc3M9ImQiPjIxLjA8L3RleHQ+PHRleHQgeD0iMjUuMDUiIHk9IjEwLjM1NCIgY2xhc3M9ImQiPjY8L3RleHQ+PHRleHQgeD0iMjguMDU1OTk5OTk5OTk5OTk3IiB5PSIxMC4zNTQiIGNsYXNzPSJkIj4xNjA8L3RleHQ+PHRleHQgeD0iMzIuMDY0IiB5PSIxMC4zNTQiIGNsYXNzPSJkIj4xMTA8L3RleHQ+PHRleHQgeD0iMzYuMDcxOTk5OTk5OTk5OTk2IiB5PSIxMC4zNTQiIGNsYXNzPSJkIj4zLjkwPC90ZXh0Pjx0ZXh0IHg9IjQxLjA4MiIgeT0iMTAuMzU0IiBjbGFzcz0iZCI+Mi42MjA8L3RleHQ+PHRleHQgeD0iNDcuMDkzOTk5OTk5OTk5OTk0IiB5PSIxMC4zNTQiIGNsYXNzPSJkIj4xNi40NjwvdGV4dD48dGV4dCB4PSI1NC4xMDgiIHk9IjEwLjM1NCIgY2xhc3M9ImQiPjA8L3RleHQ+PHRleHQgeD0iNTcuMTE0IiB5PSIxMC4zNTQiIGNsYXNzPSJkIj4xPC90ZXh0Pjx0ZXh0IHg9IjYyLjEyMzk5OTk5OTk5OTk5NSIgeT0iMTAuMzU0IiBjbGFzcz0iZCI+NDwvdGV4dD48dGV4dCB4PSI2Ny4xMzQiIHk9IjEwLjM1NCIgY2xhc3M9ImQiPjQ8L3RleHQ+PHRleHQgeD0iMCIgeT0iMTIuNTI1IiBjbGFzcz0iZCI+TWF6ZGE8L3RleHQ+PHRleHQgeD0iNi4wMTIiIHk9IjEyLjUyNSIgY2xhc3M9ImQiPlJYNDwvdGV4dD48dGV4dCB4PSIxMC4wMiIgeT0iMTIuNTI1IiBjbGFzcz0iZCI+V2FnPC90ZXh0Pjx0ZXh0IHg9IjE4LjAzNTk5OTk5OTk5OTk5OCIgeT0iMTIuNTI1IiBjbGFzcz0iZCI+MjEuMDwvdGV4dD48dGV4dCB4PSIyNS4wNSIgeT0iMTIuNTI1IiBjbGFzcz0iZCI+NjwvdGV4dD48dGV4dCB4PSIyOC4wNTU5OTk5OTk5OTk5OTciIHk9IjEyLjUyNSIgY2xhc3M9ImQiPjE2MDwvdGV4dD48dGV4dCB4PSIzMi4wNjQiIHk9IjEyLjUyNSIgY2xhc3M9ImQiPjExMDwvdGV4dD48dGV4dCB4PSIzNi4wNzE5OTk5OTk5OTk5OTYiIHk9IjEyLjUyNSIgY2xhc3M9ImQiPjMuOTA8L3RleHQ+PHRleHQgeD0iNDEuMDgyIiB5PSIxMi41MjUiIGNsYXNzPSJkIj4yLjg3NTwvdGV4dD48dGV4dCB4PSI0Ny4wOTM5OTk5OTk5OTk5OTQiIHk9IjEyLjUyNSIgY2xhc3M9ImQiPjE3LjAyPC90ZXh0Pjx0ZXh0IHg9IjU0LjEwOCIgeT0iMTIuNTI1IiBjbGFzcz0iZCI+MDwvdGV4dD48dGV4dCB4PSI1Ny4xMTQiIHk9IjEyLjUyNSIgY2xhc3M9ImQiPjE8L3RleHQ+PHRleHQgeD0iNjIuMTIzOTk5OTk5OTk5OTk1IiB5PSIxMi41MjUiIGNsYXNzPSJkIj40PC90ZXh0Pjx0ZXh0IHg9IjY3LjEzNCIgeT0iMTIuNTI1IiBjbGFzcz0iZCI+NDwvdGV4dD48dGV4dCB4PSIwIiB5PSIxNC42OTYiIGNsYXNzPSJkIj5EYXRzdW48L3RleHQ+PHRleHQgeD0iNy4wMTM5OTk5OTk5OTk5OTkiIHk9IjE0LjY5NiIgY2xhc3M9ImQiPjcxMDwvdGV4dD48dGV4dCB4PSIxOC4wMzU5OTk5OTk5OTk5OTgiIHk9IjE0LjY5NiIgY2xhc3M9ImQiPjIyLjg8L3RleHQ+PHRleHQgeD0iMjUuMDUiIHk9IjE0LjY5NiIgY2xhc3M9ImQiPjQ8L3RleHQ+PHRleHQgeD0iMjguMDU1OTk5OTk5OTk5OTk3IiB5PSIxNC42OTYiIGNsYXNzPSJkIj4xMDg8L3RleHQ+PHRleHQgeD0iMzMuMDY1OTk5OTk5OTk5OTk1IiB5PSIxNC42OTYiIGNsYXNzPSJkIj45MzwvdGV4dD48dGV4dCB4PSIzNi4wNzE5OTk5OTk5OTk5OTYiIHk9IjE0LjY5NiIgY2xhc3M9ImQiPjMuODU8L3RleHQ+PHRleHQgeD0iNDEuMDgyIiB5PSIxNC42OTYiIGNsYXNzPSJkIj4yLjMyMDwvdGV4dD48dGV4dCB4PSI0Ny4wOTM5OTk5OTk5OTk5OTQiIHk9IjE0LjY5NiIgY2xhc3M9ImQiPjE4LjYxPC90ZXh0Pjx0ZXh0IHg9IjU0LjEwOCIgeT0iMTQuNjk2IiBjbGFzcz0iZCI+MTwvdGV4dD48dGV4dCB4PSI1Ny4xMTQiIHk9IjE0LjY5NiIgY2xhc3M9ImQiPjE8L3RleHQ+PHRleHQgeD0iNjIuMTIzOTk5OTk5OTk5OTk1IiB5PSIxNC42OTYiIGNsYXNzPSJkIj40PC90ZXh0Pjx0ZXh0IHg9IjY3LjEzNCIgeT0iMTQuNjk2IiBjbGFzcz0iZCI+MTwvdGV4dD48dGV4dCB4PSIwIiB5PSIxNi44NjY5OTk5OTk5OTk5OTciIGNsYXNzPSJkIj5Ib3JuZXQ8L3RleHQ+PHRleHQgeD0iNy4wMTM5OTk5OTk5OTk5OTkiIHk9IjE2Ljg2Njk5OTk5OTk5OTk5NyIgY2xhc3M9ImQiPjQ8L3RleHQ+PHRleHQgeD0iOS4wMTc5OTk5OTk5OTk5OTkiIHk9IjE2Ljg2Njk5OTk5OTk5OTk5NyIgY2xhc3M9ImQiPkRyaXZlPC90ZXh0Pjx0ZXh0IHg9IjE4LjAzNTk5OTk5OTk5OTk5OCIgeT0iMTYuODY2OTk5OTk5OTk5OTk3IiBjbGFzcz0iZCI+MjEuNDwvdGV4dD48dGV4dCB4PSIyNS4wNSIgeT0iMTYuODY2OTk5OTk5OTk5OTk3IiBjbGFzcz0iZCI+NjwvdGV4dD48dGV4dCB4PSIyOC4wNTU5OTk5OTk5OTk5OTciIHk9IjE2Ljg2Njk5OTk5OTk5OTk5NyIgY2xhc3M9ImQiPjI1ODwvdGV4dD48dGV4dCB4PSIzMi4wNjQiIHk9IjE2Ljg2Njk5OTk5OTk5OTk5NyIgY2xhc3M9ImQiPjExMDwvdGV4dD48dGV4dCB4PSIzNi4wNzE5OTk5OTk5OTk5OTYiIHk9IjE2Ljg2Njk5OTk5OTk5OTk5NyIgY2xhc3M9ImQiPjMuMDg8L3RleHQ+PHRleHQgeD0iNDEuMDgyIiB5PSIxNi44NjY5OTk5OTk5OTk5OTciIGNsYXNzPSJkIj4zLjIxNTwvdGV4dD48dGV4dCB4PSI0Ny4wOTM5OTk5OTk5OTk5OTQiIHk9IjE2Ljg2Njk5OTk5OTk5OTk5NyIgY2xhc3M9ImQiPjE5LjQ0PC90ZXh0Pjx0ZXh0IHg9IjU0LjEwOCIgeT0iMTYuODY2OTk5OTk5OTk5OTk3IiBjbGFzcz0iZCI+MTwvdGV4dD48dGV4dCB4PSI1Ny4xMTQiIHk9IjE2Ljg2Njk5OTk5OTk5OTk5NyIgY2xhc3M9ImQiPjA8L3RleHQ+PHRleHQgeD0iNjIuMTIzOTk5OTk5OTk5OTk1IiB5PSIxNi44NjY5OTk5OTk5OTk5OTciIGNsYXNzPSJkIj4zPC90ZXh0Pjx0ZXh0IHg9IjY3LjEzNCIgeT0iMTYuODY2OTk5OTk5OTk5OTk3IiBjbGFzcz0iZCI+MTwvdGV4dD48dGV4dCB4PSIwIiB5PSIxOS4wMzc5OTk5OTk5OTk5OTciIGNsYXNzPSJkIj5Ib3JuZXQ8L3RleHQ+PHRleHQgeD0iNy4wMTM5OTk5OTk5OTk5OTkiIHk9IjE5LjAzNzk5OTk5OTk5OTk5NyIgY2xhc3M9ImQiPlNwb3J0YWJvdXQ8L3RleHQ+PHRleHQgeD0iMTguMDM1OTk5OTk5OTk5OTk4IiB5PSIxOS4wMzc5OTk5OTk5OTk5OTciIGNsYXNzPSJkIj4xOC43PC90ZXh0Pjx0ZXh0IHg9IjI1LjA1IiB5PSIxOS4wMzc5OTk5OTk5OTk5OTciIGNsYXNzPSJkIj44PC90ZXh0Pjx0ZXh0IHg9IjI4LjA1NTk5OTk5OTk5OTk5NyIgeT0iMTkuMDM3OTk5OTk5OTk5OTk3IiBjbGFzcz0iZCI+MzYwPC90ZXh0Pjx0ZXh0IHg9IjMyLjA2NCIgeT0iMTkuMDM3OTk5OTk5OTk5OTk3IiBjbGFzcz0iZCI+MTc1PC90ZXh0Pjx0ZXh0IHg9IjM2LjA3MTk5OTk5OTk5OTk5NiIgeT0iMTkuMDM3OTk5OTk5OTk5OTk3IiBjbGFzcz0iZCI+My4xNTwvdGV4dD48dGV4dCB4PSI0MS4wODIiIHk9IjE5LjAzNzk5OTk5OTk5OTk5NyIgY2xhc3M9ImQiPjMuNDQwPC90ZXh0Pjx0ZXh0IHg9IjQ3LjA5Mzk5OTk5OTk5OTk5NCIgeT0iMTkuMDM3OTk5OTk5OTk5OTk3IiBjbGFzcz0iZCI+MTcuMDI8L3RleHQ+PHRleHQgeD0iNTQuMTA4IiB5PSIxOS4wMzc5OTk5OTk5OTk5OTciIGNsYXNzPSJkIj4wPC90ZXh0Pjx0ZXh0IHg9IjU3LjExNCIgeT0iMTkuMDM3OTk5OTk5OTk5OTk3IiBjbGFzcz0iZCI+MDwvdGV4dD48dGV4dCB4PSI2Mi4xMjM5OTk5OTk5OTk5OTUiIHk9IjE5LjAzNzk5OTk5OTk5OTk5NyIgY2xhc3M9ImQiPjM8L3RleHQ+PHRleHQgeD0iNjcuMTM0IiB5PSIxOS4wMzc5OTk5OTk5OTk5OTciIGNsYXNzPSJkIj4yPC90ZXh0Pjx0ZXh0IHg9IjAiIHk9IjIxLjIwOTAwMDAwMDAwMDAwMyIgY2xhc3M9ImQiPlZhbGlhbnQ8L3RleHQ+PHRleHQgeD0iMTguMDM1OTk5OTk5OTk5OTk4IiB5PSIyMS4yMDkwMDAwMDAwMDAwMDMiIGNsYXNzPSJkIj4xOC4xPC90ZXh0Pjx0ZXh0IHg9IjI1LjA1IiB5PSIyMS4yMDkwMDAwMDAwMDAwMDMiIGNsYXNzPSJkIj42PC90ZXh0Pjx0ZXh0IHg9IjI4LjA1NTk5OTk5OTk5OTk5NyIgeT0iMjEuMjA5MDAwMDAwMDAwMDAzIiBjbGFzcz0iZCI+MjI1PC90ZXh0Pjx0ZXh0IHg9IjMyLjA2NCIgeT0iMjEuMjA5MDAwMDAwMDAwMDAzIiBjbGFzcz0iZCI+MTA1PC90ZXh0Pjx0ZXh0IHg9IjM2LjA3MTk5OTk5OTk5OTk5NiIgeT0iMjEuMjA5MDAwMDAwMDAwMDAzIiBjbGFzcz0iZCI+Mi43NjwvdGV4dD48dGV4dCB4PSI0MS4wODIiIHk9IjIxLjIwOTAwMDAwMDAwMDAwMyIgY2xhc3M9ImQiPjMuNDYwPC90ZXh0Pjx0ZXh0IHg9IjQ3LjA5Mzk5OTk5OTk5OTk5NCIgeT0iMjEuMjA5MDAwMDAwMDAwMDAzIiBjbGFzcz0iZCI+MjAuMjI8L3RleHQ+PHRleHQgeD0iNTQuMTA4IiB5PSIyMS4yMDkwMDAwMDAwMDAwMDMiIGNsYXNzPSJkIj4xPC90ZXh0Pjx0ZXh0IHg9IjU3LjExNCIgeT0iMjEuMjA5MDAwMDAwMDAwMDAzIiBjbGFzcz0iZCI+MDwvdGV4dD48dGV4dCB4PSI2Mi4xMjM5OTk5OTk5OTk5OTUiIHk9IjIxLjIwOTAwMDAwMDAwMDAwMyIgY2xhc3M9ImQiPjM8L3RleHQ+PHRleHQgeD0iNjcuMTM0IiB5PSIyMS4yMDkwMDAwMDAwMDAwMDMiIGNsYXNzPSJkIj4xPC90ZXh0Pjwvc3ZnPjwvc3ZnPjwvZz48L3N2Zz48L3N2Zz4=" /><!-- --></p>
+</div>
+<div id="changing-parameters" class="section level2">
+<h2>Changing parameters</h2>
+<p>You can include a DCF header in the asciicast, to set some parameters, e.g. the height of the widget.</p>
+<pre><code>```{asciicast}
+#&#39; Rows: 5
+
+# No much here, so avoid a big widget
+1 + 2 + 3 + 4
+```</code></pre>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTA0MCIgaGVpZ2h0PSIxNDguNTUiPjxyZWN0IHdpZHRoPSIxMDQwIiBoZWlnaHQ9IjE0OC41NSIgcng9IjAiIHJ5PSIwIiBjbGFzcz0iYSI+PC9yZWN0PjxzdmcgaGVpZ2h0PSIxMDguNTUwMDAwMDAwMDAwMDEiIHZpZXdCb3g9IjAgMCAxMDAgMTAuODU1IiB3aWR0aD0iMTAwMCIgeD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHk9IjIwIj48c3R5bGU+LmF7ZmlsbDpyZ2IoNDAsNDUsNTMpfS5ie2ZvbnQtZmFtaWx5OidGaXJhIENvZGUnLE1vbmFjbyxDb25zb2xhcyxNZW5sbywnQml0c3RyZWFtIFZlcmEgU2FucyBNb25vJywnUG93ZXJsaW5lIFN5bWJvbHMnLG1vbm9zcGFjZX0uY3tmaWxsOnRyYW5zcGFyZW50fS5ke2ZpbGw6cmdiKDE4NSwxOTIsMjAzKTt3aGl0ZS1zcGFjZTpwcmV9PC9zdHlsZT48ZyBmb250LWZhbWlseT0iJiN4Mjc7RmlyYSBDb2RlJiN4Mjc7LE1vbmFjbyxDb25zb2xhcyxNZW5sbywmI3gyNztCaXRzdHJlYW0gVmVyYSBTYW5zIE1vbm8mI3gyNzssJiN4Mjc7UG93ZXJsaW5lIFN5bWJvbHMmI3gyNzssbW9ub3NwYWNlIiBmb250LXNpemU9IjEuNjciIGNsYXNzPSJiIj48ZGVmcz48c3ltYm9sIGlkPSJhIj48cmVjdCBoZWlnaHQ9IjYiIHdpZHRoPSIxMDAiIHg9IjAiIHk9IjAiIGNsYXNzPSJjIj48L3JlY3Q+PC9zeW1ib2w+PC9kZWZzPjxyZWN0IGhlaWdodD0iMTAuODU1IiB3aWR0aD0iMTAwIiBjbGFzcz0iYSI+PC9yZWN0PjxzdmcgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCI+PHN2ZyB4PSIwIj48dXNlIHhsaW5rOmhyZWY9IiNhIj48L3VzZT48dGV4dCB4PSIwIiB5PSIxLjY3IiBjbGFzcz0iZCI+Jmd0OzwvdGV4dD48dGV4dCB4PSIyLjAwNCIgeT0iMS42NyIgY2xhc3M9ImQiPiM8L3RleHQ+PHRleHQgeD0iNC4wMDgiIHk9IjEuNjciIGNsYXNzPSJkIj5Ob3Q8L3RleHQ+PHRleHQgeD0iOC4wMTYiIHk9IjEuNjciIGNsYXNzPSJkIj5tdWNoPC90ZXh0Pjx0ZXh0IHg9IjEzLjAyNiIgeT0iMS42NyIgY2xhc3M9ImQiPmhlcmUsPC90ZXh0Pjx0ZXh0IHg9IjE5LjAzNzk5OTk5OTk5OTk5NyIgeT0iMS42NyIgY2xhc3M9ImQiPnNvPC90ZXh0Pjx0ZXh0IHg9IjIyLjA0Mzk5OTk5OTk5OTk5NyIgeT0iMS42NyIgY2xhc3M9ImQiPmF2b2lkPC90ZXh0Pjx0ZXh0IHg9IjI4LjA1NTk5OTk5OTk5OTk5NyIgeT0iMS42NyIgY2xhc3M9ImQiPmE8L3RleHQ+PHRleHQgeD0iMzAuMDU5OTk5OTk5OTk5OTk1IiB5PSIxLjY3IiBjbGFzcz0iZCI+YmlnPC90ZXh0Pjx0ZXh0IHg9IjM0LjA2OCIgeT0iMS42NyIgY2xhc3M9ImQiPndpZGdldDwvdGV4dD48dGV4dCB4PSIwIiB5PSIzLjg0MDk5OTk5OTk5OTk5OTciIGNsYXNzPSJkIj4mZ3Q7PC90ZXh0Pjx0ZXh0IHg9IjIuMDA0IiB5PSIzLjg0MDk5OTk5OTk5OTk5OTciIGNsYXNzPSJkIj4xPC90ZXh0Pjx0ZXh0IHg9IjQuMDA4IiB5PSIzLjg0MDk5OTk5OTk5OTk5OTciIGNsYXNzPSJkIj4rPC90ZXh0Pjx0ZXh0IHg9IjYuMDEyIiB5PSIzLjg0MDk5OTk5OTk5OTk5OTciIGNsYXNzPSJkIj4yPC90ZXh0Pjx0ZXh0IHg9IjguMDE2IiB5PSIzLjg0MDk5OTk5OTk5OTk5OTciIGNsYXNzPSJkIj4rPC90ZXh0Pjx0ZXh0IHg9IjEwLjAyIiB5PSIzLjg0MDk5OTk5OTk5OTk5OTciIGNsYXNzPSJkIj4zPC90ZXh0Pjx0ZXh0IHg9IjEyLjAyNCIgeT0iMy44NDA5OTk5OTk5OTk5OTk3IiBjbGFzcz0iZCI+KzwvdGV4dD48dGV4dCB4PSIxNC4wMjc5OTk5OTk5OTk5OTkiIHk9IjMuODQwOTk5OTk5OTk5OTk5NyIgY2xhc3M9ImQiPjQ8L3RleHQ+PHRleHQgeD0iMCIgeT0iNi4wMTIiIGNsYXNzPSJkIj5bMV08L3RleHQ+PHRleHQgeD0iNC4wMDgiIHk9IjYuMDEyIiBjbGFzcz0iZCI+MTA8L3RleHQ+PC9zdmc+PC9zdmc+PC9nPjwvc3ZnPjwvc3ZnPg==" /><!-- --></p>
+</div>
+<div id="caching" class="section level2">
+<h2>Caching</h2>
+<p>Recording the asciinema casts might take long, as everything happens in real time. You can tell knitr to cache the results, as long as the code of the chunk is unchanged. E.g. the previous chunk with caching looks like this:</p>
+<pre><code>```{asciicast cache = TRUE}
+#&#39; Rows: 5
+
+# Not much here, so avoid a big widget
+1 + 2 + 3 + 4
+```</code></pre>
+</div>
+<div id="casting-a-script-from-a-file" class="section level2">
+<h2>Casting a script from a file</h2>
+<p>It is possible to read the R code of a cast from a file, instead of specifying it in the code chunk. The advantage of this is that it is easier to use the code in the R scripts for other purposes.</p>
+<pre><code>```{asciicast code = readLines(&quot;../inst/examples/hello.R&quot;)}
+```</code></pre>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTA0MCIgaGVpZ2h0PSIyNTcuMSI+PHJlY3Qgd2lkdGg9IjEwNDAiIGhlaWdodD0iMjU3LjEiIHJ4PSIwIiByeT0iMCIgY2xhc3M9ImEiPjwvcmVjdD48c3ZnIGhlaWdodD0iMjE3LjEwMDAwMDAwMDAwMDAyIiB2aWV3Qm94PSIwIDAgMTAwIDIxLjcxIiB3aWR0aD0iMTAwMCIgeD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHk9IjIwIj48c3R5bGU+LmF7ZmlsbDpyZ2IoNDAsNDUsNTMpfS5ie2ZvbnQtZmFtaWx5OidGaXJhIENvZGUnLE1vbmFjbyxDb25zb2xhcyxNZW5sbywnQml0c3RyZWFtIFZlcmEgU2FucyBNb25vJywnUG93ZXJsaW5lIFN5bWJvbHMnLG1vbm9zcGFjZX0uY3tmaWxsOnRyYW5zcGFyZW50fS5ke2ZpbGw6cmdiKDE4NSwxOTIsMjAzKTt3aGl0ZS1zcGFjZTpwcmV9PC9zdHlsZT48ZyBmb250LWZhbWlseT0iJiN4Mjc7RmlyYSBDb2RlJiN4Mjc7LE1vbmFjbyxDb25zb2xhcyxNZW5sbywmI3gyNztCaXRzdHJlYW0gVmVyYSBTYW5zIE1vbm8mI3gyNzssJiN4Mjc7UG93ZXJsaW5lIFN5bWJvbHMmI3gyNzssbW9ub3NwYWNlIiBmb250LXNpemU9IjEuNjciIGNsYXNzPSJiIj48ZGVmcz48c3ltYm9sIGlkPSJhIj48cmVjdCBoZWlnaHQ9IjExIiB3aWR0aD0iMTAwIiB4PSIwIiB5PSIwIiBjbGFzcz0iYyI+PC9yZWN0Pjwvc3ltYm9sPjwvZGVmcz48cmVjdCBoZWlnaHQ9IjIxLjcxIiB3aWR0aD0iMTAwIiBjbGFzcz0iYSI+PC9yZWN0PjxzdmcgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCI+PHN2ZyB4PSIwIj48dXNlIHhsaW5rOmhyZWY9IiNhIj48L3VzZT48dGV4dCB4PSIwIiB5PSIxLjY3IiBjbGFzcz0iZCI+Jmd0OzwvdGV4dD48dGV4dCB4PSIyLjAwNCIgeT0iMS42NyIgY2xhc3M9ImQiPnByaW50KCZxdW90O0hlbGxvPC90ZXh0Pjx0ZXh0IHg9IjE1LjAyOTk5OTk5OTk5OTk5OCIgeT0iMS42NyIgY2xhc3M9ImQiPndvcmxkISZxdW90Oyk8L3RleHQ+PHRleHQgeD0iMCIgeT0iMy44NDA5OTk5OTk5OTk5OTk3IiBjbGFzcz0iZCI+WzFdPC90ZXh0Pjx0ZXh0IHg9IjQuMDA4IiB5PSIzLjg0MDk5OTk5OTk5OTk5OTciIGNsYXNzPSJkIj4mcXVvdDtIZWxsbzwvdGV4dD48dGV4dCB4PSIxMS4wMjE5OTk5OTk5OTk5OTgiIHk9IjMuODQwOTk5OTk5OTk5OTk5NyIgY2xhc3M9ImQiPndvcmxkISZxdW90OzwvdGV4dD48dGV4dCB4PSIwIiB5PSI2LjAxMiIgY2xhc3M9ImQiPiZndDs8L3RleHQ+PC9zdmc+PC9zdmc+PC9nPjwvc3ZnPjwvc3ZnPg==" /><!-- --></p>
+</div>
+<div id="using-svg-files" class="section level2">
+<h2>Using SVG files</h2>
+<p>Sometimes the asciinema player widget cannot be used, because custom JavaScript code is forbidden on the page. A common example is README (and other) markdown files on GitHub. acsiicast can also use animated SVG images instead of the asciinema player HTML widget. For this set the <code>asciicast_knitr_svg</code> option to <code>TRUE</code>, or the <code>ASCIICAST_KNITR_SVG</code> environment variable to <code>TRUE</code>. (The former takes precedence if both are set.)</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">options</span>(<span class="dt">asciicast_knitr_svg =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>```{asciicast}
+#&#39; Rows: 3
+cli::rule(center = &quot;TITLE&quot;, line = &quot;~-&quot;, line_col = &quot;blue&quot;)
+```</code></pre>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTA0MCIgaGVpZ2h0PSIxMDUuMTMiPjxyZWN0IHdpZHRoPSIxMDQwIiBoZWlnaHQ9IjEwNS4xMyIgcng9IjAiIHJ5PSIwIiBjbGFzcz0iYSI+PC9yZWN0PjxzdmcgaGVpZ2h0PSI2NS4xMyIgdmlld0JveD0iMCAwIDEwMCA2LjUxMyIgd2lkdGg9IjEwMDAiIHg9IjIwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB5PSIyMCI+PHN0eWxlPi5he2ZpbGw6cmdiKDQwLDQ1LDUzKX0uYntmb250LWZhbWlseTonRmlyYSBDb2RlJyxNb25hY28sQ29uc29sYXMsTWVubG8sJ0JpdHN0cmVhbSBWZXJhIFNhbnMgTW9ubycsJ1Bvd2VybGluZSBTeW1ib2xzJyxtb25vc3BhY2V9LmN7ZmlsbDp0cmFuc3BhcmVudH0uZHtmaWxsOnJnYigxODUsMTkyLDIwMyk7d2hpdGUtc3BhY2U6cHJlfS5le2ZpbGw6cmdiKDExMywxOTAsMjQyKTt3aGl0ZS1zcGFjZTpwcmV9PC9zdHlsZT48ZyBmb250LWZhbWlseT0iJiN4Mjc7RmlyYSBDb2RlJiN4Mjc7LE1vbmFjbyxDb25zb2xhcyxNZW5sbywmI3gyNztCaXRzdHJlYW0gVmVyYSBTYW5zIE1vbm8mI3gyNzssJiN4Mjc7UG93ZXJsaW5lIFN5bWJvbHMmI3gyNzssbW9ub3NwYWNlIiBmb250LXNpemU9IjEuNjciIGNsYXNzPSJiIj48ZGVmcz48c3ltYm9sIGlkPSJhIj48cmVjdCBoZWlnaHQ9IjQiIHdpZHRoPSIxMDAiIHg9IjAiIHk9IjAiIGNsYXNzPSJjIj48L3JlY3Q+PC9zeW1ib2w+PC9kZWZzPjxyZWN0IGhlaWdodD0iNi41MTMiIHdpZHRoPSIxMDAiIGNsYXNzPSJhIj48L3JlY3Q+PHN2ZyB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwIj48c3ZnIHg9IjAiPjx1c2UgeGxpbms6aHJlZj0iI2EiPjwvdXNlPjx0ZXh0IHg9IjAiIHk9IjEuNjciIGNsYXNzPSJkIj5jbGk6OnJ1bGUoY2VudGVyPC90ZXh0Pjx0ZXh0IHg9IjE3LjAzNCIgeT0iMS42NyIgY2xhc3M9ImQiPj08L3RleHQ+PHRleHQgeD0iMTkuMDM3OTk5OTk5OTk5OTk3IiB5PSIxLjY3IiBjbGFzcz0iZCI+JnF1b3Q7VElUTEUmcXVvdDssPC90ZXh0Pjx0ZXh0IHg9IjI4LjA1NTk5OTk5OTk5OTk5NyIgeT0iMS42NyIgY2xhc3M9ImQiPmxpbmU8L3RleHQ+PHRleHQgeD0iMzMuMDY1OTk5OTk5OTk5OTk1IiB5PSIxLjY3IiBjbGFzcz0iZCI+PTwvdGV4dD48dGV4dCB4PSIzNS4wNjk5OTk5OTk5OTk5OSIgeT0iMS42NyIgY2xhc3M9ImQiPiZxdW90O34tJnF1b3Q7LDwvdGV4dD48dGV4dCB4PSI0MS4wODIiIHk9IjEuNjciIGNsYXNzPSJkIj5saW5lX2NvbDwvdGV4dD48dGV4dCB4PSI1MC4xIiB5PSIxLjY3IiBjbGFzcz0iZCI+PTwvdGV4dD48dGV4dCB4PSI1Mi4xMDQiIHk9IjEuNjciIGNsYXNzPSJkIj4mcXVvdDtibHVlJnF1b3Q7KTwvdGV4dD48dGV4dCB4PSIwIiB5PSIzLjg0MDk5OTk5OTk5OTk5OTciIGNsYXNzPSJlIj5+LX4tfi1+LX4tfi1+LX4tfi1+LX4tfi1+LX4tfi1+LX4tfi1+PC90ZXh0Pjx0ZXh0IHg9IjM4LjA3NTk5OTk5OTk5OTk5IiB5PSIzLjg0MDk5OTk5OTk5OTk5OTciIGNsYXNzPSJkIj5USVRMRTwvdGV4dD48dGV4dCB4PSI0NC4wODc5OTk5OTk5OTk5OTQiIHk9IjMuODQwOTk5OTk5OTk5OTk5NyIgY2xhc3M9ImUiPn4tfi1+LX4tfi1+LX4tfi1+LX4tfi1+LX4tfi1+LX4tfi1+LTwvdGV4dD48dGV4dCB4PSIwIiB5PSI2LjAxMiIgY2xhc3M9ImQiPiZndDs8L3RleHQ+PC9zdmc+PC9zdmc+PC9nPjwvc3ZnPjwvc3ZnPg==" /><!-- --></p>
+<p>You can also use SVG files to show still screenshots, with the state of the screen after running the R code.</p>
+<pre><code>```{asciicast}
+#&#39; Rows: 3
+#&#39; At: end
+#&#39; Window: FALSE
+#&#39; Padding: 10
+#&#39; Cursor: FALSE
+cli::rule(center = &quot;TITLE&quot;, line = &quot;~-&quot;, line_col = &quot;blue&quot;)
+```</code></pre>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iODQwIiBoZWlnaHQ9Ijg1LjEzIj48cmVjdCB3aWR0aD0iODQwIiBoZWlnaHQ9Ijg1LjEzIiByeD0iMCIgcnk9IjAiIGNsYXNzPSJhIj48L3JlY3Q+PHN2ZyBoZWlnaHQ9IjY1LjEzIiB2aWV3Qm94PSIwIDAgODIgNi41MTMiIHdpZHRoPSI4MjAiIHg9IjEwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB5PSIxMCI+PHN0eWxlPi5he2ZpbGw6cmdiKDQwLDQ1LDUzKX0uYntmb250LWZhbWlseTonRmlyYSBDb2RlJyxNb25hY28sQ29uc29sYXMsTWVubG8sJ0JpdHN0cmVhbSBWZXJhIFNhbnMgTW9ubycsJ1Bvd2VybGluZSBTeW1ib2xzJyxtb25vc3BhY2V9LmN7ZmlsbDp0cmFuc3BhcmVudH0uZHtmaWxsOnJnYigxODUsMTkyLDIwMyk7d2hpdGUtc3BhY2U6cHJlfS5le2ZpbGw6cmdiKDExMywxOTAsMjQyKTt3aGl0ZS1zcGFjZTpwcmV9PC9zdHlsZT48ZyBmb250LWZhbWlseT0iJiN4Mjc7RmlyYSBDb2RlJiN4Mjc7LE1vbmFjbyxDb25zb2xhcyxNZW5sbywmI3gyNztCaXRzdHJlYW0gVmVyYSBTYW5zIE1vbm8mI3gyNzssJiN4Mjc7UG93ZXJsaW5lIFN5bWJvbHMmI3gyNzssbW9ub3NwYWNlIiBmb250LXNpemU9IjEuNjciIGNsYXNzPSJiIj48ZGVmcz48c3ltYm9sIGlkPSJhIj48cmVjdCBoZWlnaHQ9IjQiIHdpZHRoPSI4MiIgeD0iMCIgeT0iMCIgY2xhc3M9ImMiPjwvcmVjdD48L3N5bWJvbD48L2RlZnM+PHJlY3QgaGVpZ2h0PSI2LjUxMyIgd2lkdGg9IjgyIiBjbGFzcz0iYSI+PC9yZWN0PjxzdmcgeD0iMCIgeT0iMCIgd2lkdGg9IjgyIj48c3ZnIHg9IjAiPjx1c2UgeGxpbms6aHJlZj0iI2EiPjwvdXNlPjx0ZXh0IHg9IjAiIHk9IjEuNjciIGNsYXNzPSJkIj5jbGk6OnJ1bGUoY2VudGVyPC90ZXh0Pjx0ZXh0IHg9IjE3LjAzNCIgeT0iMS42NyIgY2xhc3M9ImQiPj08L3RleHQ+PHRleHQgeD0iMTkuMDM3OTk5OTk5OTk5OTk3IiB5PSIxLjY3IiBjbGFzcz0iZCI+JnF1b3Q7VElUTEUmcXVvdDssPC90ZXh0Pjx0ZXh0IHg9IjI4LjA1NTk5OTk5OTk5OTk5NyIgeT0iMS42NyIgY2xhc3M9ImQiPmxpbmU8L3RleHQ+PHRleHQgeD0iMzMuMDY1OTk5OTk5OTk5OTk1IiB5PSIxLjY3IiBjbGFzcz0iZCI+PTwvdGV4dD48dGV4dCB4PSIzNS4wNjk5OTk5OTk5OTk5OSIgeT0iMS42NyIgY2xhc3M9ImQiPiZxdW90O34tJnF1b3Q7LDwvdGV4dD48dGV4dCB4PSI0MS4wODIiIHk9IjEuNjciIGNsYXNzPSJkIj5saW5lX2NvbDwvdGV4dD48dGV4dCB4PSI1MC4xIiB5PSIxLjY3IiBjbGFzcz0iZCI+PTwvdGV4dD48dGV4dCB4PSI1Mi4xMDQiIHk9IjEuNjciIGNsYXNzPSJkIj4mcXVvdDtibHVlJnF1b3Q7KTwvdGV4dD48dGV4dCB4PSIwIiB5PSIzLjg0MDk5OTk5OTk5OTk5OTciIGNsYXNzPSJlIj5+LX4tfi1+LX4tfi1+LX4tfi1+LX4tfi1+LX4tfi1+LX4tfi1+PC90ZXh0Pjx0ZXh0IHg9IjM4LjA3NTk5OTk5OTk5OTk5IiB5PSIzLjg0MDk5OTk5OTk5OTk5OTciIGNsYXNzPSJkIj5USVRMRTwvdGV4dD48dGV4dCB4PSI0NC4wODc5OTk5OTk5OTk5OTQiIHk9IjMuODQwOTk5OTk5OTk5OTk5NyIgY2xhc3M9ImUiPn4tfi1+LX4tfi1+LX4tfi1+LX4tfi1+LX4tfi1+LX4tfi1+LTwvdGV4dD48dGV4dCB4PSIwIiB5PSI2LjAxMiIgY2xhc3M9ImQiPiZndDs8L3RleHQ+PC9zdmc+PC9zdmc+PC9nPjwvc3ZnPjwvc3ZnPg==" /><!-- --></p>
+</div>
+<div id="showing-the-code" class="section level2">
+<h2>Showing the code</h2>
+<p>By default asciicast code chunks do not show the code, i.e. the <code>echo</code> kntr option is set to <code>FALSE</code> for them. You can override this locally for a code chunk, or globally, by supplying the <code>echo</code> argument to <code>asciicast::init_knitr_engine()</code>.</p>
+<pre><code>```{asciicast echo = TRUE}
+#&#39; Rows: 5
+#&#39; At: end
+# This code will be shown
+head(mtcars, 3)
+```</code></pre>
+<p>This will show the code above the SVG image. The header is not shown:</p>
+<pre class="asciicast"><code># This code will be shown
+head(mtcars, 3)</code></pre>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTA0MCIgaGVpZ2h0PSIxNDguNTUiPjxyZWN0IHdpZHRoPSIxMDQwIiBoZWlnaHQ9IjE0OC41NSIgcng9IjAiIHJ5PSIwIiBjbGFzcz0iYSI+PC9yZWN0PjxzdmcgaGVpZ2h0PSIxMDguNTUwMDAwMDAwMDAwMDEiIHZpZXdCb3g9IjAgMCAxMDAgMTAuODU1IiB3aWR0aD0iMTAwMCIgeD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHk9IjIwIj48c3R5bGU+LmF7ZmlsbDpyZ2IoNDAsNDUsNTMpfS5ie2ZvbnQtZmFtaWx5OidGaXJhIENvZGUnLE1vbmFjbyxDb25zb2xhcyxNZW5sbywnQml0c3RyZWFtIFZlcmEgU2FucyBNb25vJywnUG93ZXJsaW5lIFN5bWJvbHMnLG1vbm9zcGFjZX0uY3tmaWxsOnRyYW5zcGFyZW50fS5ke2ZpbGw6cmdiKDE4NSwxOTIsMjAzKTt3aGl0ZS1zcGFjZTpwcmV9PC9zdHlsZT48ZyBmb250LWZhbWlseT0iJiN4Mjc7RmlyYSBDb2RlJiN4Mjc7LE1vbmFjbyxDb25zb2xhcyxNZW5sbywmI3gyNztCaXRzdHJlYW0gVmVyYSBTYW5zIE1vbm8mI3gyNzssJiN4Mjc7UG93ZXJsaW5lIFN5bWJvbHMmI3gyNzssbW9ub3NwYWNlIiBmb250LXNpemU9IjEuNjciIGNsYXNzPSJiIj48ZGVmcz48c3ltYm9sIGlkPSJhIj48cmVjdCBoZWlnaHQ9IjYiIHdpZHRoPSIxMDAiIHg9IjAiIHk9IjAiIGNsYXNzPSJjIj48L3JlY3Q+PC9zeW1ib2w+PC9kZWZzPjxyZWN0IGhlaWdodD0iMTAuODU1IiB3aWR0aD0iMTAwIiBjbGFzcz0iYSI+PC9yZWN0PjxzdmcgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCI+PHN2ZyB4PSIwIj48dXNlIHhsaW5rOmhyZWY9IiNhIj48L3VzZT48dGV4dCB4PSIwIiB5PSIxLjY3IiBjbGFzcz0iZCI+Jmd0OzwvdGV4dD48dGV4dCB4PSIyLjAwNCIgeT0iMS42NyIgY2xhc3M9ImQiPmhlYWQobXRjYXJzLDwvdGV4dD48dGV4dCB4PSIxNS4wMjk5OTk5OTk5OTk5OTgiIHk9IjEuNjciIGNsYXNzPSJkIj4zKTwvdGV4dD48dGV4dCB4PSIxNS4wMjk5OTk5OTk5OTk5OTgiIHk9IjMuODQwOTk5OTk5OTk5OTk5NyIgY2xhc3M9ImQiPm1wZzwvdGV4dD48dGV4dCB4PSIxOS4wMzc5OTk5OTk5OTk5OTciIHk9IjMuODQwOTk5OTk5OTk5OTk5NyIgY2xhc3M9ImQiPmN5bDwvdGV4dD48dGV4dCB4PSIyMy4wNDU5OTk5OTk5OTk5OTYiIHk9IjMuODQwOTk5OTk5OTk5OTk5NyIgY2xhc3M9ImQiPmRpc3A8L3RleHQ+PHRleHQgeD0iMjkuMDU4IiB5PSIzLjg0MDk5OTk5OTk5OTk5OTciIGNsYXNzPSJkIj5ocDwvdGV4dD48dGV4dCB4PSIzMi4wNjQiIHk9IjMuODQwOTk5OTk5OTk5OTk5NyIgY2xhc3M9ImQiPmRyYXQ8L3RleHQ+PHRleHQgeD0iNDAuMDgiIHk9IjMuODQwOTk5OTk5OTk5OTk5NyIgY2xhc3M9ImQiPnd0PC90ZXh0Pjx0ZXh0IHg9IjQ0LjA4Nzk5OTk5OTk5OTk5NCIgeT0iMy44NDA5OTk5OTk5OTk5OTk3IiBjbGFzcz0iZCI+cXNlYzwvdGV4dD48dGV4dCB4PSI0OS4wOTgiIHk9IjMuODQwOTk5OTk5OTk5OTk5NyIgY2xhc3M9ImQiPnZzPC90ZXh0Pjx0ZXh0IHg9IjUyLjEwNCIgeT0iMy44NDA5OTk5OTk5OTk5OTk3IiBjbGFzcz0iZCI+YW08L3RleHQ+PHRleHQgeD0iNTUuMTA5OTk5OTk5OTk5OTkiIHk9IjMuODQwOTk5OTk5OTk5OTk5NyIgY2xhc3M9ImQiPmdlYXI8L3RleHQ+PHRleHQgeD0iNjAuMTE5OTk5OTk5OTk5OTkiIHk9IjMuODQwOTk5OTk5OTk5OTk5NyIgY2xhc3M9ImQiPmNhcmI8L3RleHQ+PHRleHQgeD0iMCIgeT0iNi4wMTIiIGNsYXNzPSJkIj5NYXpkYTwvdGV4dD48dGV4dCB4PSI2LjAxMiIgeT0iNi4wMTIiIGNsYXNzPSJkIj5SWDQ8L3RleHQ+PHRleHQgeD0iMTQuMDI3OTk5OTk5OTk5OTk5IiB5PSI2LjAxMiIgY2xhc3M9ImQiPjIxLjA8L3RleHQ+PHRleHQgeD0iMjEuMDQxOTk5OTk5OTk5OTk4IiB5PSI2LjAxMiIgY2xhc3M9ImQiPjY8L3RleHQ+PHRleHQgeD0iMjQuMDQ4IiB5PSI2LjAxMiIgY2xhc3M9ImQiPjE2MDwvdGV4dD48dGV4dCB4PSIyOC4wNTU5OTk5OTk5OTk5OTciIHk9IjYuMDEyIiBjbGFzcz0iZCI+MTEwPC90ZXh0Pjx0ZXh0IHg9IjMyLjA2NCIgeT0iNi4wMTIiIGNsYXNzPSJkIj4zLjkwPC90ZXh0Pjx0ZXh0IHg9IjM3LjA3NCIgeT0iNi4wMTIiIGNsYXNzPSJkIj4yLjYyMDwvdGV4dD48dGV4dCB4PSI0My4wODYiIHk9IjYuMDEyIiBjbGFzcz0iZCI+MTYuNDY8L3RleHQ+PHRleHQgeD0iNTAuMSIgeT0iNi4wMTIiIGNsYXNzPSJkIj4wPC90ZXh0Pjx0ZXh0IHg9IjUzLjEwNTk5OTk5OTk5OTk5NSIgeT0iNi4wMTIiIGNsYXNzPSJkIj4xPC90ZXh0Pjx0ZXh0IHg9IjU4LjExNiIgeT0iNi4wMTIiIGNsYXNzPSJkIj40PC90ZXh0Pjx0ZXh0IHg9IjYzLjEyNTk5OTk5OTk5OTk5IiB5PSI2LjAxMiIgY2xhc3M9ImQiPjQ8L3RleHQ+PHRleHQgeD0iMCIgeT0iOC4xODMiIGNsYXNzPSJkIj5NYXpkYTwvdGV4dD48dGV4dCB4PSI2LjAxMiIgeT0iOC4xODMiIGNsYXNzPSJkIj5SWDQ8L3RleHQ+PHRleHQgeD0iMTAuMDIiIHk9IjguMTgzIiBjbGFzcz0iZCI+V2FnPC90ZXh0Pjx0ZXh0IHg9IjE0LjAyNzk5OTk5OTk5OTk5OSIgeT0iOC4xODMiIGNsYXNzPSJkIj4yMS4wPC90ZXh0Pjx0ZXh0IHg9IjIxLjA0MTk5OTk5OTk5OTk5OCIgeT0iOC4xODMiIGNsYXNzPSJkIj42PC90ZXh0Pjx0ZXh0IHg9IjI0LjA0OCIgeT0iOC4xODMiIGNsYXNzPSJkIj4xNjA8L3RleHQ+PHRleHQgeD0iMjguMDU1OTk5OTk5OTk5OTk3IiB5PSI4LjE4MyIgY2xhc3M9ImQiPjExMDwvdGV4dD48dGV4dCB4PSIzMi4wNjQiIHk9IjguMTgzIiBjbGFzcz0iZCI+My45MDwvdGV4dD48dGV4dCB4PSIzNy4wNzQiIHk9IjguMTgzIiBjbGFzcz0iZCI+Mi44NzU8L3RleHQ+PHRleHQgeD0iNDMuMDg2IiB5PSI4LjE4MyIgY2xhc3M9ImQiPjE3LjAyPC90ZXh0Pjx0ZXh0IHg9IjUwLjEiIHk9IjguMTgzIiBjbGFzcz0iZCI+MDwvdGV4dD48dGV4dCB4PSI1My4xMDU5OTk5OTk5OTk5OTUiIHk9IjguMTgzIiBjbGFzcz0iZCI+MTwvdGV4dD48dGV4dCB4PSI1OC4xMTYiIHk9IjguMTgzIiBjbGFzcz0iZCI+NDwvdGV4dD48dGV4dCB4PSI2My4xMjU5OTk5OTk5OTk5OSIgeT0iOC4xODMiIGNsYXNzPSJkIj40PC90ZXh0Pjx0ZXh0IHg9IjAiIHk9IjEwLjM1NCIgY2xhc3M9ImQiPkRhdHN1bjwvdGV4dD48dGV4dCB4PSI3LjAxMzk5OTk5OTk5OTk5OSIgeT0iMTAuMzU0IiBjbGFzcz0iZCI+NzEwPC90ZXh0Pjx0ZXh0IHg9IjE0LjAyNzk5OTk5OTk5OTk5OSIgeT0iMTAuMzU0IiBjbGFzcz0iZCI+MjIuODwvdGV4dD48dGV4dCB4PSIyMS4wNDE5OTk5OTk5OTk5OTgiIHk9IjEwLjM1NCIgY2xhc3M9ImQiPjQ8L3RleHQ+PHRleHQgeD0iMjQuMDQ4IiB5PSIxMC4zNTQiIGNsYXNzPSJkIj4xMDg8L3RleHQ+PHRleHQgeD0iMjkuMDU4IiB5PSIxMC4zNTQiIGNsYXNzPSJkIj45MzwvdGV4dD48dGV4dCB4PSIzMi4wNjQiIHk9IjEwLjM1NCIgY2xhc3M9ImQiPjMuODU8L3RleHQ+PHRleHQgeD0iMzcuMDc0IiB5PSIxMC4zNTQiIGNsYXNzPSJkIj4yLjMyMDwvdGV4dD48dGV4dCB4PSI0My4wODYiIHk9IjEwLjM1NCIgY2xhc3M9ImQiPjE4LjYxPC90ZXh0Pjx0ZXh0IHg9IjUwLjEiIHk9IjEwLjM1NCIgY2xhc3M9ImQiPjE8L3RleHQ+PHRleHQgeD0iNTMuMTA1OTk5OTk5OTk5OTk1IiB5PSIxMC4zNTQiIGNsYXNzPSJkIj4xPC90ZXh0Pjx0ZXh0IHg9IjU4LjExNiIgeT0iMTAuMzU0IiBjbGFzcz0iZCI+NDwvdGV4dD48dGV4dCB4PSI2My4xMjU5OTk5OTk5OTk5OSIgeT0iMTAuMzU0IiBjbGFzcz0iZCI+MTwvdGV4dD48dGV4dCB4PSIwIiB5PSIxMi41MjUiIGNsYXNzPSJkIj4mZ3Q7PC90ZXh0Pjwvc3ZnPjwvc3ZnPjwvZz48L3N2Zz48L3N2Zz4=" /><!-- --></p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -79,6 +79,12 @@ init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
   default_echo <- knitr::opts_chunk$get("echo")
   attr(default_echo, "asciicast") <- echo
   knitr::opts_chunk$set(echo = default_echo)
+  orig_hook <- knitr::knit_hooks$get("purl")
+  knitr::knit_hooks$set(purl = function(before, options, envir) {
+    if (!is.function(orig_hook)) return()
+    options$engine <- "R"
+    orig_hook(before, options, envir)
+  })
 
   do.call(base::options, options)
 
