@@ -1,7 +1,7 @@
 
 # # Standalone file for controlling when and where to build vignettes ----
 #
-# The canonical location of this file is in the processx package:
+# The canonical location of this file is in the asciicast package:
 # https://github.com/r-lib/asciicast/master/R/lazyrmd.R
 #
 # This standalone file provides a vignette builder that gives you more
@@ -40,7 +40,7 @@
 # 4. Also in `DESCRIPTION`, add knitr and rmarkdown to `Suggests`, if you
 #    want to install them automatically on the CI, and/or you want to
 #    build vignettes in CRAN.
-# 4. Change the builder of the vignettes that you want to build lazily,
+# 5. Change the builder of the vignettes that you want to build lazily,
 #    in the YAML header. E.g.:
 #    ```
 #    vignette: >
