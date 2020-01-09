@@ -100,9 +100,9 @@ poster <- function(poster_text = NULL, poster_frame = NULL, secs = 0 ) {
   }
 
   if (!identical(poster_text, "")) {
-    sprintf("data:text/plain,{%s}", poster_text)
+    sprintf("data:text/plain,%s", poster_text)
 
   } else {
-    sprintf("npt:{%d}", seconds)
+    sprintf("npt:%d", seconds)
   }
 }
