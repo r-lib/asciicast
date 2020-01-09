@@ -2,6 +2,9 @@ language: r
 sudo: false
 cache: packages
 
+r_github_packages:
+  r-lib/asciicast
+
 dist: xenial
 addons:
   apt:
@@ -9,9 +12,6 @@ addons:
       - sourceline: 'ppa:cran/v8'
     packages:
       - libnode-dev
-
-before_install:
-  - Rscript -e 'remotes::install_github("r-lib/asciicast")'
 
 matrix:
   include:
