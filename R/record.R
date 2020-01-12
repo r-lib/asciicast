@@ -227,7 +227,7 @@ record_setup_subprocess <- function(proc, timeout, allow_errors, startup,
     }
     rm(env, data)
     startup
-    messagex(id, " done")
+    cat(id, "done")
   }, substs)
 
   setupstr <- paste0(deparse(setup), "\n", collapse = "")
@@ -237,7 +237,7 @@ record_setup_subprocess <- function(proc, timeout, allow_errors, startup,
   ## proper callback
   done <- FALSE
   output <- ""
-  str <- paste0(id, " done\r\n")
+  str <- paste0(id, " done")
   wait_for_done(proc, timeout, function(out) {
     if (done) {
       if (!is.null(callback)) callback(out)
