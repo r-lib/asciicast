@@ -1,4 +1,3 @@
-
 record_commands <- function(lines, typing_speed, timeout, empty_wait,
                             allow_errors, start_wait, end_wait,
                             record_env, startup, echo, process) {
@@ -28,7 +27,8 @@ record_commands <- function(lines, typing_speed, timeout, empty_wait,
 
   next_expression <- function() {
     end <- next_line
-    while (end <= length(lines) && ! is_complete(lines[next_line:end])) {
+    while (end <= length(lines) &&
+           ! is_complete(lines[next_line:end], end == length(lines))) {
       end <- end + 1L
     }
 
@@ -73,7 +73,7 @@ record_commands <- function(lines, typing_speed, timeout, empty_wait,
         type_input(px, linenl, this_typing_speed, this_callback)
       }
     }
-    wait_for_done(px, timeout, this_callback)
+    if (!is_comment_expr(expr)) wait_for_done(px, timeout, this_callback)
   }
 
   if (is.null(process)) {
@@ -276,12 +276,13 @@ wait_for_done <- function(proc, timeout, callback = NULL) {
   processx::conn_read_lines(con, n = 1)
 }
 
-is_complete <- function(x) {
+is_complete <- function(x, end = FALSE) {
   err <- expr <- NULL
   tryCatch(expr <- parse(text = x), error = function(e) err <<- e)
 
-  # Might be an empty line or a comment, they are considered incomplete
-  if (length(expr) == 0) return(FALSE)
+  # Might be an empty line or a comment, they are considered incomplete,
+  # unless we are at the end of th einput
+  if (is.null(err) && length(expr) == 0) return(end)
 
   # Otherwise if no error, then we are good
   if (is.null(err)) return(TRUE)
@@ -292,4 +293,10 @@ is_complete <- function(x) {
   exp1 <- strsplit(exp, "\n")[[1]][[1]]
   msg <- sub("^.*:\\s*([^:]+)$",  "\\1", exp1, perl = TRUE)
   ! grepl(msg, conditionMessage(err), fixed = TRUE)
+}
+
+is_comment_expr <- function(x) {
+  err <- expr <- NULL
+  tryCatch(expr <- parse(text = x), error = function(e) err <<- e)
+  is.null(err) && length(expr) == 0
 }
