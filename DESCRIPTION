@@ -23,8 +23,10 @@ Description: Record 'asciicast' screen casts from R scripts. Convert them
     'knitr' engine, to embed 'ascii' screen casts in 'Rmarkdown' documents.
 License: MIT + file LICENSE
 Imports:
+    cli,
     curl,
     jsonlite,
+    magick (>= 2.2.9002),
     processx (>= 3.4.0),
     tibble,
     utils,
@@ -34,9 +36,12 @@ Suggests:
     cli,
     htmlwidgets,
     knitr,
-    rmarkdown
+    rmarkdown,
+    rstudioapi
+Remotes: ropensci/magick
 Encoding: UTF-8
 LazyData: true
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.0.1.9000
+Roxygen: { loadNamespace("roxygenlabs"); list(markdown = TRUE) }
+RoxygenNote: 7.0.2.9000
 VignetteBuilder: asciicast
+SystemRequirements: phantom.js for convertion casts to GIFs.

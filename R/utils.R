@@ -78,3 +78,37 @@ is_interactive <- function() {
     interactive()
   }
 }
+
+is_windows <- function() {
+  .Platform$OS.type == "windows"
+}
+
+is_macos <- function() {
+  Sys.info()[["sysname"]] == "Darwin"
+}
+
+is_linux <- function() {
+  Sys.info()[["sysname"]] == "Linux"
+}
+
+dir_exists <- function(path) {
+  utils::file_test("-d", path)
+}
+
+try_silently <- function(expr) {
+  try(expr, silent = TRUE)
+}
+
+#' @importFrom cli cli_process_start cli_process_done
+
+with_cli_process <- function(msg, expr, ...) {
+  proc <- cli_process_start(msg, ...)
+  ret <- withVisible(expr)
+  cli_process_done(proc)
+  if (ret$visible) ret$value else invisible(ret$value)
+}
+
+file_ext <- function(x) {
+  pos <- regexpr("(\\.[[:alnum:]]+)$", x)
+  ifelse(pos > -1L, substring(x, pos + 1L), "")
+}
