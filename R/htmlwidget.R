@@ -47,8 +47,8 @@ asciinema_player <- function(cast, start_at = 0, rows = NULL, cols = NULL,
                              html_height = NULL, html_width = NULL,
                              element_id = NULL) {
 
-  rows <- rows %||% cast$config$rows %||% 24
-  cols <- cols %||% cast$config$cols %||% 80
+  rows <- rows %||% cast$config$rows %||% cast$config$height %||% 24
+  cols <- cols %||% cast$config$cols %||% cast$config$width %||% 80
   title <- title %||% cast$config$title %||% ""
   poster_frame <- poster_frame %||% cast$config$poster_frame %||% ""
   poster_text <- poster_text %||% cast$config$poster_text %||% title
