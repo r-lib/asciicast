@@ -69,6 +69,9 @@ write_gif <- function(cast, path, show = NULL, cols = NULL,
     "page",
     "asciicast2gif.html",
     package = "asciicast")
+  if (identical(rows, "auto")) {
+    rows <- sum(unlist(strsplit(cast$output$data, "")) == "\n")
+  }
   args <- c(rndr_js, rndr_html, cols %||% frames$width,
             rows %||% frames$height,
             theme %||% cast$config$theme %||% "asciinema", scale)
