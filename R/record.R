@@ -1,6 +1,6 @@
 record_commands <- function(lines, typing_speed, timeout, empty_wait,
                             allow_errors, start_wait, end_wait,
-                            record_env, startup, echo, process) {
+                            record_env, startup, echo, speed, process) {
 
   next_line <- 1L
   output <- list()
@@ -85,8 +85,13 @@ record_commands <- function(lines, typing_speed, timeout, empty_wait,
 
   output <- append(output, list(list(Sys.time() - start + end_wait, "")))
 
+  time <- as.double(vapply(output, "[[", double(1), 1), units = "secs")
+  if (speed != 1.0) {
+    time <- (time - time[1]) / speed + time[1]
+  }
+
   tibble::tibble(
-    time = as.double(vapply(output, "[[", double(1), 1), units = "secs"),
+    time = time,
     type = "o",
     data = vapply(output, "[[", character(1), 2))
 }

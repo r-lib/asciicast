@@ -31,6 +31,8 @@
 #'   starting the recording.
 #' @param echo Whether to echo the input to the terminal. If `FALSE`, then
 #'   only the output is shown.
+#' @param speed Rescale the speed of the recorded cast with this factor.
+#'   The delay of the first frame is kept constant.
 #' @param process A processx subprocess to run the cast in. By default a
 #'   new subprocess is started. You can reuse a process by calling
 #'   [asciicast_start_process()] first, and supplying the returned process
@@ -51,7 +53,7 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
                    env = NULL, idle_time_limit = NULL, allow_errors = TRUE,
                    timeout = NULL, start_wait = NULL, end_wait = NULL,
                    record_env = NULL, startup = NULL, echo = TRUE,
-                   process = NULL) {
+                   speed = NULL, process = NULL) {
 
   lines <- readLines(script)
   parsed <- parse_header(lines)
@@ -63,6 +65,7 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
   start_wait <- as.numeric(get_param("start_wait", 0L, header))
   end_wait <- as.numeric(get_param("end_wait", 5L, header))
   timeout <- as.numeric(get_param("timeout", 10, header))
+  speed <- as.numeric(get_param("speed", 1.0, header))
   if (is.null(record_env) && !is.null(header$record_env)) {
     record_env <- eval(parse(text = header$record_env))
   }
@@ -87,7 +90,7 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
 
   output <- record_commands(body, typing_speed, timeout, empty_wait,
                             allow_errors, start_wait, end_wait, record_env,
-                            startup, echo, process)
+                            startup, echo, speed, process)
 
   if (rows == "auto") {
     plain <- cli::ansi_strip(paste0(output$data, collapse = ""))
