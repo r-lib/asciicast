@@ -23,6 +23,7 @@ Description: Record 'asciicast' screen casts from R scripts. Convert them
     'knitr' engine, to embed 'ascii' screen casts in 'Rmarkdown' documents.
 License: MIT + file LICENSE
 Imports:
+    cli,
     curl,
     jsonlite,
     processx (>= 3.4.0),
@@ -31,7 +32,6 @@ Imports:
     uuid,
     V8
 Suggests:
-    cli,
     htmlwidgets,
     knitr,
     rmarkdown

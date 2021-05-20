@@ -90,7 +90,19 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
                             startup, echo, process)
 
   if (rows == "auto") {
-    rows <- sum(unlist(strsplit(output$data, "")) == "\n")
+    plain <- cli::ansi_strip(paste0(output$data, collapse = ""))
+
+    # The show/hide cursor sequences
+    plain <- gsub("\033[?25h", "", plain, fixed = TRUE)
+    plain <- gsub("\033[?25l", "", plain, fixed = TRUE)
+
+    # Count the \n characters. If the last character is not \n then
+    # we also want to print the last incomplete line
+    chrs <- charToRaw(plain)
+    rows <- sum(chrs == charToRaw("\n"))
+    if (length(chrs) == 0 || chrs[length(chrs)] != charToRaw("\n")) {
+      rows <- rows + 1L
+    }
   }
 
   header$rows <- header$height <- as.integer(rows)
