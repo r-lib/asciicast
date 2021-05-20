@@ -68,9 +68,11 @@ init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
                               timeout = 10, allow_errors = TRUE,
                               startup = NULL, record_env = NULL,
                               echo_input = TRUE,
-                              options = asciicast_knitr_options()) {
+                              options = list()) {
 
+  options <- utils::modifyList(asciicast_knitr_options(), options)
   knitr::knit_engines$set("asciicast" = eng_asciicast)
+  knitr::knit_engines$set("asciicastcpp11" = eng_asciicastcpp11)
   knitr::cache_engines$set("asciicast" = cache_eng_asciicast)
 
   deps <- htmlwidgets::getDependency("asciinema_player", "asciicast")
@@ -117,6 +119,52 @@ eng_asciicast <- function(options) {
   if (options$cache > 0) cache_asciicast(cast, options$hash)
 
   eng_asciicast_print(cast, options)
+}
+
+eng_asciicastcpp11 <- function(options) {
+  if (options$eval) {
+    # separate the headers
+    ishead <- grepl("^#include", options$code)
+    headers <- options$code[ishead]
+    options$code <- options$code[!ishead]
+
+    cast_file <- tempfile()
+    cpp11_file <- tempfile(fileext = ".cc")
+    on.exit(unlink(c(cast_file, cpp11_file)), add = TRUE)
+
+    writeLines(c(
+      "#include \"cpp11.hpp\"",
+      "using namespace cpp11;",
+      "namespace writable = cpp11::writable;",
+      getOption("asciicast_cpp11_header"),
+      headers,
+      getOption("asciicast_cpp11_linkingto"),
+      "[[cpp11::register]]",
+      options$code
+    ), cpp11_file, useBytes = TRUE)
+
+    code <- deparse(bquote({
+      cpp11::cpp_source(
+        file = .(cpp11_file),
+        env = .GlobalEnv,
+        clean = .(options$clean %||% TRUE),
+        quiet = .(options$quiet %||% FALSE),
+        cxx_std = .(options$cxx_std %||% Sys.getenv("CXX_STD", "CXX11"))
+      )
+    }))
+    writeLines(c(code, "\n"), cast_file, useBytes = TRUE)
+
+    proc <- .GlobalEnv$.knitr_asciicast_process
+    if (!is.null(proc) && !proc$is_alive()) {
+      stop("asciicast subprocess crashed")
+    }
+
+    cast <- record(cast_file, process = proc)
+
+    # Change the engine to cpp so that code formatting works
+    options$engine <- "cpp"
+    knitr::engine_output(options, options$code, "")
+  }
 }
 
 cache_eng_asciicast <- function(options) {

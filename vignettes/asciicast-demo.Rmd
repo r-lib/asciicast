@@ -168,3 +168,44 @@ This will show the code above the SVG image. The header is not shown:
 # This code will be shown
 head(mtcars, 3)
 ```
+
+## cpp11 integration
+
+Use the `asciicastcpp11` knitr engine to compile cpp11 functions in the
+asciicast subprocess:
+
+````
+```{asciicastcpp11}`r ''`
+double mean_cpp(doubles x) {
+  int n = x.size();
+  double total = 0;
+  for (double value : x) {
+     total += value;
+  }
+  return total / n;
+}
+```
+````
+
+```{asciicastcpp11, echo = FALSE}
+double mean_cpp(doubles x) {
+  int n = x.size();
+  double total = 0;
+  for (double value : x) {
+     total += value;
+  }
+  return total / n;
+}
+```
+
+Then you can use these functions in regular `asciicast` chunks:
+
+````
+```{asciicast}`r ''`
+mean_cpp(1:10000*1.0)
+```
+````
+
+```{asciicast}
+mean_cpp(1:10000*1.0)
+```
