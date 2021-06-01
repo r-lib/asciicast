@@ -118,6 +118,7 @@ eng_asciicast <- function(options) {
 
   if (options$cache > 0) cache_asciicast(cast, options$hash)
 
+  options$engine <- "r"
   eng_asciicast_print(cast, options)
 }
 
