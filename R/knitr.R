@@ -75,8 +75,10 @@ init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
   knitr::knit_engines$set("asciicastcpp11" = eng_asciicastcpp11)
   knitr::cache_engines$set("asciicast" = cache_eng_asciicast)
 
-  deps <- htmlwidgets::getDependency("asciinema_player", "asciicast")
-  knitr::knit_meta_add(deps)
+  if (!eng_asciicast_is_svg()) {
+    deps <- htmlwidgets::getDependency("asciinema_player", "asciicast")
+    knitr::knit_meta_add(deps)
+  }
 
   default_echo <- knitr::opts_chunk$get("echo")
   attr(default_echo, "asciicast") <- echo
