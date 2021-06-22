@@ -279,6 +279,18 @@ wait_for_done <- function(proc, timeout, callback = NULL) {
   if (ready["process"] != "ready") stop("R subprocess did not respond")
   con <- proc$get_poll_connection()
   processx::conn_read_lines(con, n = 1)
+
+  # Might still have some output coming, from exit handlers that are called
+  # after the error handlers
+  while (1) {
+    ready <- proc$poll_io(100)
+    if (ready["output"] == "ready") {
+      out <- proc$read_output()
+      if (!is.null(callback)) callback(out)
+    } else {
+      break
+    }
+  }
 }
 
 is_complete <- function(x, end = FALSE) {
