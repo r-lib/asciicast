@@ -96,7 +96,11 @@ init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
     proc <- asciicast_start_process(timeout, allow_errors, startup,
                                     record_env, echo_input)
     oldproc <- .GlobalEnv$.knitr_asciicast_process
-    if (!is.null(oldproc)) oldproc$kill()
+    if (!is.null(oldproc)) {
+      close(oldproc$get_input_connection())
+      close(oldproc$get_output_connection())
+      oldproc$kill()
+    }
     .GlobalEnv$.knitr_asciicast_process <- proc
   }
 }
