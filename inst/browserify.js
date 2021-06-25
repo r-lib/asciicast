@@ -7,3 +7,4 @@ global.document = dom.window.document;
 global.navigator = global.window.navigator;
 
 global.svgterm = require('.');
+global.loadcast = require('load-asciicast').load;

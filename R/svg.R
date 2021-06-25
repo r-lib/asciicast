@@ -34,14 +34,7 @@ write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
                       padding = NULL, padding_x = NULL, padding_y = NULL,
                       omit_last_line = NULL, theme = NULL) {
 
-  check_svg_support()
-
-  ct <- v8(c("global", "window", "document"))
-  ct$assign("setTimeout", JS("function(callback, after) { callback(); }"))
-  ct$assign("clearTimeout", JS("function(timer) { }"))
-  jsfile <- gzfile(system.file("svg-term.js.gz", package = "asciicast"))
-  on.exit(close(jsfile), add = TRUE)
-  ct$source(jsfile)
+  ct <- load_svg_term()
 
   window <- as.logical(get_param("window", TRUE))
   start_at <- get_param("start_at")

@@ -193,6 +193,8 @@ lazyrmd <- local({
 
   #' If NOT_CRAN is set to a true value, then we are local
   #' Otherwise we are local if not running inside `R CMD check`.
+  #'
+  #' @noRd
 
   is_local <- function() {
     if (isTRUE(as.logical(Sys.getenv("NOT_CRAN")))) return(TRUE)
