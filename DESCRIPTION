@@ -33,7 +33,6 @@ Imports:
     uuid,
     V8
 Suggests:
-    cli,
     htmlwidgets,
     knitr,
     rmarkdown,
