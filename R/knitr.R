@@ -206,7 +206,7 @@ cache_asciicast <- function(cast, path) {
 
 asciicast_knitr_svg <- function(cast, options) {
   filename <- file.path(
-    knitr::opts_chunk$get("fig.path"),
+    knitr::opts_current$get("fig.path"),
     paste0(options$label, ".svg"))
   mkdirp(dirname(filename))
 
@@ -218,6 +218,9 @@ asciicast_knitr_svg <- function(cast, options) {
     write_svg(cast, filename)
     if (options$cache > 0) file.copy(filename, cached)
   }
+
+  fig_proc <- knitr::opts_current$get("fig.process")
+  if (!is.null(fig_proc)) filename <- fig_proc(filename)
 
   knitr::knit_hooks$get('plot')(filename, options)
 }
