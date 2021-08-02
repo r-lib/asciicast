@@ -115,7 +115,9 @@ eng_asciicast <- function(options) {
   on.exit(unlink(cast_file), add = TRUE)
   writeLines(options$code %||% "", cast_file, useBytes = TRUE)
 
-  if (options$echo) options$code <- parse_header(options$code)$body
+  if (!identical(options$echo, FALSE)) {
+    options$code <- parse_header(options$code)$body
+  }
   proc <- .GlobalEnv$.knitr_asciicast_process
   if (!is.null(proc) && !proc$is_alive()) {
     stop("asciicast subprocess crashed")
