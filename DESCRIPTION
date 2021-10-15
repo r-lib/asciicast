@@ -40,3 +40,5 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.0.1.9000
 VignetteBuilder: asciicast
+URL: https://github.com/r-lib/asciicast
+BugReports: https://github.com/r-lib/asciicast/issues
