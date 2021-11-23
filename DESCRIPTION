@@ -38,7 +38,7 @@ Suggests:
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.0.1.9000
+RoxygenNote: 7.1.2
 VignetteBuilder: asciicast
 URL: https://github.com/r-lib/asciicast
 BugReports: https://github.com/r-lib/asciicast/issues
