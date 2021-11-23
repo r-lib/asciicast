@@ -32,7 +32,7 @@ asciicast_knitr_options <- function() {
 
 #' Initialize the asciicast knitr engine
 #'
-#' Call this function in your Rmd file, to enable creating asciinema
+#' Call this function in your Rmd file to enable creating asciinema
 #' casts from code chunks.
 #'
 #' @param echo Whether to print the code of asciicast chunks.
@@ -41,7 +41,7 @@ asciicast_knitr_options <- function() {
 #'   again.
 #' @param echo_input Whether to echo the input in the asciicast recording.
 #' @param options R options to set (via [base::options()], in the background
-#'   R process that performs the recording. See `asciicast_knitr_options()`
+#'   R process that performs the recording. See [asciicast_knitr_options()]
 #'   for the defaults.
 #' @inheritParams asciicast_start_process
 #'

@@ -12,7 +12,7 @@ init_knitr_engine(
   startup = NULL,
   record_env = NULL,
   echo_input = TRUE,
-  options = asciicast_knitr_options()
+  options = list()
 )
 }
 \arguments{
@@ -39,11 +39,11 @@ starting the recording.}
 \item{echo_input}{Whether to echo the input in the asciicast recording.}
 
 \item{options}{R options to set (via \code{\link[base:options]{base::options()}}, in the background
-R process that performs the recording. See \code{asciicast_knitr_options()}
+R process that performs the recording. See \code{\link[=asciicast_knitr_options]{asciicast_knitr_options()}}
 for the defaults.}
 }
 \description{
-Call this function in your Rmd file, to enable creating asciinema
+Call this function in your Rmd file to enable creating asciinema
 casts from code chunks.
 }
 \section{Examples}{

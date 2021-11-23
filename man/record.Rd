@@ -21,6 +21,7 @@ record(
   record_env = NULL,
   startup = NULL,
   echo = TRUE,
+  speed = NULL,
   process = NULL
 )
 }
@@ -70,6 +71,9 @@ starting the recording.}
 
 \item{echo}{Whether to echo the input to the terminal. If \code{FALSE}, then
 only the output is shown.}
+
+\item{speed}{Rescale the speed of the recorded cast with this factor.
+The delay of the first frame is kept constant.}
 
 \item{process}{A processx subprocess to run the cast in. By default a
 new subprocess is started. You can reuse a process by calling
