@@ -40,7 +40,8 @@ Suggests:
 Remotes: ropensci/magick
 Encoding: UTF-8
 LazyData: true
-Roxygen: { loadNamespace("roxygenlabs"); list(markdown = TRUE) }
-RoxygenNote: 7.0.2.9000
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
 VignetteBuilder: asciicast
-SystemRequirements: phantom.js for convertion casts to GIFs.
+URL: https://github.com/r-lib/asciicast
+BugReports: https://github.com/r-lib/asciicast/issues

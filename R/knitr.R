@@ -32,7 +32,7 @@ asciicast_knitr_options <- function() {
 
 #' Initialize the asciicast knitr engine
 #'
-#' Call this function in your Rmd file, to enable creating asciinema
+#' Call this function in your Rmd file to enable creating asciinema
 #' casts from code chunks.
 #'
 #' @param echo Whether to print the code of asciicast chunks.
@@ -41,7 +41,7 @@ asciicast_knitr_options <- function() {
 #'   again.
 #' @param echo_input Whether to echo the input in the asciicast recording.
 #' @param options R options to set (via [base::options()], in the background
-#'   R process that performs the recording. See `asciicast_knitr_options()`
+#'   R process that performs the recording. See [asciicast_knitr_options()]
 #'   for the defaults.
 #' @inheritParams asciicast_start_process
 #'
@@ -115,7 +115,9 @@ eng_asciicast <- function(options) {
   on.exit(unlink(cast_file), add = TRUE)
   writeLines(options$code %||% "", cast_file, useBytes = TRUE)
 
-  if (options$echo) options$code <- parse_header(options$code)$body
+  if (!identical(options$echo, FALSE)) {
+    options$code <- parse_header(options$code)$body
+  }
   proc <- .GlobalEnv$.knitr_asciicast_process
   if (!is.null(proc) && !proc$is_alive()) {
     stop("asciicast subprocess crashed")
@@ -206,7 +208,7 @@ cache_asciicast <- function(cast, path) {
 
 asciicast_knitr_svg <- function(cast, options) {
   filename <- file.path(
-    knitr::opts_chunk$get("fig.path"),
+    knitr::opts_current$get("fig.path"),
     paste0(options$label, ".svg"))
   mkdirp(dirname(filename))
 
@@ -218,6 +220,9 @@ asciicast_knitr_svg <- function(cast, options) {
     write_svg(cast, filename)
     if (options$cache > 0) file.copy(filename, cached)
   }
+
+  fig_proc <- knitr::opts_current$get("fig.process")
+  if (!is.null(fig_proc)) filename <- fig_proc(filename)
 
   knitr::knit_hooks$get('plot')(filename, options)
 }
