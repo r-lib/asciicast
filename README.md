@@ -10,7 +10,7 @@
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![Linux Build
-Status](https://travis-ci.org/r-lib/asciicast.svg?branch=master)](https://travis-ci.org/r-lib/asciicast)
+Status](https://travis-ci.org/r-lib/asciicast.svg?branch=main)](https://travis-ci.org/r-lib/asciicast)
 [![Windows Build
 status](https://ci.appveyor.com/api/projects/status/github/r-lib/asciicast?svg=true)](https://ci.appveyor.com/project/gaborcsardi/asciicast)
 [![CRAN
@@ -68,7 +68,7 @@ install.packages("asciicast")
 ## Examples
 
 See the [`inst/examples`
-directory](https://github.com/gaborcsardi/asciicast/tree/master/inst/examples)
+directory](https://github.com/gaborcsardi/asciicast/tree/main/inst/examples)
 for these examples.
 
 ### Hello world

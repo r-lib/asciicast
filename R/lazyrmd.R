@@ -2,7 +2,7 @@
 # # Standalone file for controlling when and where to build vignettes ----
 #
 # The canonical location of this file is in the asciicast package:
-# https://github.com/r-lib/asciicast/master/R/lazyrmd.R
+# https://github.com/r-lib/asciicast/main/R/lazyrmd.R
 #
 # This standalone file provides a vignette builder that gives you more
 # control about when, where and how the vignettes of an R package will be
