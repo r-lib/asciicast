@@ -202,6 +202,7 @@ eng_asciicast_print <- function(cast, options) {
 ## Caching support. We cache both the cast and the SVG file as well,
 ## if the output is SVG
 cache_asciicast <- function(cast, path) {
+  message("(1) Saving ", paste0(path, ".cast"))
   saveRDS(cast, paste0(path, ".cast"))
   if (eng_asciicast_is_svg()) write_svg(cast, paste0(path, ".svg"))
 }
