@@ -1,0 +1,6 @@
+
+re: r.o
+	$(MAIN_LINK) -o $@ r.o $(LIBR) $(LIBS)
+
+clean:
+	@rm -f re r.o
