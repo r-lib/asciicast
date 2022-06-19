@@ -1,6 +1,6 @@
 
-re: r.o
+rem: r.o
 	$(MAIN_LINK) -o $@ r.o $(LIBR) $(LIBS)
 
 clean:
-	@rm -f re r.o
+	@rm -f rem r.o
