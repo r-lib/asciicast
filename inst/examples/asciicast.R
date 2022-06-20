@@ -1,5 +1,4 @@
 #' Title: asciicast example recorded in asciicast
-#' Cols: 80
 #' Empty_wait: 3
 #' End_wait: 20
 

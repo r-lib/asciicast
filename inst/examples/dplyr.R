@@ -1,4 +1,3 @@
-
 #' Title: Simple asciicast example
 #' Depends: processx (>= 3.4.0), dplyr
 
