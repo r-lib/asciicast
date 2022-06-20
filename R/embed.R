@@ -92,9 +92,7 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
                             allow_errors, start_wait, end_wait,
                             record_env, startup, echo, speed, process) {
 
-  # TODO:
   # * allow_errors
-  # * commands in the input
 
   px <- process %||% asciicast_start_process(startup, timeout, record_env)
 
@@ -290,8 +288,11 @@ adjust_typing_speed <- function(data, typing_speed) {
 
   inp <- which(
     data$type == "rlib" & data$data == "type: input" &
-    shift(data$type) == "o"
+    shift(data$type) == "o" & !grepl("#[!]\\s*$", shift(data$data))
   )
+
+  data$data <- sub("\\s+#[!]\\s*$", "\r\n", data$data)
+
   if (length(inp) == 0) return(data)
 
   inp <- c(-1, inp)
