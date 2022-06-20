@@ -21,19 +21,7 @@ player HTML widget.
     ```
 
 Now we are ready to include casts. The current default is to create a
-snapshot of the screen after the code has run, and to change it, we need
-to set the `at` option to `NULL`. (The default is `"end"`.) We also set
-`end_wait` to wait three second before restarting the animation. By
-default asciicast creates animated SVG files:
-
-    ```{asciicast, cache = TRUE, R.options = list(asciicast_at = NULL)}
-    #' Rows: 10
-    #' End_wait: 3
-    # This is an asciicast example
-    loadedNamespaces()
-    ```
-
-<img src="man/figures/README-/unnamed-chunk-4.svg" width="100%" />
+snapshot of the screen after the code has run:
 
 ## Still screenshots
 
@@ -41,6 +29,22 @@ To include a snapshot instead of an animation, the `at` option must be
 set to `"end"`, but that is the default currently:
 
     ```{asciicast, cache = TRUE}
+    # This is an asciicast example
+    loadedNamespaces()
+    ```
+
+<img src="man/figures/README-/unnamed-chunk-4.svg" width="100%" />
+
+## Proper ASCII casts
+
+To use animated casts instead of screen shots, we need to set the `at`
+option to `NULL`. (It is not currently possible to do this from the
+header.) We also set `end_wait` to wait three second before restarting
+the animation. By default asciicast creates animated SVG files:
+
+    ```{asciicast, cache = TRUE, R.options = list(asciicast_at = NULL)}
+    #' Rows: 10
+    #' End_wait: 3
     # This is an asciicast example
     loadedNamespaces()
     ```
