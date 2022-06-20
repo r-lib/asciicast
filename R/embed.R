@@ -188,10 +188,11 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
   wait_for_idle(px, timeout)
 
   # throw away the output of the startup code
-  if (!is.null(startup)) {
-    lines <- deparse(startup)
-    record_internal(lines, timeout, process = px)
-  }
+  lines <- c(
+    "Sys.setlocale('LC_ALL', 'en_US.UTF-8')",
+    if (!is.null(startup)) deparse(startup)
+  )
+  record_internal(lines, timeout, process = px)
 
   px
 }
