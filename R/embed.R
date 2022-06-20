@@ -5,6 +5,7 @@ record_internal <- function(lines, timeout, process) {
 
   ptr <- 1
   output <- character()
+  px <- process
   con <- attr(px, "cast_fifo")
 
   send_next_command <- function() {
@@ -184,7 +185,7 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
   attr(px, "cast_fifo") <-
     processx::conn_create_file(cast_fifo, read = TRUE, write = FALSE)
 
-  wait_for_idle(px)
+  wait_for_idle(px, timeout)
 
   # throw away the output of the startup code
   if (!is.null(startup)) {
@@ -199,9 +200,15 @@ make_fifo <- function(path) {
   processx::run("mkfifo", path)
 }
 
-wait_for_idle <- function(px) {
+wait_for_idle <- function(px, timeout) {
+  timeout <- as.double(timeout, units = "secs") * 1000
   output <- character()
+  con <- attr(px, "cast_fifo")
   while (TRUE) {
+    ret <- processx::poll(list(con), timeout)
+    if (ret[[1]] == "timeout") {
+      throw(new_error("Cannot start asciicast subprocess, timeout"))
+    }
     line <- read_line(px)
     output[length(output) + 1L] <- line
     msg <- parse_line(line)
