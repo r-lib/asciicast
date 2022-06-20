@@ -98,7 +98,7 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
 
   px <- process %||% asciicast_start_process(startup, timeout, record_env)
 
-  data <- record_internal(lines, timeout, process)
+  data <- record_internal(lines, timeout, px)
 
   if (nrow(data) > 0) {
     data$time <- data$time - data$time[1] + start_wait
