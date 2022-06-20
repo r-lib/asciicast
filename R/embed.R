@@ -284,8 +284,6 @@ add_empty_wait <- function(data, wait) {
 }
 
 adjust_typing_speed <- function(data, typing_speed) {
-  if (typing_speed == 0) return(data)
-
   inp <- which(
     data$type == "rlib" & data$data == "type: input" &
     shift(data$type) == "o" & !grepl("#[!]\\s*$", shift(data$data))
@@ -293,6 +291,7 @@ adjust_typing_speed <- function(data, typing_speed) {
 
   data$data <- sub("\\s+#[!]\\s*$", "\r\n", data$data)
 
+  if (typing_speed == 0) return(data)
   if (length(inp) == 0) return(data)
 
   inp <- c(-1, inp)
