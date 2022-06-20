@@ -95,7 +95,10 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
                             startup, echo, speed, process)
 
   if (rows == "auto") {
-    plain <- cli::ansi_strip(paste0(output$data, collapse = ""))
+    plain <- cli::ansi_strip(paste0(
+      output$data[output$type == "o"],
+      collapse = ""
+    ))
 
     # The show/hide cursor sequences
     plain <- gsub("\033[?25h", "", plain, fixed = TRUE)
