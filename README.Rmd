@@ -13,7 +13,11 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 asciicast::init_knitr_engine()
-options(asciicast_knitr_svg = TRUE)
+options(
+  asciicast_at = NULL,
+  asciicast_knitr_svg = TRUE,
+  asciicast_end_wait = 3
+)
 ```
 # asciicast
 
@@ -55,13 +59,9 @@ records all terminal output in real time as it happens.
 
 ## Limitations
 
-* asciicast does not work in Windows yet, because of a the lack of a
-  pseudo terminal. Maybe you can try running it on Linux in Docker?
-* Recordings are currently real time, so if you "type in" a lot of
-  code/text, that might take a while to record.
-* Only syntactically correct R script files can be recorded.
-* asciicast redefines `option("error")` currently, so if you want to
-  set this option in your demo, that won't work.
+* asciicast does not work in Windows yet, but Windows support is coming soon.
+* asciicast needs an R build that contains a shared or static R library.
+  This is true for most R builds currently.
 
 ## Installation
 
