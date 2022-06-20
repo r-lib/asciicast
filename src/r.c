@@ -178,14 +178,14 @@ void rem_write_console_ex(const char *buf, int buflen, int which) {
   fprintf(cast_file, "[%f, \"o\", \"%s\"]\n", ts, escape_len(buf, buflen));
 }
 
+void rem_write_console(const char *buf, int buflen) {
+  rem_write_console_ex(buf, buflen, 0);
+}
+
 int rem_read_console(const char *prompt,
                      unsigned char *buf,
                      int buflen,
                      int hist) {
-
-  double ts = get_time();
-  fprintf(cast_file, "[%f, \"rlib\", \"type: prompt\"]\n", ts);
-  fprintf(cast_file, "[%f, \"o\", \"%s\"]\n", ts, escape(prompt));
 
   errno = 0;
   buf[0] = '\0';
@@ -204,10 +204,18 @@ int rem_read_console(const char *prompt,
     exit(2);
   }
 
-  const char *escbuf = escape((const char*) buf);
-  fprintf(cast_file, "[%f, \"i\", \"%s\"]\n", ts, escbuf);
-  fprintf(cast_file, "[%f, \"rlib\", \"type: input\"]\n", ts);
-  fprintf(cast_file, "[%f, \"o\", \"%s\"]\n", ts, escbuf);
+  // We only do this after we read something, otherwise the timings are
+  // off if this process is idle for a long time
+  double ts = get_time();
+  fprintf(cast_file, "[%f, \"rlib\", \"type: prompt\"]\n", ts);
+  fprintf(cast_file, "[%f, \"o\", \"%s\"]\n", ts, escape(prompt));
+
+  if (strlen((const char*) buf)) {
+    const char *escbuf = escape((const char*) buf);
+    fprintf(cast_file, "[%f, \"i\", \"%s\"]\n", ts, escbuf);
+    fprintf(cast_file, "[%f, \"rlib\", \"type: input\"]\n", ts);
+    fprintf(cast_file, "[%f, \"o\", \"%s\"]\n", ts, escbuf);
+  }
 
   return 1;
 }
@@ -252,6 +260,7 @@ int main(int argc, char **argv) {
     );
     exit(1);
   }
+  setbuf(cast_file, NULL);
 
   size_t header_len = strlen(cast_header);
   size_t written = fwrite(cast_header, 1, header_len, cast_file);
@@ -267,6 +276,9 @@ int main(int argc, char **argv) {
   char *argv2[]= { "R", "-q", "--vanilla" };
   Rf_initEmbeddedR(sizeof(argv2) / sizeof(argv2[0]), argv2);
 
+  R_Interactive = 1;
+  R_Outputfile = NULL;
+  R_Consolefile = NULL;
   ptr_R_ShowMessage = rem_show_message;
   ptr_R_Busy = rem_busy;
   ptr_R_WriteConsole = NULL;
@@ -275,7 +287,7 @@ int main(int argc, char **argv) {
 
   R_ReplDLLinit();
 
-  while(R_ReplDLLdo1() > 0) { }
+  while(R_ReplDLLdo1() > 0) {  }
 
   Rf_endEmbeddedR(0);
 

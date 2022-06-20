@@ -90,7 +90,7 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
     startup <- str2lang(header$startup)
   }
 
-  output <- record_commands(body, typing_speed, timeout, empty_wait,
+  output <- record_embedded(body, typing_speed, timeout, empty_wait,
                             allow_errors, start_wait, end_wait, record_env,
                             startup, echo, speed, process)
 

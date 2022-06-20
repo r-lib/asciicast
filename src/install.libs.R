@@ -1,8 +1,8 @@
 
 progs <- if (WINDOWS) {
-           "re.exe"
+           "rem.exe"
          } else {
-           "re"
+           "rem"
          }
 
 dest <- file.path(R_PACKAGE_DIR, paste0("bin", R_ARCH))
