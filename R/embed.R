@@ -1,28 +1,7 @@
 
-record_embedded <- function(lines, typing_speed, timeout, empty_wait,
-                            allow_errors, start_wait, end_wait,
-                            record_env, startup, echo, speed, process) {
-
-  # TODO:
-  # * typing_speed
-  # * allow_errors
-  # * startup
-  # * commands in the input
+record_internal <- function(lines, timeout, process) {
 
   timeout <- as.double(timeout, units = "secs") * 1000
-
-  px <- process
-  if (is.null(px)) {
-    px <- asciicast_start_process(
-      timeout,
-      allow_errors,
-      startup,
-      record_env,
-      echo
-    )
-  }
-
-  start <- Sys.time()
 
   ptr <- 1
   output <- character()
@@ -105,6 +84,21 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
     data = vapply(msgs, "[[", character(1), "value")
   )
 
+  data
+}
+
+record_embedded <- function(lines, typing_speed, timeout, empty_wait,
+                            allow_errors, start_wait, end_wait,
+                            record_env, startup, echo, speed, process) {
+
+  # TODO:
+  # * allow_errors
+  # * commands in the input
+
+  px <- process %||% asciicast_start_process(startup, timeout, record_env)
+
+  data <- record_internal(lines, timeout, process)
+
   if (nrow(data) > 0) {
     data$time <- data$time - data$time[1] + start_wait
   }
@@ -122,6 +116,8 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
 
   if (empty_wait != 0) data <- add_empty_wait(data, empty_wait)
 
+  if (echo) data <- adjust_typing_speed(data, typing_speed)
+
   if (speed != 1.0) {
     data$time <- (data$time - data$time[1]) / speed + data$time[1]
   }
@@ -134,18 +130,12 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
 #' This is for expert use, if you want to run multiple recordings in the
 #' same process.
 #'
-#' @param timeout Idle timeout, in seconds If the R subprocess running
-#'   the recording does not answer within this limit, it is killed and the
-#'   recording stops. Update this for slow running code, that produces no
-#'   output as it runs.
-#' @param allow_errors Whether to cast errors properly. If this is set to
-#'   `TRUE`, then asciicast overwrites the `"error"` option. Only change
-#'   this if you know what you are doing.
 #' @param startup Quoted language object to run in the subprocess before
 #'   starting the recording.
+#' @param timeout Idle timeout, in seconds If the R subprocess running
+#'   the recording does not answer within this limit, it is killed and the
+#'   recording stops.
 #' @param record_env Environment variables to set for the R subprocess.
-#' @param echo Whether to echo the input to the terminal. If `FALSE`, then
-#'   only the output is shown.
 #' @return The R process, a [processx::process] object.
 #'
 #' @family asciicast functions
@@ -160,9 +150,8 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
 #' cast1
 #' cast2
 
-asciicast_start_process <- function(timeout = 10, allow_errors = TRUE,
-                                    startup = NULL, record_env = NULL,
-                                    echo = TRUE) {
+asciicast_start_process <- function(startup = NULL, timeout = 10,
+                                    record_env = NULL) {
 
   env <- c(
     ASCIICAST = "true",
@@ -196,6 +185,12 @@ asciicast_start_process <- function(timeout = 10, allow_errors = TRUE,
     processx::conn_create_file(cast_fifo, read = TRUE, write = FALSE)
 
   wait_for_idle(px)
+
+  # throw away the output of the startup code
+  if (!is.null(startup)) {
+    lines <- deparse(startup)
+    record_internal(lines, timeout, process = px)
+  }
 
   px
 }
@@ -244,28 +239,6 @@ parse_line <- function(line) {
   list(timestamp = pcs[[1]], type = pcs[[2]], value = pcs[[3]])
 }
 
-#' @importFrom stats runif
-
-rtime <- function(n, speed){
-  runif(n, min = speed * 0.5, max = speed * 1.5)
-}
-
-type_input <- function(proc, text, speed, callback) {
-  messagex("--> ", appendLF = FALSE)
-  if (speed == 0) {
-    write_for_sure(proc, text)
-    messagex(text, appendLF = FALSE)
-  } else {
-    chars <- strsplit(text, "")[[1]]
-    time <- rtime(length(chars), speed)
-    for (i in seq_along(chars)) {
-      write_for_sure(proc, chars[i])
-      messagex(chars[i], appendLF = FALSE)
-      poll_wait(proc, time[i], callback)
-    }
-  }
-}
-
 remove_input <- function(data) {
   todel <- which(
     data$type == "rlib" & data$data %in% c("type: input", "type: prompt")
@@ -301,4 +274,54 @@ add_empty_wait <- function(data, wait) {
   data$time <- data$time + cumsum(shft)
 
   data
+}
+
+adjust_typing_speed <- function(data, typing_speed) {
+  if (typing_speed == 0) return(data)
+
+  inp <- which(
+    data$type == "rlib" & data$data == "type: input" &
+    shift(data$type) == "o"
+  )
+  if (length(inp) == 0) return(data)
+
+  inp <- c(-1, inp)
+  ptr <- 2L
+  out <- data[integer(), ]
+
+  while (ptr <= length(inp)) {
+    # rows in between are added without modification, including input
+    from <- inp[ptr - 1] + 2L
+    out <- rbind(out, data[from:inp[ptr], ])
+
+    # the next output row is simulated typing
+    oidx <- inp[ptr] + 1
+    txt <- data$data[oidx]
+    txt <- sub("\r\n$", "", txt)
+    chars <- strsplit(txt, "")[[1]]
+    delay <- cumsum(c(rtime(length(chars), typing_speed), 0))
+    typed <- tibble::tibble(
+      time = data$time[oidx] + delay,
+      type = "o",
+      data = c(chars, "\r\n")
+    )
+    out <- rbind(out, typed)
+    data$time <- data$time + delay[length(delay)]
+
+    ptr <- ptr + 1L
+  }
+
+  # and the end
+  if (inp[length(inp)] < nrow(data) - 1) {
+    from <- inp[length(inp)] + 2L
+    out <- rbind(out, data[from:nrow(data), ])
+  }
+
+  out
+}
+
+#' @importFrom stats runif
+
+rtime <- function(n, speed){
+  runif(n, min = speed * 0.5, max = speed * 1.5)
 }
