@@ -113,6 +113,11 @@ eng_asciicast <- function(options) {
   # otherwise we use the asciicast default, which is FALSE
   options$echo <- attr(options$echo, "asciicast") %||% options$echo
 
+  if (!options$eval) {
+    options$engine <- "r"
+    return(knitr::engine_output(options, options$code, '', NULL))
+  }
+
   cast_file <- tempfile()
   on.exit(unlink(cast_file), add = TRUE)
   writeLines(options$code %||% "", cast_file, useBytes = TRUE)
