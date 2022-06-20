@@ -102,6 +102,7 @@ init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
       try(close(attr(oldproc, "cast_fifo")), silent = TRUE)
       try(oldproc$kill(), silent = TRUE)
     }
+    attr(proc, "echo") <- echo_input
     .GlobalEnv$.knitr_asciicast_process <- proc
   }
 }
@@ -123,7 +124,11 @@ eng_asciicast <- function(options) {
   if (!is.null(proc) && !proc$is_alive()) {
     stop("asciicast subprocess crashed")
   }
-  cast <- record(cast_file, process = proc)
+  cast <- record(
+    cast_file,
+    process = proc,
+    echo = attr(proc, "echo") %||% TRUE
+  )
 
   if (options$cache > 0) cache_asciicast(cast, options$hash)
 
