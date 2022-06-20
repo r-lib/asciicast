@@ -273,7 +273,16 @@ int main(int argc, char **argv) {
     );
   }
 
-  char *argv2[]= { "R", "-q", "--vanilla" };
+  char *argv2[]= {
+    "R",
+    "-q",
+    "--vanilla",
+    "--gui=none",
+    "--no-restore",
+    "--no-save",
+    "--no-readline"
+  };
+
   Rf_initEmbeddedR(sizeof(argv2) / sizeof(argv2[0]), argv2);
 
   R_Interactive = 1;
