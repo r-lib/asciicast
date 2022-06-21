@@ -69,6 +69,11 @@
 #' * `rows`: Height of the terminal, in number of characters.
 #' * `start_at`: Where to start the playback from, in seconds.
 #' * `window`: Render with window decorations.
+#' * `theme`: Theme to use, currently it has to be a string referring to
+#'    a build-in theme, or a named list of theme properties,
+#'    see [default_theme()].
+#'    The built-in themes are `"asciinema"`, `"tango"`, `"solarized-dark"`,
+#'    `"solarized-light"`, `"seti"`, `"monokai"`.
 #'
 #' @name asciicast-package
 #' @family asciicast functions

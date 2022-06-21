@@ -76,6 +76,11 @@ Parameters for SVG files:
 \item \code{rows}: Height of the terminal, in number of characters.
 \item \code{start_at}: Where to start the playback from, in seconds.
 \item \code{window}: Render with window decorations.
+\item \code{theme}: Theme to use, currently it has to be a string referring to
+a build-in theme, or a named list of theme properties,
+see \code{\link[=default_theme]{default_theme()}}.
+The built-in themes are \code{"asciinema"}, \code{"tango"}, \code{"solarized-dark"},
+\code{"solarized-light"}, \code{"seti"}, \code{"monokai"}.
 }
 }
 \seealso{

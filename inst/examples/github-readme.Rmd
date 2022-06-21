@@ -29,6 +29,7 @@ asciicast::init_knitr_engine()
 ````
 
 ```{r echo = FALSE, results = "hide"}
+options(asciicast_theme = "asciinema")
 asciicast::init_knitr_engine()
 ```
 
@@ -90,23 +91,14 @@ loadedNamespaces()
 
 ## ANSI colors
 
-asciicast supports 256 ANSI colors, but with earlier versions of the
-cranyon and/or cli package, you might need to tutn on ANSI color support
-manually:
+asciicast supports 256 ANSI colors, and ANSI support is automatically
+enabled in the asciicast subprocess:
 
 ````
-```{asciicast, include = FALSE}`r ''`
-options(cli.num_colors = 256)
-```
-
 ```{asciicast, cache = TRUE}`r ''`
 cli::ansi_palette_show()
 ```
 ````
-
-```{asciicast, include = FALSE}
-options(cli.num_colors = 256)
-```
 
 ```{asciicast, cache = TRUE}
 cli::ansi_palette_show()

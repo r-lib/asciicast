@@ -53,16 +53,11 @@ the animation. By default asciicast creates animated SVG files:
 
 ## ANSI colors
 
-asciicast supports 256 ANSI colors, but with earlier versions of the
-cranyon and/or cli package, you might need to tutn on ANSI color support
-manually:
-
-    ```{asciicast, include = FALSE}
-    options(cli.num_colors = 256)
-    ```
+asciicast supports 256 ANSI colors, and ANSI support is automatically
+enabled in the asciicast subprocess:
 
     ```{asciicast, cache = TRUE}
     cli::ansi_palette_show()
     ```
 
-<img src="man/figures/README-/unnamed-chunk-7.svg" width="100%" />
+<img src="man/figures/README-/unnamed-chunk-6.svg" width="100%" />
