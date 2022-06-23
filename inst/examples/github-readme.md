@@ -20,27 +20,44 @@ player HTML widget.
     options(asciicast_knitr_svg = TRUE)
     ```
 
-Now we are ready to include casts. By default asciicast creates animated
-SVG files:
+Now we are ready to include casts. The current default is to create a
+snapshot of the screen after the code has run:
+
+## Still screenshots
+
+To include a snapshot instead of an animation, the `at` option must be
+set to `"end"`, but that is the default currently:
 
     ```{asciicast, cache = TRUE}
-    #' Rows: 10
     # This is an asciicast example
     loadedNamespaces()
     ```
 
 <img src="man/figures/README-/unnamed-chunk-4.svg" width="100%" />
 
-## Still screenshots
+## Proper ASCII casts
 
-To include a snapshot instead of an animation, use `At: end` in the
-asciicast header.
+To use animated casts instead of screen shots, we need to set the `at`
+option to `NULL`. (It is not currently possible to do this from the
+header.) We also set `end_wait` to wait three second before restarting
+the animation. By default asciicast creates animated SVG files:
 
-    ```{asciicast, cache = TRUE}
+    ```{asciicast, cache = TRUE, R.options = list(asciicast_at = NULL)}
     #' Rows: 10
-    #' At: end
+    #' End_wait: 3
     # This is an asciicast example
     loadedNamespaces()
     ```
 
 <img src="man/figures/README-/unnamed-chunk-5.svg" width="100%" />
+
+## ANSI colors
+
+asciicast supports 256 ANSI colors, and ANSI support is automatically
+enabled in the asciicast subprocess:
+
+    ```{asciicast, cache = TRUE}
+    cli::ansi_palette_show()
+    ```
+
+<img src="man/figures/README-/unnamed-chunk-6.svg" width="100%" />

@@ -78,3 +78,7 @@ is_interactive <- function() {
     interactive()
   }
 }
+
+is_windows <- function() {
+  .Platform$OS.type == "windows"
+}

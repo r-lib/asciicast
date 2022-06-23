@@ -10,3 +10,6 @@ Meta
 /README_cache
 /inst/examples/github-readme_cache
 /vignettes/asciicast-demo_files
+/src/*.o
+/src/rem
+/src/rem.exe

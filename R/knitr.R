@@ -15,7 +15,7 @@ asciicast_knitr_options <- function() {
   list(
     asciicast_knitr_svg = TRUE,
     asciicast_at = "end",
-    asciicast_typing_speed = 0,
+    asciicast_typing_speed = 0.05,
     asciicast_padding = 20,
     asciicast_window = FALSE,
     asciicast_omit_last_line = FALSE,
@@ -93,14 +93,16 @@ init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
   do.call(base::options, options)
 
   if (same_process) {
-    proc <- asciicast_start_process(timeout, allow_errors, startup,
-                                    record_env, echo_input)
+    proc <- asciicast_start_process(startup, timeout, record_env)
     oldproc <- .GlobalEnv$.knitr_asciicast_process
     if (!is.null(oldproc)) {
-      close(oldproc$get_input_connection())
-      close(oldproc$get_output_connection())
-      oldproc$kill()
+      try(close(oldproc$get_input_connection()), silent = TRUE)
+      try(close(oldproc$get_output_connection()), silent = TRUE)
+      try(close(attr(oldproc, "input_fifo")), silent = TRUE)
+      try(close(attr(oldproc, "cast_fifo")), silent = TRUE)
+      try(oldproc$kill(), silent = TRUE)
     }
+    attr(proc, "echo") <- echo_input
     .GlobalEnv$.knitr_asciicast_process <- proc
   }
 }
@@ -110,6 +112,11 @@ eng_asciicast <- function(options) {
   # will be NULL, and we use the directly specified value.
   # otherwise we use the asciicast default, which is FALSE
   options$echo <- attr(options$echo, "asciicast") %||% options$echo
+
+  if (!options$eval) {
+    options$engine <- "r"
+    return(knitr::engine_output(options, options$code, '', NULL))
+  }
 
   cast_file <- tempfile()
   on.exit(unlink(cast_file), add = TRUE)
@@ -122,7 +129,11 @@ eng_asciicast <- function(options) {
   if (!is.null(proc) && !proc$is_alive()) {
     stop("asciicast subprocess crashed")
   }
-  cast <- record(cast_file, process = proc)
+  cast <- record(
+    cast_file,
+    process = proc,
+    echo = attr(proc, "echo") %||% TRUE
+  )
 
   if (options$cache > 0) cache_asciicast(cast, options$hash)
 
@@ -190,7 +201,9 @@ eng_asciicast_is_svg <- function() {
 
 eng_asciicast_print <- function(cast, options) {
   svg <- eng_asciicast_is_svg()
-  extra <- if (svg) {
+  extra <- if (!options$include) {
+    NULL
+  } else if (svg) {
     asciicast_knitr_svg(cast, options)
   } else {
     knitr::knit_print(asciinema_player(cast), options = options)

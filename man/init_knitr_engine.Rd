@@ -24,12 +24,7 @@ again.}
 
 \item{timeout}{Idle timeout, in seconds If the R subprocess running
 the recording does not answer within this limit, it is killed and the
-recording stops. Update this for slow running code, that produces no
-output as it runs.}
-
-\item{allow_errors}{Whether to cast errors properly. If this is set to
-\code{TRUE}, then asciicast overwrites the \code{"error"} option. Only change
-this if you know what you are doing.}
+recording stops.}
 
 \item{startup}{Quoted language object to run in the subprocess before
 starting the recording.}
@@ -49,15 +44,19 @@ casts from code chunks.
 \section{Examples}{
 
 Call this function from an Rmd chunk and then you can use the asciicast
-knitr engine:\preformatted{```\{r echo = FALSE, results = "hide"\}
+knitr engine:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{```\{r echo = FALSE, results = "hide"\}
 asciicast::init_knitr_engine()
 ```
-}\preformatted{```\{asciicast, cache = TRUE\}`
+}\if{html}{\out{</div>}}
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{```\{asciicast, cache = TRUE\}`
 #' Rows: 10
 # This is an asciicast example
 loadedNamespaces()
 ```
-}
+}\if{html}{\out{</div>}}
 }
 
 \seealso{
