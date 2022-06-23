@@ -165,23 +165,22 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
     exec_path <- system.file("src", exec_name, package = "asciicast")
   }
 
-  make_fifo(input_fifo <- tempfile("asciicast"))
-  make_fifo(cast_fifo <- tempfile("asciicast"))
+  input_fifo <- processx::conn_create_fifo(write = TRUE)
+  cast_fifo <- processx::conn_create_fifo(read = TRUE)
+
+  input_fifo_name <- processx::conn_file_name(input_fifo)
+  cast_fifo_name <- processx::conn_file_name(cast_fifo)
 
   px <- processx::process$new(
     exec_path,
-    c(input_fifo, cast_fifo),
+    c(input_fifo_name, cast_fifo_name),
     env = env,
     stdout = "|",
     stderr = "|"
   )
 
-  attr(px, "input_fifo_path") <- input_fifo
-  attr(px, "cast_fifo_path") <- cast_fifo
-  attr(px, "input_fifo") <-
-    processx::conn_create_file(input_fifo, read = FALSE, write = TRUE)
-  attr(px, "cast_fifo") <-
-    processx::conn_create_file(cast_fifo, read = TRUE, write = FALSE)
+  attr(px, "input_fifo") <- input_fifo
+  attr(px, "cast_fifo") <- cast_fifo
 
   wait_for_idle(px, timeout)
 
@@ -194,10 +193,6 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
   record_internal(lines, timeout, process = px)
 
   px
-}
-
-make_fifo <- function(path) {
-  processx::run("mkfifo", path)
 }
 
 wait_for_idle <- function(px, timeout) {
