@@ -201,7 +201,9 @@ eng_asciicast_is_svg <- function() {
 
 eng_asciicast_print <- function(cast, options) {
   svg <- eng_asciicast_is_svg()
-  extra <- if (svg) {
+  extra <- if (!options$include) {
+    NULL
+  } else if (svg) {
     asciicast_knitr_svg(cast, options)
   } else {
     knitr::knit_print(asciinema_player(cast), options = options)
