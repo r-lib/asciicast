@@ -26,6 +26,7 @@ Imports:
     cli,
     curl,
     jsonlite,
+    magick (>= 2.2.9002),
     processx (>= 3.6.1.9001),
     tibble,
     utils,
@@ -33,7 +34,8 @@ Imports:
 Suggests:
     htmlwidgets,
     knitr,
-    rmarkdown
+    rmarkdown,
+    rstudioapi,
 Remotes:
     r-lib/processx@feature/fifo
 Encoding: UTF-8

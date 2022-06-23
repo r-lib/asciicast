@@ -1,6 +1,9 @@
 
 # development version
 
+* New `write_gif()` function to save a cast as a GIF. It needs phantom.js
+  currently.
+
 * The `asciinema_player()` HTML widget now properly sets the height and
   width of the player window, using the `height` and `width` parameters
   of the cast.
