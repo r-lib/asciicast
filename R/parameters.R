@@ -73,7 +73,7 @@
 #'    a build-in theme, or a named list of theme properties,
 #'    see [default_theme()].
 #'    The built-in themes are `"asciinema"`, `"tango"`, `"solarized-dark"`,
-#'    `"solarized-light"`, `"seti"`, `"monokai"`.
+#'    `"solarized-light"`, `"seti"`, `"monokai"`, `"github-light"`.
 #'
 #' @name asciicast-package
 #' @family asciicast functions

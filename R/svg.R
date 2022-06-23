@@ -317,6 +317,29 @@ themes <- list(
     cursor        = c(grDevices::col2rgb("#f8f8f2")),
     bold          = c(grDevices::col2rgb("#f8f8f2")),
     text          = c(grDevices::col2rgb("#f8f8f2"))
+  ),
+
+  "github-light" = list(
+    black         = c(grDevices::col2rgb("#073642")),
+    red           = c(grDevices::col2rgb("#dc322f")),
+    green         = c(grDevices::col2rgb("#859900")),
+    yellow        = c(grDevices::col2rgb("#b58900")),
+    blue          = c(grDevices::col2rgb("#268bd2")),
+    magenta       = c(grDevices::col2rgb("#d33682")),
+    cyan          = c(grDevices::col2rgb("#2aa198")),
+    white         = c(grDevices::col2rgb("#eee8d5")),
+    light_black   = c(grDevices::col2rgb("#002b36")),
+    light_red     = c(grDevices::col2rgb("#cb4b16")),
+    light_green   = c(grDevices::col2rgb("#586e75")),
+    light_yellow  = c(grDevices::col2rgb("#657c83")),
+    light_blue    = c(grDevices::col2rgb("#839496")),
+    light_magenta = c(grDevices::col2rgb("#6c71c4")),
+    light_cyan    = c(grDevices::col2rgb("#93a1a1")),
+    light_white   = c(grDevices::col2rgb("#fdf6e3")),
+    background    = c(grDevices::col2rgb("#f7f7f7")),
+    cursor        = c(grDevices::col2rgb("#657b83")),
+    bold          = c(grDevices::col2rgb("#657b83")),
+    text          = c(grDevices::col2rgb("#657b83"))
   )
 )
 
