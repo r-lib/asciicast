@@ -36,7 +36,7 @@ read_cast <- function(json) {
     lines <- readLines(json)
   }
 
-  config <- rethrow(fromJSON(lines[1]), new_parse_error(json))
+  config <- chain_error(fromJSON(lines[1]), new_parse_error(json))
   if (!identical(as.integer(config$version), 2L)) {
     throw(new_parse_error(json))
   }
@@ -48,7 +48,7 @@ read_cast <- function(json) {
     data = character(nrec))
 
   for (i in seq_along(lines)[-1]) {
-    l <- rethrow(
+    l <- chain_error(
       fromJSON(lines[i], simplifyVector = FALSE),
       new_parse_error(json, line = i))
     if (!is.numeric(l[[1]]) || !is.character(l[[2]]) || !is.character(l[[3]])) {

@@ -47,5 +47,7 @@ env_file <- NULL
     cran = "no-code"
   )
 
+  err$onload_hook()
+
   invisible()
 }

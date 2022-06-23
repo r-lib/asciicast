@@ -13,7 +13,11 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 asciicast::init_knitr_engine()
-options(asciicast_knitr_svg = TRUE)
+options(
+  asciicast_at = NULL,
+  asciicast_knitr_svg = TRUE,
+  asciicast_end_wait = 3
+)
 ```
 # asciicast
 
@@ -21,7 +25,7 @@ options(asciicast_knitr_svg = TRUE)
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-[![Linux Build Status](https://travis-ci.org/r-lib/asciicast.svg?branch=master)](https://travis-ci.org/r-lib/asciicast)
+[![Linux Build Status](https://travis-ci.org/r-lib/asciicast.svg?branch=main)](https://travis-ci.org/r-lib/asciicast)
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/github/r-lib/asciicast?svg=true)](https://ci.appveyor.com/project/gaborcsardi/asciicast)
 [![CRAN status](https://www.r-pkg.org/badges/version/asciicast)](https://cran.r-project.org/package=asciicast)
 <!-- badges: end -->
@@ -55,13 +59,9 @@ records all terminal output in real time as it happens.
 
 ## Limitations
 
-* asciicast does not work in Windows yet, because of a the lack of a
-  pseudo terminal. Maybe you can try running it on Linux in Docker?
-* Recordings are currently real time, so if you "type in" a lot of
-  code/text, that might take a while to record.
-* Only syntactically correct R script files can be recorded.
-* asciicast redefines `option("error")` currently, so if you want to
-  set this option in your demo, that won't work.
+* asciicast does not work in Windows yet, but Windows support is coming soon.
+* asciicast needs an R build that contains a shared or static R library.
+  This is true for most R builds currently.
 
 ## Installation
 
@@ -74,18 +74,17 @@ install.packages("asciicast")
 
 ## Examples
 
-See the [`inst/examples` directory](https://github.com/gaborcsardi/asciicast/tree/master/inst/examples)
+See the [`inst/examples` directory](https://github.com/gaborcsardi/asciicast/tree/main/inst/examples)
 for these examples.
 
 ### Hello world
 
 The input script:
 
-```{r echo = FALSE, results = "asis"}
-cat("```\n")
-cat(readLines("inst/examples/hello.R"), sep = "\n")
-cat("```\n")
+```{r code = readLines("inst/examples/hello.R"), eval = FALSE}
 ```
+
+The result:
 
 ```{asciicast, code = readLines("inst/examples/hello.R"), cache = TRUE}
 ```
@@ -94,10 +93,7 @@ cat("```\n")
 
 Input script that uses asciicast itself:
 
-```{r echo = FALSE, results = "asis"}
-cat("```\n")
-cat(readLines("inst/examples/asciicast.R"), sep = "\n")
-cat("```\n")
+```{r code = readLines("inst/examples/asciicast.R"), eval = FALSE}
 ```
 
 ```{asciicast, code = readLines("inst/examples/asciicast.R"), cache = TRUE}
@@ -107,10 +103,7 @@ cat("```\n")
 
 Input script with errors:
 
-```{r echo = FALSE, results = "asis"}
-cat("```\n")
-cat(readLines("inst/examples/errors.R"), sep = "\n")
-cat("```\n")
+```{r code = readLines("inst/examples/errors.R"), eval = FALSE}
 ```
 
 ```{asciicast, code = readLines("inst/examples/errors.R"), cache = TRUE}
