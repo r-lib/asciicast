@@ -28,9 +28,11 @@ record_internal <- function(lines, timeout, process) {
           throw(new_error("asciicast timeout at line ", ptr - 1))
         }
         line <- read_line(px)
-        output[length(output) + 1L] <<- line
-        msg <- parse_line(line)
-        if (msg$type == "rlib" && msg$value == "type: input") break
+        if (length(line)) {
+          output[length(output) + 1L] <<- line
+          msg <- parse_line(line)
+          if (msg$type == "rlib" && msg$value == "type: input") break
+        }
       }
 
       # wait until we get back a "busy" linem that means that it is running
@@ -40,9 +42,11 @@ record_internal <- function(lines, timeout, process) {
           throw(new_error("asciicast timeout at line ", ptr - 1))
         }
         line <- read_line(px)
-        output[length(output) + 1L] <<- line
-        msg <- parse_line(line)
-        if (msg$type == "rlib" && grepl("^busy:", msg$value)) break
+        if (length(line)) {
+          output[length(output) + 1L] <<- line
+          msg <- parse_line(line)
+          if (msg$type == "rlib" && grepl("^busy:", msg$value)) break
+        }
       }
 
       # if busy: 1, then the command is running, nothing more to send
@@ -59,9 +63,11 @@ record_internal <- function(lines, timeout, process) {
         throw(new_error("asciicast timeout at line ", ptr - 1))
       }
       line <- read_line(px)
-      output[length(output) + 1L] <<- line
-      msg <- parse_line(line)
-      if (msg$type == "rlib" && msg$value == "busy: 0") break
+      if (length(line)) {
+        output[length(output) + 1L] <<- line
+        msg <- parse_line(line)
+        if (msg$type == "rlib" && msg$value == "busy: 0") break
+      }
     }
   }
 
@@ -74,8 +80,10 @@ record_internal <- function(lines, timeout, process) {
   while (TRUE) {
     ret <- processx::poll(list(con), 0)
     if (ret[[1]] == "timeout") break
-    line <-read_line(px)
-    output[[length(output) + 1L]] <- line
+    line <- read_line(px)
+    if (length(line)) {
+      output[[length(output) + 1L]] <- line
+    }
   }
 
   msgs <- lapply(output, parse_line)
@@ -156,6 +164,7 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
     ASCIICAST = "true",
     R_HOME = Sys.getenv("R_HOME"),
     TMPDIR = Sys.getenv("TMPDIR"),
+    PATH = if (is_windows()) paste0(R.home("bin"), ";", Sys.getenv("PATH")),
     record_env
   )
 
@@ -205,17 +214,21 @@ wait_for_idle <- function(px, timeout) {
       throw(new_error("Cannot start asciicast subprocess, timeout"))
     }
     line <- read_line(px)
-    output[length(output) + 1L] <- line
-    msg <- parse_line(line)
-    if (msg$type == "rlib" && msg$value == "busy: 0") break
+    if (length(line)) {
+      output[length(output) + 1L] <- line
+      msg <- parse_line(line)
+      if (msg$type == "rlib" && msg$value == "busy: 0") break
+    }
   }
 
   # there might we some more messages in the output, read those
   while (TRUE) {
     ret <- processx::poll(list(con), 0)
     if (ret[[1]] == "timeout") break
-    line <-read_line(px)
-    output[[length(output) + 1L]] <- line
+    line <- read_line(px)
+    if (length(line)) {
+      output[[length(output) + 1L]] <- line
+    }
   }
   output
 }

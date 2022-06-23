@@ -1,4 +1,7 @@
 
+#define Win32
+#define WIN32_LEAN_AND_MEAN 1
+#include <windows.h>
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -6,68 +9,16 @@
 #include <time.h>
 #include <stdint.h>
 
-#define R_INTERFACE_PTRS 1
+#include <Rversion.h>
+#define LibExtern __declspec(dllimport) extern
 #include <Rembedded.h>
-#include <Rinterface.h>
+#include <R_ext/RStartup.h>
 
 FILE* input_file = NULL;
 FILE* cast_file = NULL;
 char *output_buffer = NULL;
 
-/* for older macOS versions */
-
-#if defined(__APPLE__) && defined(__MACH__)
-#include <mach/clock.h>
-#include <mach/mach.h>
-#include <mach/mach_time.h>
-#include <sys/time.h>
-/* It doesn't really matter what these are defined to, as long as they
-   are defined */
-#ifndef CLOCK_REALTIME
-#define CLOCK_REALTIME 0
-#endif
-#ifndef CLOCK_MONOTONIC
-#define CLOCK_MONOTONIC 1
-#endif
-static int rem_clock_gettime(int clk_id, struct timespec *t) {
-  memset(t, 0, sizeof(*t));
-  if (clk_id == CLOCK_REALTIME) {
-    struct timeval now;
-    int rv = gettimeofday(&now, NULL); // __NO_COVERAGE__
-    if (rv) {                          // __NO_COVERAGE__
-      return rv;                       // __NO_COVERAGE__
-    }                                  // __NO_COVERAGE__
-    t->tv_sec = now.tv_sec;            // __NO_COVERAGE__
-    t->tv_nsec = now.tv_usec * 1000;   // __NO_COVERAGE__
-    return 0;                          // __NO_COVERAGE__
-
-  } else if (clk_id == CLOCK_MONOTONIC) {
-    static uint64_t clock_start_time = 0;
-    static mach_timebase_info_data_t timebase_ifo = {0, 0};
-    uint64_t now = mach_absolute_time();
-
-    if (clock_start_time == 0) {
-      kern_return_t mach_status = mach_timebase_info(&timebase_ifo);
-
-      /* appease "unused variable" warning for release builds */
-      (void)mach_status;
-
-      clock_start_time = now;
-    }
-
-    now = (uint64_t)((double)(now - clock_start_time)
-                     * (double)timebase_ifo.numer
-                     / (double)timebase_ifo.denom);
-
-    t->tv_sec = now / 1000000000;
-    t->tv_nsec = now % 1000000000;
-    return 0;
-  }
-  return EINVAL; /* EINVAL - Clock ID is unknown */ // __NO_COVERAGE__
-}
-#else
 #define rem_clock_gettime(a,b) clock_gettime(a,b)
-#endif
 
 double get_time() {
   struct timespec t;
@@ -99,6 +50,15 @@ const char *escape_len(const char *str, size_t len) {
 
   while (pi < end) {
     uint_fast8_t ch = *pi++;
+    // Skip the UTf-8 markers from R windows
+    if (ch == '\2' || ch == '\3') {
+      uint_fast8_t ch1 = pi[0];
+      uint_fast8_t ch2 = pi[1];
+      if (ch1 == 255 && ch2 == 254) {
+	pi += 2;
+	continue;
+      }
+    }
     if (!(ch & 0x80)) {
       code = ch;
       nc = 0;
@@ -222,7 +182,18 @@ int rem_read_console(const char *prompt,
   return 1;
 }
 
+void rem_callback() {
+  // shall we use this for something?
+}
+
+// Do we need this?
+// static void rem_on_intr(int sig) {
+//   UserBreak = 1;
+// }
+
 int main(int argc, char **argv) {
+
+  fprintf(stderr, "Starting up\n");
 
   // TODO: time stamp
   const char *cast_header =
@@ -241,6 +212,8 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
+  fprintf(stderr, "Opening input file: '%s'\n", argv[1]);
+
   input_file = fopen(argv[1], "r");
   if (input_file == NULL) {
     fprintf(
@@ -251,6 +224,8 @@ int main(int argc, char **argv) {
     );
     exit(1);
   }
+
+  fprintf(stderr, "Opening cast file: '%s'\n", argv[2]);
 
   cast_file = fopen(argv[2], "w");
   if (cast_file == NULL) {
@@ -263,6 +238,8 @@ int main(int argc, char **argv) {
     exit(1);
   }
   setbuf(cast_file, NULL);
+
+  fprintf(stderr, "Sending header\n");
 
   size_t header_len = strlen(cast_header);
   size_t written = fwrite(cast_header, 1, header_len, cast_file);
@@ -285,20 +262,57 @@ int main(int argc, char **argv) {
     "--no-readline"
   };
 
-  Rf_initEmbeddedR(sizeof(argv2) / sizeof(argv2[0]), argv2);
+  fprintf(stderr, "Starting R");
 
-  R_Interactive = 1;
-  R_Outputfile = NULL;
-  R_Consolefile = NULL;
-  ptr_R_ShowMessage = rem_show_message;
-  ptr_R_Busy = rem_busy;
-  ptr_R_WriteConsole = NULL;
-  ptr_R_WriteConsoleEx = rem_write_console_ex;
-  ptr_R_ReadConsole = rem_read_console;
+  // Rf_initEmbeddedR(sizeof(argv2) / sizeof(argv2[0]), argv2);
+
+  structRstart rp;
+  Rstart Rp = &rp;
+  char Rversion[25], *RHome;
+
+  snprintf(Rversion, 25, "%s.%s", R_MAJOR, R_MINOR);
+  if(strcmp(getDLLVersion(), Rversion) != 0) {
+    fprintf(stderr, "Error: R.DLL version does not match\n");
+    exit(1);
+  }
+
+  R_setStartTime();
+  R_DefParamsEx(Rp, RSTART_VERSION);
+  if((RHome = get_R_HOME()) == NULL) {
+    fprintf(stderr,
+	    "R_HOME must be set in the environment or Registry\n");
+    exit(1);
+  }
+  Rp->rhome = RHome;
+  Rp->home = getRUser();
+  Rp->CharacterMode = LinkDLL;
+  Rp->EmitEmbeddedUTF8 = FALSE;
+  Rp->ReadConsole = rem_read_console;
+  Rp->WriteConsole = NULL;
+  Rp->WriteConsoleEx = rem_write_console_ex;
+  Rp->CallBack = rem_callback;
+  Rp->ShowMessage = NULL;
+  Rp->YesNoCancel = NULL;
+  Rp->Busy = rem_busy;
+
+  Rp->R_Quiet = TRUE;
+  Rp->R_Interactive = TRUE;
+  Rp->RestoreAction = SA_NORESTORE;
+  Rp->SaveAction = SA_NOSAVE;
+  R_SetParams(Rp);
+  R_set_command_line_arguments(sizeof(argv2[0]), argv2);
+
+  setup_Rmainloop();
+
+  fprintf(stderr, "DLL init\n");
 
   R_ReplDLLinit();
 
+  fprintf(stderr, "REPL loop\n");
+
   while(R_ReplDLLdo1() > 0) {  }
+
+  fprintf(stderr, "REPL done\n");
 
   Rf_endEmbeddedR(0);
 
