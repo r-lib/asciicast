@@ -165,6 +165,8 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
     R_HOME = Sys.getenv("R_HOME"),
     R_LIBS_USER = Sys.getenv("R_LIBS_USER"),
     R_LIBS_SITE = Sys.getenv("R_LIBS_SITE"),
+    RTOOLS40_HOME = Sys.getenv("RTOOLS40_HOME"),
+    RTOOLS42_HOME = Sys.getenv("RTOOLS42_HOME"),
     TMPDIR = Sys.getenv("TMPDIR"),
     PATH = if (is_windows()) paste0(R.home("bin"), ";", Sys.getenv("PATH")),
     record_env
