@@ -199,6 +199,8 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
   lines <- c(
     "Sys.setlocale('LC_ALL', 'en_US.UTF-8')",
     "options(cli.num_colors = 256)",
+    "options(cli.dynamic = TRUE)",
+    "options(cli.ansi = TRUE)",
     if (!is.null(startup)) deparse(startup)
   )
   record_internal(lines, timeout, process = px)
