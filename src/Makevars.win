@@ -1,6 +1,6 @@
 
 rem.exe: rwin.o
-	$(CC) -o $@ rwin.o $(LIBR) $(LIBS)
+	$(CC) -O3 -o $@ rwin.o -I. $(LIBR) $(LIBS)
 
 clean:
 	@rm -f rem.exe rwin.o

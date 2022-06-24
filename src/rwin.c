@@ -14,6 +14,8 @@
 #include <Rembedded.h>
 #include <R_ext/RStartup.h>
 
+#include "psignal.h"
+
 FILE* input_file = NULL;
 FILE* cast_file = NULL;
 char *output_buffer = NULL;
@@ -34,7 +36,7 @@ const char *escape_len(const char *str, size_t len) {
   if (!output_buffer) {
     output_buffer = malloc(len * 4);
   } else {
-    output_buffer = realloc(output_buffer, len * 4);
+    output_buffer = realloc(output_buffer, len * 6 + 1);
   }
 
   if (output_buffer == NULL) {
@@ -187,9 +189,17 @@ void rem_callback() {
 }
 
 // Do we need this?
-// static void rem_on_intr(int sig) {
-//   UserBreak = 1;
-// }
+static void rem_on_intr(int sig) {
+  UserBreak = 1;
+}
+
+void rem_cleanup(SA_TYPE sa, int x, int y) { }
+void rem_void() { }
+void rem_suicide(const char *s) {
+  fprintf(stderr, "suicide: %s\n", s);
+}
+
+extern void run_Rmainloop();
 
 int main(int argc, char **argv) {
 
@@ -257,6 +267,7 @@ int main(int argc, char **argv) {
     "-q",
     "--vanilla",
     "--gui=none",
+    "--slave",
     "--no-restore",
     "--no-save",
     "--no-readline"
@@ -294,25 +305,33 @@ int main(int argc, char **argv) {
   Rp->ShowMessage = NULL;
   Rp->YesNoCancel = NULL;
   Rp->Busy = rem_busy;
+  Rp->CleanUp = rem_cleanup;
+  Rp->ClearerrConsole = rem_void;
+  Rp->FlushConsole = rem_void;
+  Rp->ResetConsole = rem_void;
+  Rp->Suicide = rem_suicide;
 
   Rp->R_Quiet = TRUE;
+  Rp->R_NoEcho = FALSE;
   Rp->R_Interactive = TRUE;
+  Rp->R_Verbose = FALSE;
+  Rp->LoadSiteFile = TRUE;
+  Rp->LoadInitFile = FALSE;
+  Rp->DebugInitFile = FALSE;
   Rp->RestoreAction = SA_NORESTORE;
   Rp->SaveAction = SA_NOSAVE;
+
   R_SetParams(Rp);
   R_set_command_line_arguments(sizeof(argv2[0]), argv2);
 
+  signal(SIGBREAK, rem_on_intr);
   setup_Rmainloop();
 
   fprintf(stderr, "DLL init\n");
 
-  R_ReplDLLinit();
+  run_Rmainloop();
 
   fprintf(stderr, "REPL loop\n");
-
-  while(R_ReplDLLdo1() > 0) {  }
-
-  fprintf(stderr, "REPL done\n");
 
   Rf_endEmbeddedR(0);
 
