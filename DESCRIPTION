@@ -37,7 +37,7 @@ Suggests:
     rmarkdown,
     rstudioapi,
 Remotes:
-    r-lib/processx@feature/fifo
+    r-lib/processx
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
