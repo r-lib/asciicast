@@ -32,10 +32,11 @@ Imports:
     utils,
     V8
 Suggests:
+    covr,
     htmlwidgets,
     knitr,
     rmarkdown,
-    rstudioapi,
+    rstudioapi
 Remotes:
     r-lib/processx
 Encoding: UTF-8

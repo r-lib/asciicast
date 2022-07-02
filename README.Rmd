@@ -25,9 +25,9 @@ options(
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-[![Linux Build Status](https://travis-ci.org/r-lib/asciicast.svg?branch=main)](https://travis-ci.org/r-lib/asciicast)
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/github/r-lib/asciicast?svg=true)](https://ci.appveyor.com/project/gaborcsardi/asciicast)
 [![CRAN status](https://www.r-pkg.org/badges/version/asciicast)](https://cran.r-project.org/package=asciicast)
+[![R-CMD-check](https://github.com/r-lib/asciicast/workflows/R-CMD-check/badge.svg)](https://github.com/r-lib/asciicast/actions)
+[![Codecov test coverage](https://codecov.io/gh/r-lib/asciicast/branch/main/graph/badge.svg)](https://app.codecov.io/gh/r-lib/asciicast?branch=main)
 <!-- badges: end -->
 
 asciicast takes an R script and turns it into an
