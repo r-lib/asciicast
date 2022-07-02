@@ -1,90 +1,52 @@
 
 record_internal <- function(lines, timeout, process) {
 
-  timeout <- as.double(timeout, units = "secs") * 1000
+  to <- as.double(timeout, units = "secs") * 1000
 
   ptr <- 1
   output <- character()
-  px <- process
-  con <- attr(px, "cast_fifo")
 
   send_next_command <- function() {
     while (TRUE) {
-
       # if need more lines, but there is no more
       if (ptr > length(lines)) {
         throw(new_error("Incomplete asciicast expression"))
       }
 
       # send a line
-      write_line(px, lines[ptr])
+      write_line(process, lines[ptr])
       ptr <<- ptr + 1
 
       # wait until we see the "input" line, here we might read the
       # leftover from the output
-      while (TRUE) {
-        ret <- processx::poll(list(con), timeout)
-        if (ret[[1]] == "timeout") {
-          throw(new_error("asciicast timeout at line ", ptr - 1))
-        }
-        line <- read_line(px)
-        if (length(line)) {
-          output[length(output) + 1L] <<- line
-          msg <- parse_line(line)
-          if (msg$type == "rlib" && msg$value == "type: input") break
-        }
-      }
+      output <<- c(output, wait_for(process, "^rlib$", "^type: input$", to, ptr - 1))
 
       # wait until we get back a "busy" linem that means that it is running
-      while (TRUE) {
-        ret <- processx::poll(list(con), timeout)
-        if (ret[[1]] == "timeout") {
-          throw(new_error("asciicast timeout at line ", ptr - 1))
-        }
-        line <- read_line(px)
-        if (length(line)) {
-          output[length(output) + 1L] <<- line
-          msg <- parse_line(line)
-          if (msg$type == "rlib" && grepl("^busy:", msg$value)) break
-        }
-      }
+      output <<- c(output, wait_for(process, "^rlib$", "^busy:", to, ptr - 1))
 
       # if busy: 1, then the command is running, nothing more to send
-      if (msg$value == "busy: 1") break
+      if (length(output) >= 1) {
+        msg <- parse_line(output[length(output)])
+        if (msg$value == "busy: 1") break
+      }
 
       # otherwise the expression is incomplete, keep sending
     }
   }
 
   wait_for_done <- function() {
-    while (TRUE) {
-      ret <- processx::poll(list(con), timeout)
-      if (ret[[1]] == "timeout") {
-        throw(new_error("asciicast timeout at line ", ptr - 1))
-      }
-      line <- read_line(px)
-      if (length(line)) {
-        output[length(output) + 1L] <<- line
-        msg <- parse_line(line)
-        if (msg$type == "rlib" && msg$value == "busy: 0") break
-      }
-    }
+    output <<- c(output, wait_for(process, "^rlib$", "^busy: 0$", to, ptr - 1))
   }
 
+  con <- attr(process, "cast_fifo")
   while (ptr <= length(lines)) {
     send_next_command()
     wait_for_done()
+    if (!processx::conn_is_incomplete(con)) break;
   }
 
   # there might we some more messages in the output, read those
-  while (TRUE) {
-    ret <- processx::poll(list(con), 0)
-    if (ret[[1]] == "timeout") break
-    line <- read_line(px)
-    if (length(line)) {
-      output[[length(output) + 1L]] <- line
-    }
-  }
+  output <- c(output, read_all(process))
 
   msgs <- lapply(output, parse_line)
   data <- tibble::tibble(
@@ -94,6 +56,41 @@ record_internal <- function(lines, timeout, process) {
   )
 
   data
+}
+
+wait_for <- function(px, type = "", value = "", timeout = 1000, linum = "???") {
+  con <- attr(px, "cast_fifo")
+  output <- character()
+  while (TRUE) {
+    ret <- processx::poll(list(con), timeout)
+    if (ret[[1]] == "timeout") {
+      throw(new_error("asciicast timeout after line ", linum))
+    }
+    line <- processx::conn_read_lines(con, 1)
+    if (length(line)) {
+      output[length(output) + 1L] <- line
+      msg <- parse_line(line)
+      if (grepl(type, msg$type) && grepl(value, msg$value)) break
+    }
+    if (!processx::conn_is_incomplete(con)) break
+  }
+
+  output
+}
+
+read_all <- function(px) {
+  con <- attr(px, "cast_fifo")
+  output <- character()
+  while (TRUE) {
+    ret <- processx::poll(list(con), 0)
+    if (ret[[1]] == "timeout") break
+    line <- processx::conn_read_lines(con, 1)
+    if (length(line)) {
+      output[[length(output) + 1L]] <- line
+    }
+    if (!processx::conn_is_incomplete(con)) break
+  }
+  output
 }
 
 record_embedded <- function(lines, typing_speed, timeout, empty_wait,
@@ -195,7 +192,9 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
   attr(px, "input_fifo") <- input_fifo
   attr(px, "cast_fifo") <- cast_fifo
 
-  wait_for_idle(px, timeout)
+  to <- as.double(timeout, units = "secs") * 1000
+  wait_for(px, "^rlib$", "^busy: 0$", timeout = to)
+  read_all(px)
 
   # throw away the output of the startup code
   lines <- c(
@@ -207,43 +206,12 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
   )
   record_internal(lines, timeout, process = px)
 
+  if (!processx::conn_is_incomplete(cast_fifo)) {
+    throw(new_error("asciicast process exited while running `startup`"))
+  }
+
   px
 }
-
-wait_for_idle <- function(px, timeout) {
-  timeout <- as.double(timeout, units = "secs") * 1000
-  output <- character()
-  con <- attr(px, "cast_fifo")
-  while (TRUE) {
-    ret <- processx::poll(list(con), timeout)
-    if (ret[[1]] == "timeout") {
-      throw(new_error("Cannot start asciicast subprocess, timeout"))
-    }
-    line <- read_line(px)
-    if (length(line)) {
-      output[length(output) + 1L] <- line
-      msg <- parse_line(line)
-      if (msg$type == "rlib" && msg$value == "busy: 0") break
-    }
-  }
-
-  # there might we some more messages in the output, read those
-  while (TRUE) {
-    ret <- processx::poll(list(con), 0)
-    if (ret[[1]] == "timeout") break
-    line <- read_line(px)
-    if (length(line)) {
-      output[[length(output) + 1L]] <- line
-    }
-  }
-  output
-}
-
-read_line <- function(px) {
-  con <- attr(px, "cast_fifo")
-  processx::conn_read_lines(con, 1)
-}
-
 write_line <- function(px, line) {
   con <- attr(px, "input_fifo")
   line <- paste0(line, "\n")
