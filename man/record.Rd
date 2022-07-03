@@ -22,7 +22,8 @@ record(
   startup = NULL,
   echo = TRUE,
   speed = NULL,
-  process = NULL
+  process = NULL,
+  interactive = TRUE
 )
 }
 \arguments{
@@ -79,6 +80,10 @@ The delay of the first frame is kept constant.}
 new subprocess is started. You can reuse a process by calling
 \code{\link[=asciicast_start_process]{asciicast_start_process()}} first, and supplying the returned process
 here.}
+
+\item{interactive}{Whether to run R in interactive mode. This argument
+is ignored if \code{process} is specified. If \code{process} is \code{NULL} then
+it is passed to \code{\link[=asciicast_start_process]{asciicast_start_process()}}.}
 }
 \value{
 An \code{asciicast} object, write this to

@@ -10,8 +10,10 @@
 #include <Rembedded.h>
 #include <Rinterface.h>
 
-FILE* input_file = NULL;
-FILE* cast_file = NULL;
+#include <processx/unix-sockets.c>
+
+processx_socket_t sock = -1;
+FILE *sock_file = NULL;
 char *output_buffer = NULL;
 
 /* for older macOS versions */
@@ -74,7 +76,7 @@ double get_time() {
   int ret = rem_clock_gettime(CLOCK_MONOTONIC, &t);
   if (ret) {
     fprintf(stderr, "Cannot query monotonic clock: %s", strerror(errno));
-    exit(3);
+    exit(1);
   }
   return (double) t.tv_sec + 1e-9 * (double) t.tv_nsec;
 }
@@ -88,7 +90,7 @@ const char *escape_len(const char *str, size_t len) {
 
   if (output_buffer == NULL) {
     fprintf(stderr, "Cannot allocate output buffer, out of memory\n");
-    exit(4);
+    exit(2);
   }
 
   const char *end = str + len;
@@ -117,7 +119,7 @@ const char *escape_len(const char *str, size_t len) {
       ch = *pi++;
       if (ch == 0) {
         fprintf(stderr, "Incomplete UTF-8 character in output");
-        exit(5);
+        exit(3);
       }
       code = (code << 6) + (ch & 0x3F);
     }
@@ -165,19 +167,42 @@ const char *escape(const char *str) {
 
 void rem_show_message(const char *message) {
   double ts = get_time();
-  fprintf(cast_file, "[%f, \"rlib\", \"type: message\"]\n", ts);
-  fprintf(cast_file, "[%f, \"o\", \"%s\"]\n", ts, escape(message));
+  fprintf(sock_file, "[%f, \"rlib\", \"type: message\"]\n", ts);
+  fprintf(sock_file, "[%f, \"o\", \"%s\"]\n", ts, escape(message));
+}
+
+void rem_clean_up(SA_TYPE saveact, int status, int run_last) {
+  // We never save the data, is this OK? (TODO)
+  if (run_last) R_dot_Last();
+
+    R_RunExitFinalizers();
+    /* clean up after the editor e.g. CleanEd() */
+
+    R_CleanTempDir();
+
+    /* close all the graphics devices */
+    if(saveact != SA_SUICIDE) Rf_KillAllDevices();
+    fpu_setup(FALSE);
+
+    exit(status);
+}
+
+void rem_suicide(const char *message) {
+  double ts = get_time();
+  fprintf(sock_file, "[%f, \"rlib\", \"type: suicide\"]\n", ts);
+  fprintf(sock_file, "[%f, \"o\", \"%s\"]\n", ts, escape(message));
+  rem_clean_up(SA_SUICIDE, 2, 0);
 }
 
 void rem_busy(int which) {
   double ts = get_time();
-  fprintf(cast_file, "[%f, \"rlib\", \"busy: %d\"]\n", ts, which);
+  fprintf(sock_file, "[%f, \"rlib\", \"busy: %d\"]\n", ts, which);
 }
 
 void rem_write_console_ex(const char *buf, int buflen, int which) {
   double ts = get_time();
-  fprintf(cast_file, "[%f, \"rlib\", \"type: %s\"]\n", ts, which ? "stderr": "stdout");
-  fprintf(cast_file, "[%f, \"o\", \"%s\"]\n", ts, escape_len(buf, buflen));
+  fprintf(sock_file, "[%f, \"rlib\", \"type: %s\"]\n", ts, which ? "stderr": "stdout");
+  fprintf(sock_file, "[%f, \"o\", \"%s\"]\n", ts, escape_len(buf, buflen));
 }
 
 void rem_write_console(const char *buf, int buflen) {
@@ -189,11 +214,15 @@ int rem_read_console(const char *prompt,
                      int buflen,
                      int hist) {
 
+  // We let the main process know that we want to read (more)
+  double ts = get_time();
+  fprintf(sock_file, "[%f, \"rlib\", \"type: read\"]\n", ts);
+
   errno = 0;
   buf[0] = '\0';
-  fgets((char*) buf, buflen, input_file);
+  fgets((char*) buf, buflen, sock_file);
   if (errno != 0) {
-    if (feof(input_file)) {
+    if (feof(sock_file)) {
       errno = 0;
       return 0;
     }
@@ -203,26 +232,33 @@ int rem_read_console(const char *prompt,
       errno,
       strerror(errno)
     );
-    exit(2);
+    exit(4);
   }
 
   // We only do this after we read something, otherwise the timings are
   // off if this process is idle for a long time
-  double ts = get_time();
-  fprintf(cast_file, "[%f, \"rlib\", \"type: prompt\"]\n", ts);
-  fprintf(cast_file, "[%f, \"o\", \"%s\"]\n", ts, escape(prompt));
+  ts = get_time();
+  fprintf(sock_file, "[%f, \"rlib\", \"type: prompt\"]\n", ts);
+  fprintf(sock_file, "[%f, \"o\", \"%s\"]\n", ts, escape(prompt));
 
   if (strlen((const char*) buf)) {
     const char *escbuf = escape((const char*) buf);
-    fprintf(cast_file, "[%f, \"i\", \"%s\"]\n", ts, escbuf);
-    fprintf(cast_file, "[%f, \"rlib\", \"type: input\"]\n", ts);
-    fprintf(cast_file, "[%f, \"o\", \"%s\"]\n", ts, escbuf);
+    fprintf(sock_file, "[%f, \"i\", \"%s\"]\n", ts, escbuf);
+    fprintf(sock_file, "[%f, \"rlib\", \"type: input\"]\n", ts);
+    fprintf(sock_file, "[%f, \"o\", \"%s\"]\n", ts, escbuf);
   }
 
   return 1;
 }
 
+void usage(const char *argv0) {
+  fprintf(stderr, "Usage: %s [-i] <unix-socket>\n", argv0);
+  exit(5);
+}
+
 int main(int argc, char **argv) {
+
+  int interactive = 0;
 
   // TODO: time stamp
   const char *cast_header =
@@ -236,43 +272,60 @@ int main(int argc, char **argv) {
     "\"cols\":80"
     "}\n";
 
-  if (argc != 3) {
-    fprintf(stderr, "Usage: %s <R-script-file> <cast-file>\n", argv[0]);
-    exit(1);
+  if (argc < 2) {
+    usage(argv[0]);
   }
 
-  input_file = fopen(argv[1], "r");
-  if (input_file == NULL) {
-    fprintf(
-      stderr,
-      "Failed to open R script file '%s': %s",
-      argv[1],
-      strerror(errno)
-    );
-    exit(1);
+  int idx = 1;
+  if (!strcmp(argv[1], "-i")) {
+    if (argc != 3) {
+      usage(argv[0]);
+    }
+    interactive = 1;
+    idx++;
   }
 
-  cast_file = fopen(argv[2], "w");
-  if (cast_file == NULL) {
+#ifdef _WIN32
+  const char *prefix = "\\\\?\\pipe\\";
+  char name[1024] = {0};
+  strncpy(name, prefix, sizeof(name) - 1);
+  strncat(name, argv[idx], sizeof(name) - 1);
+#else
+  const char *name = argv[idx];
+#endif
+
+  int ret = processx_socket_connect(name, &sock);
+  if (ret == -1) {
     fprintf(
       stderr,
-      "Failed to open cast output file '%s': %s",
-      argv[2],
-      strerror(errno)
+      "Failed to connect to socket at '%s': %s\n",
+      argv[idx],
+      processx_socket_error_message()
     );
-    exit(1);
+    exit(6);
   }
-  setbuf(cast_file, NULL);
+
+  sock_file = fdopen(sock, "r+");
+  if (sock_file == NULL) {
+    fprintf(
+      stderr,
+      "Cannot open socket at '%s' as file: %s\n",
+      argv[idx],
+      processx_socket_error_message()
+    );
+    exit(7);
+  }
+  setbuf(sock_file, NULL);
 
   size_t header_len = strlen(cast_header);
-  size_t written = fwrite(cast_header, 1, header_len, cast_file);
+  size_t written = processx_socket_write(&sock, (void*) cast_header,  header_len);
   if (written != header_len) {
     fprintf(
       stderr,
-      "Failed to write to cast file '%s': %s",
-      argv[2],
-      strerror(errno)
+      "Failed to write header to server socket: %s\n",
+      processx_socket_error_message()
     );
+    exit(8);
   }
 
   char *argv2[]= {
@@ -287,7 +340,7 @@ int main(int argc, char **argv) {
 
   Rf_initEmbeddedR(sizeof(argv2) / sizeof(argv2[0]), argv2);
 
-  R_Interactive = 1;
+  R_Interactive = interactive;
   R_Outputfile = NULL;
   R_Consolefile = NULL;
   ptr_R_ShowMessage = rem_show_message;
@@ -295,6 +348,8 @@ int main(int argc, char **argv) {
   ptr_R_WriteConsole = NULL;
   ptr_R_WriteConsoleEx = rem_write_console_ex;
   ptr_R_ReadConsole = rem_read_console;
+  ptr_R_Suicide = rem_suicide;
+  ptr_R_CleanUp = rem_clean_up;
 
   R_ReplDLLinit();
 

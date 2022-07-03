@@ -27,10 +27,12 @@ Imports:
     curl,
     jsonlite,
     magick (>= 2.2.9002),
-    processx (>= 3.6.1.9001),
+    processx (>= 3.6.1.9002),
     tibble,
     utils,
     V8
+LinkingTo:
+    processx
 Suggests:
     covr,
     htmlwidgets,
