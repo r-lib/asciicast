@@ -47,8 +47,6 @@ records all terminal output in real time as it happens.
 
 ## Limitations
 
--   asciicast does not work in Windows yet, but Windows support is
-    coming soon.
 -   asciicast needs an R build that contains a shared or static R
     library. This is true for most R builds currently.
 
