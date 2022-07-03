@@ -44,7 +44,7 @@ Suggests:
 Remotes:
     r-lib/processx
 Config/Needs/website:
-    r-lb/downlit
+    r-lib/downlit
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0
