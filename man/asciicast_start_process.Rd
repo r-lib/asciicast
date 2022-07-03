@@ -4,7 +4,12 @@
 \alias{asciicast_start_process}
 \title{Start an asciicast background process}
 \usage{
-asciicast_start_process(startup = NULL, timeout = 10, record_env = NULL)
+asciicast_start_process(
+  startup = NULL,
+  timeout = 10,
+  record_env = NULL,
+  interactive = TRUE
+)
 }
 \arguments{
 \item{startup}{Quoted language object to run in the subprocess before
@@ -15,6 +20,9 @@ the recording does not answer within this limit, it is killed and the
 recording stops.}
 
 \item{record_env}{Environment variables to set for the R subprocess.}
+
+\item{interactive}{Whether to run R in interactive mode. Note that in
+interactive mode R might ask for terminal input.}
 }
 \value{
 The R process, a \link[processx:process]{processx::process} object.

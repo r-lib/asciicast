@@ -11,9 +11,9 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/asciicast)](https://cran.r-project.org/package=asciicast)
-[![R-CMD-check](https://github.com/r-lib/asciicast/workflows/R-CMD-check/badge.svg)](https://github.com/r-lib/asciicast/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/r-lib/asciicast/branch/main/graph/badge.svg)](https://app.codecov.io/gh/r-lib/asciicast?branch=main)
+[![R-CMD-check](https://github.com/r-lib/asciicast/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-lib/asciicast/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 asciicast takes an R script and turns it into an
@@ -47,8 +47,6 @@ records all terminal output in real time as it happens.
 
 ## Limitations
 
--   asciicast does not work in Windows yet, but Windows support is
-    coming soon.
 -   asciicast needs an R build that contains a shared or static R
     library. This is true for most R builds currently.
 

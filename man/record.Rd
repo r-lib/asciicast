@@ -14,7 +14,6 @@ record(
   timestamp = NULL,
   env = NULL,
   idle_time_limit = NULL,
-  allow_errors = TRUE,
   timeout = NULL,
   start_wait = NULL,
   end_wait = NULL,
@@ -22,7 +21,8 @@ record(
   startup = NULL,
   echo = TRUE,
   speed = NULL,
-  process = NULL
+  process = NULL,
+  interactive = TRUE
 )
 }
 \arguments{
@@ -51,10 +51,6 @@ Defaults to \code{list(TERM = "xterm-256color", SHELL = "/bin/zsh")}.}
 \item{idle_time_limit}{Time limit for the cast not printing anything,
 in seconds. By default there is no limit.}
 
-\item{allow_errors}{Whether to cast errors properly. If this is set to
-\code{TRUE}, then asciicast overwrites the \code{"error"} option. Only change
-this if you know what you are doing.}
-
 \item{timeout}{Idle timeout, in seconds If the R subprocess running
 the recording does not answer within this limit, it is killed and the
 recording stops. Update this for slow running code, that produces no
@@ -79,6 +75,10 @@ The delay of the first frame is kept constant.}
 new subprocess is started. You can reuse a process by calling
 \code{\link[=asciicast_start_process]{asciicast_start_process()}} first, and supplying the returned process
 here.}
+
+\item{interactive}{Whether to run R in interactive mode. This argument
+is ignored if \code{process} is specified. If \code{process} is \code{NULL} then
+it is passed to \code{\link[=asciicast_start_process]{asciicast_start_process()}}.}
 }
 \value{
 An \code{asciicast} object, write this to

@@ -10,6 +10,7 @@
 ^\.travis\.yml$
 ^doc$
 ^Meta$
+^vignettes$
 ^vignettes/.*_cache$
 ^vignettes/.*_files$
 ^README_cache$

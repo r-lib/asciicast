@@ -41,12 +41,6 @@ env_file <- NULL
   env_file <<- tempfile()
   saveRDS(env, file = env_file, version = 2, compress = FALSE)
 
-  lazyrmd$onload_hook(
-    local = FALSE,
-    ci = function() is_recording_supported(),
-    cran = "no-code"
-  )
-
   err$onload_hook()
 
   invisible()

@@ -17,9 +17,6 @@
 #'   Defaults to `list(TERM = "xterm-256color", SHELL = "/bin/zsh")`.
 #' @param idle_time_limit Time limit for the cast not printing anything,
 #'   in seconds. By default there is no limit.
-#' @param allow_errors Whether to cast errors properly. If this is set to
-#'   `TRUE`, then asciicast overwrites the `"error"` option. Only change
-#'   this if you know what you are doing.
 #' @param timeout Idle timeout, in seconds If the R subprocess running
 #'   the recording does not answer within this limit, it is killed and the
 #'   recording stops. Update this for slow running code, that produces no
@@ -37,7 +34,9 @@
 #'   new subprocess is started. You can reuse a process by calling
 #'   [asciicast_start_process()] first, and supplying the returned process
 #'   here.
-#'
+#' @param interactive Whether to run R in interactive mode. This argument
+#'   is ignored if `process` is specified. If `process` is `NULL` then
+#'   it is passed to [asciicast_start_process()].
 #' @return An `asciicast` object, write this to
 #'   file with [write_json()].
 #'
@@ -50,10 +49,10 @@
 
 record <- function(script, typing_speed = NULL, empty_wait = NULL,
                    cols = NULL, rows = NULL, title = NULL, timestamp = NULL,
-                   env = NULL, idle_time_limit = NULL, allow_errors = TRUE,
+                   env = NULL, idle_time_limit = NULL,
                    timeout = NULL, start_wait = NULL, end_wait = NULL,
                    record_env = NULL, startup = NULL, echo = TRUE,
-                   speed = NULL, process = NULL) {
+                   speed = NULL, process = NULL, interactive = TRUE) {
 
   lines <- readLines(script)
   parsed <- parse_header(lines)
@@ -91,8 +90,8 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
   }
 
   output <- record_embedded(body, typing_speed, timeout, empty_wait,
-                            allow_errors, start_wait, end_wait, record_env,
-                            startup, echo, speed, process)
+                            start_wait, end_wait, record_env,
+                            startup, echo, speed, process, interactive)
 
   if (rows == "auto") {
     plain <- cli::ansi_strip(paste0(

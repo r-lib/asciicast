@@ -13,3 +13,5 @@ Meta
 /src/*.o
 /src/rem
 /src/rem.exe
+/docs
+/vignettes/asciicast-demo.html

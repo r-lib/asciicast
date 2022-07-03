@@ -65,9 +65,8 @@ asciicast_knitr_options <- function() {
 #' ````
 
 init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
-                              timeout = 10, allow_errors = TRUE,
-                              startup = NULL, record_env = NULL,
-                              echo_input = TRUE,
+                              timeout = 10, startup = NULL,
+                              record_env = NULL, echo_input = TRUE,
                               options = list()) {
 
   options <- utils::modifyList(asciicast_knitr_options(), options)

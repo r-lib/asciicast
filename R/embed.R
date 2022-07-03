@@ -5,9 +5,15 @@ record_internal <- function(lines, timeout, process) {
 
   ptr <- 1
   output <- character()
+  con <- attr(process, "sock")
 
   send_next_command <- function() {
     while (TRUE) {
+      if (!processx::conn_is_incomplete(con)) {
+        # R exited unexpectedly while evaluating an expression
+        return()
+      }
+
       # if need more lines, but there is no more
       if (ptr > length(lines)) {
         throw(new_error("Incomplete asciicast expression"))
@@ -38,7 +44,6 @@ record_internal <- function(lines, timeout, process) {
     output <<- c(output, wait_for(process, "^rlib$", "^busy: 0$", to, ptr - 1))
   }
 
-  con <- attr(process, "cast_fifo")
   while (ptr <= length(lines)) {
     send_next_command()
     wait_for_done()
@@ -59,7 +64,7 @@ record_internal <- function(lines, timeout, process) {
 }
 
 wait_for <- function(px, type = "", value = "", timeout = 1000, linum = "???") {
-  con <- attr(px, "cast_fifo")
+  con <- attr(px, "sock")
   output <- character()
   while (TRUE) {
     ret <- processx::poll(list(con), timeout)
@@ -71,6 +76,7 @@ wait_for <- function(px, type = "", value = "", timeout = 1000, linum = "???") {
       output[length(output) + 1L] <- line
       msg <- parse_line(line)
       if (grepl(type, msg$type) && grepl(value, msg$value)) break
+      if (msg$type == "rlib" && msg$value == "type: read") break
     }
     if (!processx::conn_is_incomplete(con)) break
   }
@@ -79,7 +85,7 @@ wait_for <- function(px, type = "", value = "", timeout = 1000, linum = "???") {
 }
 
 read_all <- function(px) {
-  con <- attr(px, "cast_fifo")
+  con <- attr(px, "sock")
   output <- character()
   while (TRUE) {
     ret <- processx::poll(list(con), 0)
@@ -94,12 +100,16 @@ read_all <- function(px) {
 }
 
 record_embedded <- function(lines, typing_speed, timeout, empty_wait,
-                            allow_errors, start_wait, end_wait,
-                            record_env, startup, echo, speed, process) {
+                            start_wait, end_wait,
+                            record_env, startup, echo, speed, process,
+                            interactive) {
 
-  # * allow_errors
-
-  px <- process %||% asciicast_start_process(startup, timeout, record_env)
+  px <- process %||% asciicast_start_process(
+    startup,
+    timeout,
+    record_env,
+    interactive
+  )
 
   data <- record_internal(lines, timeout, px)
 
@@ -140,6 +150,8 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
 #'   the recording does not answer within this limit, it is killed and the
 #'   recording stops.
 #' @param record_env Environment variables to set for the R subprocess.
+#' @param interactive Whether to run R in interactive mode. Note that in
+#'   interactive mode R might ask for terminal input.
 #' @return The R process, a [processx::process] object.
 #'
 #' @family asciicast functions
@@ -155,7 +167,7 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
 #' cast2
 
 asciicast_start_process <- function(startup = NULL, timeout = 10,
-                                    record_env = NULL) {
+                                    record_env = NULL, interactive = TRUE) {
 
   env <- c(
     ASCIICAST = "true",
@@ -175,22 +187,25 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
     exec_path <- system.file("src", exec_name, package = "asciicast")
   }
 
-  input_fifo <- processx::conn_create_fifo(write = TRUE)
-  cast_fifo <- processx::conn_create_fifo(read = TRUE)
-
-  input_fifo_name <- processx::conn_file_name(input_fifo)
-  cast_fifo_name <- processx::conn_file_name(cast_fifo)
+  sock <- processx::conn_create_unix_socket()
+  sock_name <- processx::conn_file_name(sock)
+  if (is_windows()) sock_name <- basename(sock_name)
 
   px <- processx::process$new(
     exec_path,
-    c(input_fifo_name, cast_fifo_name),
+    c(if (interactive) "-i", sock_name),
     env = env,
     stdout = "|",
-    stderr = "|"
+    stderr = "2>&1"
   )
 
-  attr(px, "input_fifo") <- input_fifo
-  attr(px, "cast_fifo") <- cast_fifo
+  attr(px, "sock") <- sock
+
+  pr <- processx::poll(list(sock), 5000)[[1]]
+  if (pr != "connect") {
+    throw(new_error("R subprocess did not connect back"))
+  }
+  processx::conn_accept_unix_socket(sock)
 
   to <- as.double(timeout, units = "secs") * 1000
   wait_for(px, "^rlib$", "^busy: 0$", timeout = to)
@@ -206,14 +221,14 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
   )
   record_internal(lines, timeout, process = px)
 
-  if (!processx::conn_is_incomplete(cast_fifo)) {
+  if (!processx::conn_is_incomplete(sock)) {
     throw(new_error("asciicast process exited while running `startup`"))
   }
 
   px
 }
 write_line <- function(px, line) {
-  con <- attr(px, "input_fifo")
+  con <- attr(px, "sock")
   line <- paste0(line, "\n")
   leftover <- processx::conn_write(con, charToRaw(line))
   if (length(leftover) > 0) {

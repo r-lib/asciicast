@@ -8,7 +8,6 @@ init_knitr_engine(
   echo = FALSE,
   same_process = TRUE,
   timeout = 10,
-  allow_errors = TRUE,
   startup = NULL,
   record_env = NULL,
   echo_input = TRUE,
