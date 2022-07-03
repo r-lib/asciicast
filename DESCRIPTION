@@ -35,6 +35,7 @@ LinkingTo:
     processx
 Suggests:
     covr,
+    cpp11,
     htmlwidgets,
     knitr,
     rmarkdown,

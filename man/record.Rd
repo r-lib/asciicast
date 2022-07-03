@@ -14,7 +14,6 @@ record(
   timestamp = NULL,
   env = NULL,
   idle_time_limit = NULL,
-  allow_errors = TRUE,
   timeout = NULL,
   start_wait = NULL,
   end_wait = NULL,
@@ -51,10 +50,6 @@ Defaults to \code{list(TERM = "xterm-256color", SHELL = "/bin/zsh")}.}
 
 \item{idle_time_limit}{Time limit for the cast not printing anything,
 in seconds. By default there is no limit.}
-
-\item{allow_errors}{Whether to cast errors properly. If this is set to
-\code{TRUE}, then asciicast overwrites the \code{"error"} option. Only change
-this if you know what you are doing.}
 
 \item{timeout}{Idle timeout, in seconds If the R subprocess running
 the recording does not answer within this limit, it is killed and the

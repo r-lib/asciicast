@@ -27,6 +27,7 @@
 #' @importFrom processx process
 #' @importFrom jsonlite toJSON
 #' @importFrom magick image_read image_write image_animate image_quantize
+#'   image_display
 #' @importFrom cli cli_status cli_status_update cli_status_clear
 #' @export
 

@@ -100,11 +100,9 @@ read_all <- function(px) {
 }
 
 record_embedded <- function(lines, typing_speed, timeout, empty_wait,
-                            allow_errors, start_wait, end_wait,
+                            start_wait, end_wait,
                             record_env, startup, echo, speed, process,
                             interactive) {
-
-  # * allow_errors
 
   px <- process %||% asciicast_start_process(
     startup,
