@@ -285,15 +285,7 @@ int main(int argc, char **argv) {
     idx++;
   }
 
-#ifdef _WIN32
-  const char *prefix = "\\\\?\\pipe\\";
-  char name[1024] = {0};
-  strncpy(name, prefix, sizeof(name) - 1);
-  strncat(name, argv[idx], sizeof(name) - 1);
-#else
   const char *name = argv[idx];
-#endif
-
   int ret = processx_socket_connect(name, &sock);
   if (ret == -1) {
     fprintf(

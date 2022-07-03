@@ -191,6 +191,7 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
 
   sock <- processx::conn_create_unix_socket()
   sock_name <- processx::conn_file_name(sock)
+  if (is_windows()) sock_name <- basename(sock_name)
 
   px <- processx::process$new(
     exec_path,
@@ -201,7 +202,6 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
   )
 
   attr(px, "sock") <- sock
-  attr(px, "sock_name") <- sock_name
 
   pr <- processx::poll(list(sock), 5000)[[1]]
   if (pr != "connect") {
