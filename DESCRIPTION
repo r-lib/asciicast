@@ -43,6 +43,8 @@ Suggests:
     rstudioapi
 Remotes:
     r-lib/processx
+Config/Needs/website:
+    r-lb/downlit
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
