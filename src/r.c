@@ -220,8 +220,8 @@ int rem_read_console(const char *prompt,
 
   errno = 0;
   buf[0] = '\0';
-  fgets((char*) buf, buflen, sock_file);
-  if (errno != 0) {
+  char *ret = fgets((char*) buf, buflen, sock_file);
+  if (ret == NULL) {
     if (feof(sock_file)) {
       errno = 0;
       return 0;
