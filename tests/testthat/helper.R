@@ -1,4 +1,4 @@
 
 os_name <- function() {
-  Sys.info()[["sysname"]]
+  tolower(Sys.info()[["sysname"]])
 }
