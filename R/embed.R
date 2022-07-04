@@ -169,17 +169,13 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
 asciicast_start_process <- function(startup = NULL, timeout = 10,
                                     record_env = NULL, interactive = TRUE) {
 
-  env <- c(
-    ASCIICAST = "true",
-    R_HOME = Sys.getenv("R_HOME"),
-    R_LIBS_USER = Sys.getenv("R_LIBS_USER"),
-    R_LIBS_SITE = Sys.getenv("R_LIBS_SITE"),
-    RTOOLS40_HOME = Sys.getenv("RTOOLS40_HOME"),
-    RTOOLS42_HOME = Sys.getenv("RTOOLS42_HOME"),
-    TMPDIR = Sys.getenv("TMPDIR"),
-    PATH = if (is_windows()) paste0(R.home("bin"), ";", Sys.getenv("PATH")),
-    record_env
-  )
+  env <- Sys.getenv()
+  env["ASCIICAST"] <- "true"
+  if (is_windows()) {
+    env["PATH"] <- paste0(R.home("bin"), ";", Sys.getenv("PATH"))
+  }
+  env[names(record_env)] <- record_env
+  env <- na_omit(env)
 
   exec_name <- if (.Platform$OS.type == "windows") "rem.exe" else "rem"
   exec_path <- system.file("bin", exec_name, package = "asciicast")

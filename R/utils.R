@@ -116,3 +116,7 @@ file_ext <- function(x) {
 is_verbose <- function() {
   isTRUE(getOption("verbose"))
 }
+
+na_omit <- function(x) {
+  x[!is.na(x)]
+}
