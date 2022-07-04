@@ -146,9 +146,13 @@ ssize_t sock_read_line(HANDLE socket, char *buffer, size_t buflen) {
   char *end = buffer + buflen - 1;
   DWORD bytesread = 0;
   while (1) {
-    if (ptr > end) {
-      return 0;
+    // At the end of the buffer?
+    if (ptr >= end) {
+      *ptr = '\0';
+      return ptr - buffer;
     }
+
+    // Otherwise read
     BOOL ret = ReadFile(
       socket,
       ptr,
@@ -156,12 +160,16 @@ ssize_t sock_read_line(HANDLE socket, char *buffer, size_t buflen) {
       &bytesread,
       NULL
     );
+
     // Error
     if (!ret) return -1;
+
     // EOF
     if (bytesread == 0) {
+      *ptr = '\0';
       return ptr - buffer;
     }
+
     // Complete line
     if (*ptr == '\n') {
       ptr++;
@@ -170,6 +178,7 @@ ssize_t sock_read_line(HANDLE socket, char *buffer, size_t buflen) {
     }
     ptr++;
   }
+
   return 0;
 }
 
