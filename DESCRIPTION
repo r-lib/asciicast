@@ -43,7 +43,8 @@ Suggests:
     mockery,
     rmarkdown,
     rstudioapi,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    withr
 Remotes:
     r-lib/processx
 Config/Needs/website:
