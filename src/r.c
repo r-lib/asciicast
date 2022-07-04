@@ -256,6 +256,8 @@ void usage(const char *argv0) {
   exit(5);
 }
 
+extern void run_Rmainloop();
+
 int main(int argc, char **argv) {
 
   int interactive = 0;
@@ -345,7 +347,7 @@ int main(int argc, char **argv) {
 
   R_ReplDLLinit();
 
-  while(R_ReplDLLdo1() > 0) {  }
+  run_Rmainloop();
 
   Rf_endEmbeddedR(0);
 
