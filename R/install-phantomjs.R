@@ -24,11 +24,13 @@
 #'   download. If the default download site is unavailable, you may specify an
 #'   alternative mirror, such as
 #'   \code{"https://bitbucket.org/ariya/phantomjs/downloads/"}.
+#' @param quiet If `TRUE` suppress status messages and progress bar.
 #' @return \code{NULL} (the executable is written to a system directory).
 #' @export
 
 install_phantomjs <- function(version = '2.1.1',
-    baseURL = 'https://github.com/wch/webshot/releases/download/v0.3.1/') {
+                              baseURL = 'https://github.com/wch/webshot/releases/download/v0.3.1/',
+                              quiet = FALSE) {
 
   if (!grepl("/$", baseURL)) baseURL <- paste0(baseURL, "/")
 
@@ -36,13 +38,13 @@ install_phantomjs <- function(version = '2.1.1',
   on.exit(setwd(owd), add = TRUE)
   if (is_windows()) {
     zipfile <- sprintf('phantomjs-%s-windows.zip', version)
-    download(paste0(baseURL, zipfile), zipfile, mode = 'wb')
+    utils::download.file(paste0(baseURL, zipfile), zipfile, mode = 'wb')
     utils::unzip(zipfile)
     zipdir <- sub('.zip$', '', zipfile)
     exec <- file.path(zipdir, 'bin', 'phantomjs.exe')
   } else if (is_macos()) {
     zipfile <- sprintf('phantomjs-%s-macosx.zip', version)
-    download(paste0(baseURL, zipfile), zipfile, mode = 'wb')
+    utils::download.file(paste0(baseURL, zipfile), zipfile, mode = 'wb')
     utils::unzip(zipfile)
     zipdir <- sub('.zip$', '', zipfile)
     exec <- file.path(zipdir, 'bin', 'phantomjs')
@@ -52,7 +54,7 @@ install_phantomjs <- function(version = '2.1.1',
       'phantomjs-%s-linux-%s.tar.bz2', version,
       if (grepl('64', Sys.info()[['machine']])) 'x86_64' else 'i686'
     )
-    download(paste0(baseURL, zipfile), zipfile, mode = 'wb')
+    utils::download.file(paste0(baseURL, zipfile), zipfile, mode = 'wb')
     utils::untar(zipfile)
     zipdir <- sub('.tar.bz2$', '', zipfile)
     exec <- file.path(zipdir, 'bin', 'phantomjs')

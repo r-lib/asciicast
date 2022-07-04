@@ -6,7 +6,8 @@
 \usage{
 install_phantomjs(
   version = "2.1.1",
-  baseURL = "https://github.com/wch/webshot/releases/download/v0.3.1/"
+  baseURL = "https://github.com/wch/webshot/releases/download/v0.3.1/",
+  quiet = FALSE
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ install_phantomjs(
 download. If the default download site is unavailable, you may specify an
 alternative mirror, such as
 \code{"https://bitbucket.org/ariya/phantomjs/downloads/"}.}
+
+\item{quiet}{If \code{TRUE} suppress status messages and progress bar.}
 }
 \value{
 \code{NULL} (the executable is written to a system directory).
