@@ -283,7 +283,7 @@ int main(int argc, char **argv) {
       interactive = 1;
       idx++;
     } else if (!strcmp(argv[idx], "-v")) {
-      verbose - 1;
+      verbose = 1;
       idx++;
     } else {
       break;
