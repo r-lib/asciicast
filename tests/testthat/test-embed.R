@@ -21,7 +21,7 @@ test_that("R quits", {
 test_that("R crashes", {
   withr::local_options(asciicast_typing_speed = 0)
   cast <- record(textConnection("callr:::crash()\n"), interactive = FALSE)
-  expect_snapshot(cast$output$data, variant = os_name())
+  expect_snapshot(cast$output$data, variant = os_arch())
 })
 
 test_that("incomplete expression", {
