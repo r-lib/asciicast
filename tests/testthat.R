@@ -10,5 +10,5 @@ library(testthat)
 library(asciicast)
 
 if (Sys.getenv("NOT_CRAN") == "true") {
-  test_check("asciicast")
+  test_check("asciicast", reporter = "summary")
 }
