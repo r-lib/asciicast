@@ -252,7 +252,7 @@ int rem_read_console(const char *prompt,
 }
 
 void usage(const char *argv0) {
-  fprintf(stderr, "Usage: %s [-i] <unix-socket>\n", argv0);
+  fprintf(stderr, "Usage: %s [-i] [-v] <unix-socket>\n", argv0);
   exit(5);
 }
 
@@ -261,6 +261,7 @@ extern void run_Rmainloop();
 int main(int argc, char **argv) {
 
   int interactive = 0;
+  int verbose = 0;
 
   // TODO: time stamp
   const char *cast_header =
@@ -274,17 +275,27 @@ int main(int argc, char **argv) {
     "\"cols\":80"
     "}\n";
 
-  if (argc < 2) {
+  int idx = 1;
+  while (1) {
+    if (argc <= idx) {
+      break;
+    } else if (!strcmp(argv[idx], "-i")) {
+      interactive = 1;
+      idx++;
+    } else if (!strcmp(argv[idx], "-v")) {
+      verbose - 1;
+      idx++;
+    } else {
+      break;
+    }
+  }
+
+  if (argc <= idx) {
     usage(argv[0]);
   }
 
-  int idx = 1;
-  if (!strcmp(argv[1], "-i")) {
-    if (argc != 3) {
-      usage(argv[0]);
-    }
-    interactive = 1;
-    idx++;
+  if (verbose) {
+    fprintf(stderr, "starting up\n");
   }
 
   const char *name = argv[idx];
@@ -299,6 +310,10 @@ int main(int argc, char **argv) {
     exit(6);
   }
 
+  if (verbose) {
+    fprintf(stderr, "opening socket\n");
+  }
+
   sock_file = fdopen(sock, "r+");
   if (sock_file == NULL) {
     fprintf(
@@ -310,6 +325,10 @@ int main(int argc, char **argv) {
     exit(7);
   }
   setbuf(sock_file, NULL);
+
+  if (verbose) {
+    fprintf(stderr, "sending header\n");
+  }
 
   size_t header_len = strlen(cast_header);
   size_t written = processx_socket_write(&sock, (void*) cast_header,  header_len);
@@ -332,7 +351,15 @@ int main(int argc, char **argv) {
     "--no-readline"
   };
 
+  if (verbose) {
+    fprintf(stderr, "initializing embedded R\n");
+  }
+
   Rf_initEmbeddedR(sizeof(argv2) / sizeof(argv2[0]), argv2);
+
+  if (verbose) {
+    fprintf(stderr, "Setting callbacks\n");
+  }
 
   R_Interactive = interactive;
   R_Outputfile = NULL;
@@ -345,7 +372,15 @@ int main(int argc, char **argv) {
   ptr_R_Suicide = rem_suicide;
   ptr_R_CleanUp = rem_clean_up;
 
+  if (verbose) {
+    fprintf(stderr, "initializing REPL\n");
+  }
+
   R_ReplDLLinit();
+
+  if (verbose) {
+    fprintf(stderr, "Running REPL\n");
+  }
 
   run_Rmainloop();
 
