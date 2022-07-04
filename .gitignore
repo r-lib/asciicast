@@ -13,5 +13,8 @@ Meta
 /src/*.o
 /src/rem
 /src/rem.exe
+/src/*.gcda
+/src/*.gcno
 /docs
 /vignettes/asciicast-demo.html
+/dev-lib

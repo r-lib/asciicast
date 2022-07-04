@@ -20,3 +20,6 @@
 ^src/rem[.]exe$
 ^src/r[.]o$
 ^codecov\.yml$
+^dev-lib$
+^src/.*[.]gcda$
+^src/.*[.]gcno$

@@ -34,13 +34,16 @@ Imports:
 LinkingTo:
     processx
 Suggests:
+    callr,
     covr,
     cpp11,
     decor,
     htmlwidgets,
     knitr,
+    mockery,
     rmarkdown,
-    rstudioapi
+    rstudioapi,
+    testthat (>= 3.0.0)
 Remotes:
     r-lib/processx
 Config/Needs/website:
@@ -50,3 +53,4 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0
 URL: https://github.com/r-lib/asciicast
 BugReports: https://github.com/r-lib/asciicast/issues
+Config/testthat/edition: 3

@@ -11,7 +11,7 @@ record_internal <- function(lines, timeout, process) {
     while (TRUE) {
       if (!processx::conn_is_incomplete(con)) {
         # R exited unexpectedly while evaluating an expression
-        return()
+        return()                                          # __NO_COVERAGE__
       }
 
       # if need more lines, but there is no more
@@ -215,7 +215,7 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
     "options(cli.ansi = TRUE)",
     if (!is.null(startup)) deparse(startup)
   )
-  record_internal(lines, timeout, process = px)
+  output <- record_internal(lines, timeout, process = px)
 
   if (!processx::conn_is_incomplete(sock)) {
     throw(new_error("asciicast process exited while running `startup`"))
@@ -228,7 +228,7 @@ write_line <- function(px, line) {
   line <- paste0(line, "\n")
   leftover <- processx::conn_write(con, charToRaw(line))
   if (length(leftover) > 0) {
-    throw(new_error("Internal asciicast error, cannot send input"))
+    throw(new_error("Cannot send input, buffer is full, line too long?"))
   }
 }
 
