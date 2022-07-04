@@ -42,7 +42,7 @@
 #'
 #' @export
 #' @family asciicast functions
-#' @examplesIf asciicast:::is_recording_supported() && interactive()
+#' @examplesIf interactive()
 #' script <- system.file("examples", "hello.R", package = "asciicast")
 #' cast <- record(script)
 #' play(cast)
@@ -116,10 +116,6 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
   header$cols <- header$width <- as.integer(cols)
 
   new_cast(header, output)
-}
-
-is_recording_supported <- function() {
-  Sys.info()[["sysname"]] %in% c("Linux", "Darwin")
 }
 
 new_cast <- function(config, output) {

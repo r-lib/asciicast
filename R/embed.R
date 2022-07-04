@@ -156,7 +156,7 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
 #'
 #' @family asciicast functions
 #' @export
-#' @examplesIf asciicast:::is_recording_supported()
+#' @examples
 #' # Use the same R process to record multiple casts
 #' process <- asciicast_start_process()
 #' script1 <- "a <- runif(10)\n"

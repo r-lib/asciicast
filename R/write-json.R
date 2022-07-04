@@ -29,7 +29,7 @@ write_json_con <- function(cast, con) {
 #'
 #' @export
 #' @family asciicast functions
-#' @examplesIf asciicast:::is_recording_supported()
+#' @examples
 #' script <- system.file("examples", "hello.R", package = "asciicast")
 #' cast <- record(script)
 #' json <- tempfile(fileext = ".json")
