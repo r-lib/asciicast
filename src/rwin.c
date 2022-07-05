@@ -204,7 +204,11 @@ void rem_write_console(const char *buf, int buflen) {
 }
 
 int rem_read_console(const char *prompt,
+#if R_VERSION >= R_Version(4,2,0)
                      unsigned char *buf,
+#else
+		     char *buf,
+#endif
                      int buflen,
                      int hist) {
 
@@ -253,6 +257,7 @@ static void rem_on_intr(int sig) {
   UserBreak = 1;
 }
 
+#if R_VERSION >= R_Version(4,2,0)
 void rem_clean_up(SA_TYPE saveact, int status, int run_last) {
   // We never save the data, is this OK? (TODO)
   if (run_last) R_dot_Last();
@@ -268,14 +273,15 @@ void rem_clean_up(SA_TYPE saveact, int status, int run_last) {
   exit(status);
 }
 
-void rem_void() { }
-
 void rem_suicide(const char *message) {
   double ts = get_time();
   sock_write(sock, "[%f, \"rlib\", \"type: suicide\"]\n", ts);
   sock_write(sock, "[%f, \"o\", \"%s\"]\n", ts, escape(message));
   rem_clean_up(SA_SUICIDE, 2, 0);
 }
+
+void rem_void() { }
+#endif
 
 void usage(const char *argv0) {
   fprintf(stderr, "Usage: %s [-i] <pipe-name>\n", argv0);
@@ -359,7 +365,11 @@ int main(int argc, char **argv) {
   }
 
   R_setStartTime();
+#if R_VERSION >= R_Version(4,2,0)
   R_DefParamsEx(Rp, RSTART_VERSION);
+#else
+  R_DefParams(Rp);
+#endif
   if((RHome = get_R_HOME()) == NULL) {
     fprintf(
       stderr,
@@ -370,7 +380,10 @@ int main(int argc, char **argv) {
   Rp->rhome = RHome;
   Rp->home = getRUser();
   Rp->CharacterMode = LinkDLL;
+#if R_VERSION >= R_Version(4,0,0)
   Rp->EmitEmbeddedUTF8 = FALSE;
+  Rp->R_NoEcho = FALSE;
+#endif
   Rp->ReadConsole = rem_read_console;
   Rp->WriteConsole = NULL;
   Rp->WriteConsoleEx = rem_write_console_ex;
@@ -378,14 +391,15 @@ int main(int argc, char **argv) {
   Rp->ShowMessage = NULL;
   Rp->YesNoCancel = NULL;
   Rp->Busy = rem_busy;
+#if R_VERSION >= R_Version(4,2,0)
   Rp->CleanUp = rem_clean_up;
   Rp->ClearerrConsole = rem_void;
   Rp->FlushConsole = rem_void;
   Rp->ResetConsole = rem_void;
   Rp->Suicide = rem_suicide;
+#endif
 
   Rp->R_Quiet = TRUE;
-  Rp->R_NoEcho = FALSE;
   Rp->R_Interactive = interactive;
   Rp->R_Verbose = FALSE;
   Rp->LoadSiteFile = TRUE;
