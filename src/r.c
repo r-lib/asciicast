@@ -82,10 +82,11 @@ double get_time() {
 }
 
 const char *escape_len(const char *str, size_t len) {
+  size_t buffer_size = len == 0 ? 4 : len * 4;
   if (!output_buffer) {
-    output_buffer = malloc(len * 4);
+    output_buffer = malloc(buffer_size);
   } else {
-    output_buffer = realloc(output_buffer, len * 4);
+    output_buffer = realloc(output_buffer, buffer_size);
   }
 
   if (output_buffer == NULL) {
