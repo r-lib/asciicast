@@ -178,7 +178,12 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
   env <- na_omit(env)
 
   exec_name <- if (.Platform$OS.type == "windows") "rem.exe" else "rem"
-  exec_path <- system.file("bin", exec_name, package = "asciicast")
+  exec_path <- system.file(
+    "bin",
+    .Platform$r_arch,
+    exec_name,
+    package = "asciicast"
+  )
   if (exec_path == "") {
     exec_path <- system.file("src", exec_name, package = "asciicast")
   }
