@@ -73,6 +73,10 @@ write_gif <- function(cast, path, show = NULL, cols = NULL,
   if (identical(rows, "auto")) {
     rows <- sum(unlist(strsplit(cast$output$data, "")) == "\n")
   }
+  # without this, windows fails, because it takes c: as the protocol
+  if (is_windows()) {
+    rndr_html <- paste0("file:///", rndr_html)
+  }
   args <- c(rndr_js, rndr_html, cols %||% frames$width,
             rows %||% frames$height,
             theme %||% cast$config$theme %||% "asciinema", scale)
@@ -84,8 +88,10 @@ write_gif <- function(cast, path, show = NULL, cols = NULL,
     poll_connection = TRUE
   )
 
+  err <- character()
   while (TRUE) {
-    out <- c(phjs$read_output_lines(), phjs$read_error_lines())
+    out <- phjs$read_output_lines()
+    err <- c(err, phjs$read_error_lines())
     str <- grep("^Starting frame ", out, value = TRUE)
     lapply(sub("^Starting frame ", "", str), function(i) {
       cli_status_update(status, "{.alert-info Creating snapshot {i}}")
@@ -93,6 +99,13 @@ write_gif <- function(cast, path, show = NULL, cols = NULL,
     pr <- phjs$poll_io(500)
     if (pr[["process"]] == "ready") break;
   }
+
+  if (phjs$get_exit_status() != 0) {
+     cnd <- new_error("phantom.js failed, see `$stderr` for standard error")
+     cnd$stderr <- err
+     throw(cnd)
+  }
+
   cli_status_clear(
     status,
     result = "done",
