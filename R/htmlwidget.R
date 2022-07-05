@@ -21,8 +21,9 @@
 #'   titlebar in fullscreen mode.
 #' @param poster_text if not `NULL`, used as the text of the poster
 #'   (preview).
-#' @param poster_frame Text to use as the preview picture. Defaults to the
-#'   title.
+#' @param poster_frame Which frame to use for the preview. A number means
+#'   seconds. Defaults to the last frame. This is only used if `poster_text`
+#'   is `NULL`.
 #' @param font_size Size of terminal font. Possible values: small, medium,
 #'   big, any css `font-size` value (e.g. 15px).
 #' @param theme Theme.
@@ -62,6 +63,7 @@ asciinema_player <- function(cast, start_at = 0, rows = NULL, cols = NULL,
     "data:application/json;base64,",
     jsonlite::base64_enc(readBin(tmp, what = "raw", n = file.size(tmp))))
 
+  last_frame <- utils::tail(c(0, cast$output$time), 1)
   htmlwidgets::createWidget(
     name = "asciinema_player",
     list(
@@ -70,7 +72,7 @@ asciinema_player <- function(cast, start_at = 0, rows = NULL, cols = NULL,
       loop = loop %||% cast$config$loop,
       start_at = start_at,
       speed = speed %||% cast$config$speed %||% 1,
-      poster = poster(poster_text, poster_frame, start_at),
+      poster = poster(poster_text, poster_frame, last_frame),
       theme = theme,
       font_size = font_size %||% cast$config$font_size %||% NULL,
       title = title,
@@ -96,13 +98,13 @@ poster <- function(poster_text = NULL, poster_frame = NULL, secs = 0 ) {
     secs
 
   } else {
-    as.numeric(seconds(poster_frame))
+    poster_frame
   }
 
   if (!identical(poster_text, "")) {
     sprintf("data:text/plain,%s", poster_text)
 
   } else {
-    sprintf("npt:%d", seconds)
+    sprintf("npt:%f", seconds)
   }
 }
