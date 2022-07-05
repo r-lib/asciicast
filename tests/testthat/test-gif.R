@@ -1,9 +1,19 @@
 
 test_that("write_gif", {
-  withr::local_options(cli.ansi = FALSE)
+  if (!is_windows() && !is_macos() && !is_linux()) {
+    skip("Unsupported OS")
+  }
+  if (is_linux() && R.Version()$arch != "x86_64") {
+    skip("Unsupported OS")
+  }
   if (is.null(suppressMessages(find_phantom()))) {
     install_phantomjs()
   }
+  if (is.null(suppressMessages(find_phantom()))) {
+    skip("Could not install phantom.js")
+  }
+
+  withr::local_options(cli.ansi = FALSE)
 
   code <- paste(
     sep = "\n",

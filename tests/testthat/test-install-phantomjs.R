@@ -8,6 +8,9 @@ test_that("install_phantomjs", {
   if (!is_windows() && !is_macos() && !is_linux()) {
     skip("Unsupported OS")
   }
+  if (is_linux() && R.Version()$arch != "x86_64") {
+    skip("Unsupported OS")
+  }
   suppressMessages(install_phantomjs(
     baseURL = 'https://github.com/wch/webshot/releases/download/v0.3.1'
   ))
