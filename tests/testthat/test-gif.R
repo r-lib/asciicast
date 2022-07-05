@@ -1,5 +1,6 @@
 
 test_that("write_gif", {
+  withr::local_options(cli.ansi = FALSE)
   if (is.null(suppressMessages(find_phantom()))) {
     install_phantomjs()
   }
