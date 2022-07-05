@@ -120,3 +120,9 @@ is_verbose <- function() {
 na_omit <- function(x) {
   x[!is.na(x)]
 }
+
+if (getRversion() < "3.6.0") {
+  str2lang <- function(x) {
+    parse(text = x, keep.source = FALSE)[[1]]
+  }
+}
