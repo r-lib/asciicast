@@ -1,0 +1,24 @@
+---
+output: github_document
+always_allow_html: true
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  cache = FALSE
+)
+asciicast::init_knitr_engine(
+  options = list(
+    asciicast_end_wait = 3
+  )
+)
+
+```
+
+```{r}
+.GlobalEnv$.knitr_asciicast_process$kill()
+```
+
+```{asciicast 1-letters}
+letters
+```

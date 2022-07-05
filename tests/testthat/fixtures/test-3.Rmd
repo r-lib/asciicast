@@ -1,0 +1,17 @@
+---
+output: github_document
+always_allow_html: true
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  cache = TRUE
+)
+asciicast::init_knitr_engine()
+```
+
+SVG is cached.
+
+```{asciicast 1-cached}
+cli::cli_alert_success("I am cached at {Sys.time()}")
+```

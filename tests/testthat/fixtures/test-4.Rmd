@@ -1,0 +1,28 @@
+---
+output: github_document
+always_allow_html: true
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  cache = FALSE
+)
+asciicast::init_knitr_engine()
+```
+
+Test cpp11 integration.
+
+```{asciicastcpp11, echo = TRUE}
+double mean_cpp(doubles x) {
+  int n = x.size();
+  double total = 0;
+  for (double value : x) {
+     total += value;
+  }
+  return total / n;
+}
+```
+
+```{asciicast 1-cpp11-mean}
+mean_cpp(1:10000*1.0)
+```
