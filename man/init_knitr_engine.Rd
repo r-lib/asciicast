@@ -32,20 +32,30 @@ starting the recording.}
 
 \item{echo_input}{Whether to echo the input in the asciicast recording.}
 
-\item{options}{R options to set (via \code{\link[base:options]{base::options()}}, in the background
-R process that performs the recording. See \code{\link[=asciicast_knitr_options]{asciicast_knitr_options()}}
-for the defaults.}
+\item{options}{R options to set (via the \code{R.options} chunk option of
+knitr), in the current R process that performs the recording.
+See \code{\link[=asciicast_knitr_options]{asciicast_knitr_options()}} for the defaults.}
 }
 \description{
 Call this function in your Rmd file to enable creating asciinema
 casts from code chunks.
+}
+\details{
+\subsection{Limitations}{
+\itemize{
+\item \code{purl()} or setting the \code{purl = TRUE} chunk option, does not work
+properly, in that knitr thinks that asciicast chunks are not R code,
+so they will appear as comments. If you know how to fix this, please
+contact us.
+}
+}
 }
 \section{Examples}{
 
 Call this function from an Rmd chunk and then you can use the asciicast
 knitr engine:
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{```\{r echo = FALSE, results = "hide"\}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{```\{r setup, include = FALSE\}
 asciicast::init_knitr_engine()
 ```
 }\if{html}{\out{</div>}}

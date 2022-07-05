@@ -35,14 +35,21 @@ asciicast_knitr_options <- function() {
 #' Call this function in your Rmd file to enable creating asciinema
 #' casts from code chunks.
 #'
+#' ## Limitations
+#'
+#' * `purl()` or setting the `purl = TRUE` chunk option, does not work
+#'   properly, in that knitr thinks that asciicast chunks are not R code,
+#'   so they will appear as comments. If you know how to fix this, please
+#'   contact us.
+#'
 #' @param echo Whether to print the code of asciicast chunks.
 #' @param same_process Whether to run all asciicast chunks _in the same_
 #'   R process. To restart this R process, call `init_knitr_engine()`
 #'   again.
 #' @param echo_input Whether to echo the input in the asciicast recording.
-#' @param options R options to set (via [base::options()], in the background
-#'   R process that performs the recording. See [asciicast_knitr_options()]
-#'   for the defaults.
+#' @param options R options to set (via the `R.options` chunk option of
+#'   knitr), in the current R process that performs the recording.
+#'   See [asciicast_knitr_options()] for the defaults.
 #' @inheritParams asciicast_start_process
 #'
 #' @export
@@ -51,7 +58,7 @@ asciicast_knitr_options <- function() {
 #' Call this function from an Rmd chunk and then you can use the asciicast
 #' knitr engine:
 #' ````
-#' ```{r echo = FALSE, results = "hide"}
+#' ```{r setup, include = FALSE}
 #' asciicast::init_knitr_engine()
 #' ```
 #' ````
@@ -69,7 +76,6 @@ init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
                               record_env = NULL, echo_input = TRUE,
                               options = list()) {
 
-  options <- utils::modifyList(asciicast_knitr_options(), options)
   knitr::knit_engines$set("asciicast" = eng_asciicast)
   knitr::knit_engines$set("asciicastcpp11" = eng_asciicastcpp11)
   knitr::cache_engines$set("asciicast" = cache_eng_asciicast)
@@ -82,14 +88,11 @@ init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
   default_echo <- knitr::opts_chunk$get("echo")
   attr(default_echo, "asciicast") <- echo
   knitr::opts_chunk$set(echo = default_echo)
-  orig_hook <- knitr::knit_hooks$get("purl")
-  knitr::knit_hooks$set(purl = function(before, options, envir) {
-    if (!is.function(orig_hook)) return()
-    options$engine <- "R"
-    orig_hook(before, options, envir)
-  })
 
-  do.call(base::options, options)
+  roptsold <- knitr::opts_chunk$get("R.options")
+  roptsnew <- utils::modifyList(asciicast_knitr_options(), options)
+  ropts <- utils::modifyList(as.list(roptsold), as.list(roptsnew))
+  knitr::opts_chunk$set(R.options = ropts)
 
   if (same_process) {
     proc <- asciicast_start_process(startup, timeout, record_env)
@@ -97,8 +100,7 @@ init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
     if (!is.null(oldproc)) {
       try(close(oldproc$get_input_connection()), silent = TRUE)
       try(close(oldproc$get_output_connection()), silent = TRUE)
-      try(close(attr(oldproc, "input_fifo")), silent = TRUE)
-      try(close(attr(oldproc, "cast_fifo")), silent = TRUE)
+      try(close(attr(oldproc, "sock")), silent = TRUE)
       try(oldproc$kill(), silent = TRUE)
     }
     attr(proc, "echo") <- echo_input
@@ -124,6 +126,7 @@ eng_asciicast <- function(options) {
   if (!identical(options$echo, FALSE)) {
     options$code <- parse_header(options$code)$body
   }
+
   proc <- .GlobalEnv$.knitr_asciicast_process
   if (!is.null(proc) && !proc$is_alive()) {
     stop("asciicast subprocess crashed")

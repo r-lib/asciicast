@@ -56,8 +56,9 @@ titlebar in fullscreen mode.}
 \item{poster_text}{if not \code{NULL}, used as the text of the poster
 (preview).}
 
-\item{poster_frame}{Text to use as the preview picture. Defaults to the
-title.}
+\item{poster_frame}{Which frame to use for the preview. A number means
+seconds. Defaults to the last frame. This is only used if \code{poster_text}
+is \code{NULL}.}
 
 \item{font_size}{Size of terminal font. Possible values: small, medium,
 big, any css \code{font-size} value (e.g. 15px).}
