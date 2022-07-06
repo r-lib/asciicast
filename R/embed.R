@@ -102,13 +102,14 @@ read_all <- function(px) {
 record_embedded <- function(lines, typing_speed, timeout, empty_wait,
                             start_wait, end_wait,
                             record_env, startup, echo, speed, process,
-                            interactive) {
+                            interactive, locales) {
 
   px <- process %||% asciicast_start_process(
     startup,
     timeout,
     record_env,
-    interactive
+    interactive,
+    locales
   )
 
   data <- record_internal(lines, timeout, px)
@@ -152,6 +153,9 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
 #' @param record_env Environment variables to set for the R subprocess.
 #' @param interactive Whether to run R in interactive mode. Note that in
 #'   interactive mode R might ask for terminal input.
+#' @param locales Locales to set in the asciicast subprocess. Defaults
+#'   to the current locales in the main R process. Specify a named character
+#'   vector here to override some of the defaults. See also [get_locales()].
 #' @return The R process, a [processx::process] object.
 #'
 #' @family asciicast functions
@@ -167,7 +171,8 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
 #' cast2
 
 asciicast_start_process <- function(startup = NULL, timeout = 10,
-                                    record_env = NULL, interactive = TRUE) {
+                                    record_env = NULL, interactive = TRUE,
+                                    locales = get_locales()) {
 
   env <- Sys.getenv()
   env["ASCIICAST"] <- "true"
@@ -213,8 +218,11 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
   read_all(px)
 
   # throw away the output of the startup code
+  set_locale_code <- paste0(
+    "Sys.setlocale('", names(locales), "', '", locales, "')"
+  )
   lines <- c(
-    "Sys.setlocale('LC_ALL', 'en_US.UTF-8')",
+    set_locale_code,
     "options(cli.num_colors = 256)",
     "options(cli.dynamic = TRUE)",
     "options(cli.ansi = TRUE)",
@@ -331,4 +339,26 @@ adjust_typing_speed <- function(data, typing_speed) {
 
 rtime <- function(n, speed){
   runif(n, min = speed * 0.5, max = speed * 1.5)
+}
+
+#' Helper function to query locales as a named character vector.
+#'
+#' @return Named character vector with entries:
+#' * `LC_COLLATE`, `LC_CTYPE`, `LC_MONETARY`, `LC_NUMERIC` and `LC_TIME`.
+#'
+#' @export
+
+get_locales <- function() {
+  lcls <- c(
+    "LC_COLLATE",
+    "LC_CTYPE",
+    "LC_MONETARY",
+    "LC_NUMERIC",
+    "LC_TIME"
+  )
+
+  structure(
+    map_chr(lcls, Sys.getlocale),
+    names = lcls
+  )
 }

@@ -37,6 +37,7 @@
 #' @param interactive Whether to run R in interactive mode. This argument
 #'   is ignored if `process` is specified. If `process` is `NULL` then
 #'   it is passed to [asciicast_start_process()].
+#' @inheritParams asciicast_start_process
 #' @return An `asciicast` object, write this to
 #'   file with [write_json()].
 #'
@@ -52,7 +53,8 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
                    env = NULL, idle_time_limit = NULL,
                    timeout = NULL, start_wait = NULL, end_wait = NULL,
                    record_env = NULL, startup = NULL, echo = TRUE,
-                   speed = NULL, process = NULL, interactive = TRUE) {
+                   speed = NULL, process = NULL, interactive = TRUE,
+                   locales = get_locales()) {
 
   lines <- readLines(script)
   parsed <- parse_header(lines)
@@ -91,7 +93,8 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
 
   output <- record_embedded(body, typing_speed, timeout, empty_wait,
                             start_wait, end_wait, record_env,
-                            startup, echo, speed, process, interactive)
+                            startup, echo, speed, process, interactive,
+                            locales)
 
   if (rows == "auto") {
     plain <- cli::ansi_strip(paste0(

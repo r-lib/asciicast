@@ -8,7 +8,8 @@ asciicast_start_process(
   startup = NULL,
   timeout = 10,
   record_env = NULL,
-  interactive = TRUE
+  interactive = TRUE,
+  locales = get_locales()
 )
 }
 \arguments{
@@ -23,6 +24,10 @@ recording stops.}
 
 \item{interactive}{Whether to run R in interactive mode. Note that in
 interactive mode R might ask for terminal input.}
+
+\item{locales}{Locales to set in the asciicast subprocess. Defaults
+to the current locales in the main R process. Specify a named character
+vector here to override some of the defaults. See also \code{\link[=get_locales]{get_locales()}}.}
 }
 \value{
 The R process, a \link[processx:process]{processx::process} object.

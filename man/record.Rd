@@ -22,7 +22,8 @@ record(
   echo = TRUE,
   speed = NULL,
   process = NULL,
-  interactive = TRUE
+  interactive = TRUE,
+  locales = get_locales()
 )
 }
 \arguments{
@@ -79,6 +80,10 @@ here.}
 \item{interactive}{Whether to run R in interactive mode. This argument
 is ignored if \code{process} is specified. If \code{process} is \code{NULL} then
 it is passed to \code{\link[=asciicast_start_process]{asciicast_start_process()}}.}
+
+\item{locales}{Locales to set in the asciicast subprocess. Defaults
+to the current locales in the main R process. Specify a named character
+vector here to override some of the defaults. See also \code{\link[=get_locales]{get_locales()}}.}
 }
 \value{
 An \code{asciicast} object, write this to
