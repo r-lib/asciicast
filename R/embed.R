@@ -102,14 +102,15 @@ read_all <- function(px) {
 record_embedded <- function(lines, typing_speed, timeout, empty_wait,
                             start_wait, end_wait,
                             record_env, startup, echo, speed, process,
-                            interactive, locales) {
+                            interactive, locales, options) {
 
   px <- process %||% asciicast_start_process(
     startup,
     timeout,
     record_env,
     interactive,
-    locales
+    locales,
+    options
   )
 
   data <- record_internal(lines, timeout, px)
@@ -156,6 +157,12 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
 #' @param locales Locales to set in the asciicast subprocess. Defaults
 #'   to the current locales in the main R process. Specify a named character
 #'   vector here to override some of the defaults. See also [get_locales()].
+#' @param options Options to set in the subprocess, a named list.
+#'   They are deparsed to code, and then the code setting them is
+#'   executed in the subprocess. See [asciicast_options()] for the
+#'   defaults. Supply a named list here to override the defaults or set
+#'   additionsl ones. Passing large and/or complicated options here might
+#'   not work, or might be slow.
 #' @return The R process, a [processx::process] object.
 #'
 #' @family asciicast functions
@@ -172,7 +179,8 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
 
 asciicast_start_process <- function(startup = NULL, timeout = 10,
                                     record_env = NULL, interactive = TRUE,
-                                    locales = get_locales()) {
+                                    locales = get_locales(),
+                                    options = NULL) {
 
   env <- Sys.getenv()
   env["ASCIICAST"] <- "true"
@@ -221,11 +229,15 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
   set_locale_code <- paste0(
     "Sys.setlocale('", names(locales), "', '", locales, "')"
   )
+  options <- modify_list(asciicast_options(), options)
+  set_options_code <- paste0(
+    "options(", names(options), " = ",
+    map_chr(options, function(x) paste(deparse(x), collapse = "\n")),
+    ")"
+  )
   lines <- c(
     set_locale_code,
-    "options(cli.num_colors = 256)",
-    "options(cli.dynamic = TRUE)",
-    "options(cli.ansi = TRUE)",
+    set_options_code,
     if (!is.null(startup)) deparse(startup)
   )
   output <- record_internal(lines, timeout, process = px)
@@ -360,5 +372,21 @@ get_locales <- function() {
   structure(
     map_chr(lcls, Sys.getlocale),
     names = lcls
+  )
+}
+
+#' Default options to set in the asciicast subprocess.
+#'
+#' @return Named list.
+#'
+#' @export
+#' @examples
+#' asciicast_options()
+
+asciicast_options <- function() {
+  list(
+    cli.num_colors = 256,
+    cli.dynamic = TRUE,
+    cli.ansi = TRUE
   )
 }

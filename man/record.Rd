@@ -23,7 +23,8 @@ record(
   speed = NULL,
   process = NULL,
   interactive = TRUE,
-  locales = get_locales()
+  locales = get_locales(),
+  options = asciicast_options()
 )
 }
 \arguments{
@@ -84,6 +85,13 @@ it is passed to \code{\link[=asciicast_start_process]{asciicast_start_process()}
 \item{locales}{Locales to set in the asciicast subprocess. Defaults
 to the current locales in the main R process. Specify a named character
 vector here to override some of the defaults. See also \code{\link[=get_locales]{get_locales()}}.}
+
+\item{options}{Options to set in the subprocess, a named list.
+They are deparsed to code, and then the code setting them is
+executed in the subprocess. See \code{\link[=asciicast_options]{asciicast_options()}} for the
+defaults. Supply a named list here to override the defaults or set
+additionsl ones. Passing large and/or complicated options here might
+not work, or might be slow.}
 }
 \value{
 An \code{asciicast} object, write this to

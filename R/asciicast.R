@@ -54,7 +54,7 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
                    timeout = NULL, start_wait = NULL, end_wait = NULL,
                    record_env = NULL, startup = NULL, echo = TRUE,
                    speed = NULL, process = NULL, interactive = TRUE,
-                   locales = get_locales()) {
+                   locales = get_locales(), options = asciicast_options()) {
 
   lines <- readLines(script)
   parsed <- parse_header(lines)
@@ -94,7 +94,7 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
   output <- record_embedded(body, typing_speed, timeout, empty_wait,
                             start_wait, end_wait, record_env,
                             startup, echo, speed, process, interactive,
-                            locales)
+                            locales, options)
 
   if (rows == "auto") {
     plain <- cli::ansi_strip(paste0(
