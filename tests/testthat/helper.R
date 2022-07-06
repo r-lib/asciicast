@@ -1,4 +1,8 @@
 
+os_type <- function() {
+  tolower(.Platform$OS.type)
+}
+
 os_name <- function() {
   tolower(Sys.info()[["sysname"]])
 }

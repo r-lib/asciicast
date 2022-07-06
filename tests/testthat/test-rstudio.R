@@ -29,6 +29,7 @@ test_that("view_image_in_rstudio", {
     path2,
     transform = function(x) {
       sub('asciicast-preview-[^"]*"', 'asciicast-preview-xxx"', x)
-    }
+    },
+    variant = os_type()
   )
 })
