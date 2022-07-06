@@ -50,5 +50,5 @@ Config in header is OK.
 `fig.process` option.
 
 ```{asciicast 5-process, fig.process = function(x) { file.create(paste0(x, "-processed")); x }}
-cli::cli_alert_success("processed!")
+cli::cli_text("processed!")
 ```
