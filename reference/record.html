@@ -81,7 +81,8 @@
 <span>  echo <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  speed <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  process <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  interactive <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  interactive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  locales <span class="op">=</span> <span class="fu"><a href="get_locales.html">get_locales</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -175,6 +176,12 @@ here.</p></dd>
 <dd><p>Whether to run R in interactive mode. This argument
 is ignored if <code>process</code> is specified. If <code>process</code> is <code>NULL</code> then
 it is passed to <code><a href="asciicast_start_process.html">asciicast_start_process()</a></code>.</p></dd>
+
+
+<dt>locales</dt>
+<dd><p>Locales to set in the asciicast subprocess. Defaults
+to the current locales in the main R process. Specify a named character
+vector here to override some of the defaults. See also <code><a href="get_locales.html">get_locales()</a></code>.</p></dd>
 
 </dl></div>
     <div id="value">
