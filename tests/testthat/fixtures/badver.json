@@ -1,0 +1,6 @@
+{"version":3,"command":"R -q","timestamp":1655733730,"env":{"TERM":"xterm-256color","SHELL":"/bin/zsh"},"height":24,"rows":24,"width":80,"cols":80}
+[0, "rlib", "type: prompt"]
+[0, "o", "> "]
+[0, "i", "print(\"Hello world!\")\r\n"]
+["0", "rlib", "type: input"]
+[0.0677882328047417, "o", "p"]

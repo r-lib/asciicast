@@ -75,8 +75,8 @@ double get_time() {
   struct timespec t;
   int ret = rem_clock_gettime(CLOCK_MONOTONIC, &t);
   if (ret) {
-    fprintf(stderr, "Cannot query monotonic clock: %s", strerror(errno));
-    exit(1);
+    fprintf(stderr, "Cannot query monotonic clock: %s", strerror(errno)); // __NO_COVERAGE__
+    exit(1);                                                              // __NO_COVERAGE__
   }
   return (double) t.tv_sec + 1e-9 * (double) t.tv_nsec;
 }
@@ -90,8 +90,8 @@ const char *escape_len(const char *str, size_t len) {
   }
 
   if (output_buffer == NULL) {
-    fprintf(stderr, "Cannot allocate output buffer, out of memory\n");
-    exit(2);
+    fprintf(stderr, "Cannot allocate output buffer, out of memory\n"); // __NO_COVERAGE__
+    exit(2);                                                           // __NO_COVERAGE__
   }
 
   const char *end = str + len;

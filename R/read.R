@@ -54,7 +54,7 @@ read_cast <- function(json) {
     if (!is.numeric(l[[1]]) || !is.character(l[[2]]) || !is.character(l[[3]])) {
       throw(new_parse_error(json, line = i))
     }
-    output[i, ] <- l
+    output[i - 1L, ] <- l
   }
 
   new_cast(config, output)
