@@ -70,7 +70,8 @@ same process.</p>
 <span>  timeout <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  record_env <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  interactive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  locales <span class="op">=</span> <span class="fu"><a href="get_locales.html">get_locales</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  locales <span class="op">=</span> <span class="fu"><a href="get_locales.html">get_locales</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  options <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -101,6 +102,15 @@ interactive mode R might ask for terminal input.</p></dd>
 to the current locales in the main R process. Specify a named character
 vector here to override some of the defaults. See also <code><a href="get_locales.html">get_locales()</a></code>.</p></dd>
 
+
+<dt>options</dt>
+<dd><p>Options to set in the subprocess, a named list.
+They are deparsed to code, and then the code setting them is
+executed in the subprocess. See <code><a href="asciicast_options.html">asciicast_options()</a></code> for the
+defaults. Supply a named list here to override the defaults or set
+additionsl ones. Passing large and/or complicated options here might
+not work, or might be slow.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -130,7 +140,7 @@ vector here to override some of the defaults. See also <code><a href="get_locale
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;config&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   "version": 2,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   "command": "R -q",</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   "timestamp": 1657098571,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   "timestamp": 1657099386,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   "env": {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     "TERM": "xterm-256color",</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     "SHELL": "/bin/zsh"</span>
@@ -148,19 +158,19 @@ vector here to override some of the defaults. See also <code><a href="get_locale
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 0      o     <span style="color: #949494;">"</span>&gt; <span style="color: #949494;">"</span>                </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 0      i     <span style="color: #949494;">"</span>a &lt;- runif(10)\r\n<span style="color: #949494;">"</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 0      rlib  <span style="color: #949494;">"</span>type: input<span style="color: #949494;">"</span>       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 0.040<span style="text-decoration: underline;">6</span> o     <span style="color: #949494;">"</span>a<span style="color: #949494;">"</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 0.082<span style="text-decoration: underline;">8</span> o     <span style="color: #949494;">"</span> <span style="color: #949494;">"</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 0.112  o     <span style="color: #949494;">"</span>&lt;<span style="color: #949494;">"</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 0.162  o     <span style="color: #949494;">"</span>-<span style="color: #949494;">"</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 0.209  o     <span style="color: #949494;">"</span> <span style="color: #949494;">"</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 0.252  o     <span style="color: #949494;">"</span>r<span style="color: #949494;">"</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 0.043<span style="text-decoration: underline;">0</span> o     <span style="color: #949494;">"</span>a<span style="color: #949494;">"</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 0.102  o     <span style="color: #949494;">"</span> <span style="color: #949494;">"</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 0.134  o     <span style="color: #949494;">"</span>&lt;<span style="color: #949494;">"</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 0.194  o     <span style="color: #949494;">"</span>-<span style="color: #949494;">"</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 0.258  o     <span style="color: #949494;">"</span> <span style="color: #949494;">"</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 0.305  o     <span style="color: #949494;">"</span>r<span style="color: #949494;">"</span>                 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 14 more rows</span></span>
 <span class="r-in"><span><span class="va">cast2</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;asciicast&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;config&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   "version": 2,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   "command": "R -q",</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   "timestamp": 1657098571,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   "timestamp": 1657099386,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   "env": {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     "TERM": "xterm-256color",</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     "SHELL": "/bin/zsh"</span>
@@ -178,12 +188,12 @@ vector here to override some of the defaults. See also <code><a href="get_locale
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 0      o     <span style="color: #949494;">"</span>&gt; <span style="color: #949494;">"</span>          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 0      i     <span style="color: #949494;">"</span>a\r\n<span style="color: #949494;">"</span>       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 0      rlib  <span style="color: #949494;">"</span>type: input<span style="color: #949494;">"</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 0.056<span style="text-decoration: underline;">1</span> o     <span style="color: #949494;">"</span>a<span style="color: #949494;">"</span>           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 0.056<span style="text-decoration: underline;">1</span> o     <span style="color: #949494;">"</span>\r\n<span style="color: #949494;">"</span>        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 0.056<span style="text-decoration: underline;">2</span> rlib  <span style="color: #949494;">"</span>busy: 1<span style="color: #949494;">"</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 0.056<span style="text-decoration: underline;">2</span> rlib  <span style="color: #949494;">"</span>type: stdout<span style="color: #949494;">"</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 0.056<span style="text-decoration: underline;">2</span> o     <span style="color: #949494;">"</span> [1]<span style="color: #949494;">"</span>        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 0.056<span style="text-decoration: underline;">2</span> rlib  <span style="color: #949494;">"</span>type: stdout<span style="color: #949494;">"</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 0.067<span style="text-decoration: underline;">9</span> o     <span style="color: #949494;">"</span>a<span style="color: #949494;">"</span>           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 0.067<span style="text-decoration: underline;">9</span> o     <span style="color: #949494;">"</span>\r\n<span style="color: #949494;">"</span>        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 0.067<span style="text-decoration: underline;">9</span> rlib  <span style="color: #949494;">"</span>busy: 1<span style="color: #949494;">"</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 0.067<span style="text-decoration: underline;">9</span> rlib  <span style="color: #949494;">"</span>type: stdout<span style="color: #949494;">"</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 0.067<span style="text-decoration: underline;">9</span> o     <span style="color: #949494;">"</span> [1]<span style="color: #949494;">"</span>        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 0.068<span style="text-decoration: underline;">0</span> rlib  <span style="color: #949494;">"</span>type: stdout<span style="color: #949494;">"</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 29 more rows</span></span>
 </code></pre></div>
     </div>

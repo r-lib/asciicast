@@ -82,7 +82,8 @@
 <span>  speed <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  process <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  interactive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  locales <span class="op">=</span> <span class="fu"><a href="get_locales.html">get_locales</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  locales <span class="op">=</span> <span class="fu"><a href="get_locales.html">get_locales</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  options <span class="op">=</span> <span class="fu"><a href="asciicast_options.html">asciicast_options</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -182,6 +183,15 @@ it is passed to <code><a href="asciicast_start_process.html">asciicast_start_pro
 <dd><p>Locales to set in the asciicast subprocess. Defaults
 to the current locales in the main R process. Specify a named character
 vector here to override some of the defaults. See also <code><a href="get_locales.html">get_locales()</a></code>.</p></dd>
+
+
+<dt>options</dt>
+<dd><p>Options to set in the subprocess, a named list.
+They are deparsed to code, and then the code setting them is
+executed in the subprocess. See <code><a href="asciicast_options.html">asciicast_options()</a></code> for the
+defaults. Supply a named list here to override the defaults or set
+additionsl ones. Passing large and/or complicated options here might
+not work, or might be slow.</p></dd>
 
 </dl></div>
     <div id="value">
