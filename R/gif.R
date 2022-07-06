@@ -100,6 +100,9 @@ write_gif <- function(cast, path, show = NULL, cols = NULL,
     if (pr[["process"]] == "ready") break;
   }
 
+  phjs$wait(3000)
+  phjs$kill()
+
   if (phjs$get_exit_status() != 0) {
      cnd <- new_error("phantom.js failed, see `$stderr` for standard error")
      cnd$stderr <- err
