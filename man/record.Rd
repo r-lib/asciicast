@@ -29,7 +29,9 @@ record(
 }
 \arguments{
 \item{script}{Path of an R script to record. It can also be a readable
-R connection or URL, as it is passed to \code{\link[base:readLines]{base::readLines()}}.}
+R connection or URL, as it is passed to \code{\link[base:readLines]{base::readLines()}}. It can also
+be a language object, which is deparsed, or a character vector with
+the source code itself.}
 
 \item{typing_speed}{Average typing speed, per keypress, in seconds.}
 

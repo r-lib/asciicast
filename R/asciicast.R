@@ -2,7 +2,9 @@
 #' Record an asciinema screencast
 #'
 #' @param script Path of an R script to record. It can also be a readable
-#'   R connection or URL, as it is passed to [base::readLines()].
+#'   R connection or URL, as it is passed to [base::readLines()]. It can also
+#'   be a language object, which is deparsed, or a character vector with
+#'   the source code itself.
 #' @param typing_speed Average typing speed, per keypress, in seconds.
 #' @param empty_wait How long to wait for empty lines in the script file,
 #'   in seconds.
@@ -56,7 +58,17 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
                    speed = NULL, process = NULL, interactive = TRUE,
                    locales = get_locales(), options = asciicast_options()) {
 
-  lines <- readLines(script)
+  lines <- if (is.language(script)) {
+    deparse(script)
+  } else if (inherits(script, "connection")) {
+    readLines(script)
+  } else if (is.character(script) && length(script) == 1 &&
+             file_exists_safe(script)) {
+    readLines(script)
+  } else {
+    unlist(strsplit(as.character(script), "\n", fixed = TRUE))
+  }
+
   parsed <- parse_header(lines)
   header <- parsed$header
   body <- parsed$body
@@ -119,6 +131,13 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
   header$cols <- header$width <- as.integer(cols)
 
   new_cast(header, output)
+}
+
+file_exists_safe <- function(x) {
+  tryCatch(
+    file.exists(x),
+    error = function(e) FALSE
+  )
 }
 
 new_cast <- function(config, output) {

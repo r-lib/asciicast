@@ -10,7 +10,7 @@ test_that("Unicode output", {
     cat("\u0100\u2500\U1F600")
   })
 
-  cast <- record(textConnection(deparse(code)))
+  cast <- record(code)
   expect_true(any(grepl("\u0100\u2500\U1F600", cast$output$data)))
 })
 

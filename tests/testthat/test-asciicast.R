@@ -22,7 +22,7 @@ test_that("env vars in header", {
 
 test_that("startup option", {
   cast <- record(
-    textConnection("foo\n"),
+    quote(foo),
     echo = FALSE,
     startup = quote(foo <- 112)
   )
@@ -36,7 +36,7 @@ test_that("startup in header", {
     "foo",
     ""
   )
-  cast <- record(textConnection(code), echo = FALSE)
+  cast <- record(code, echo = FALSE)
   expect_snapshot(cast$output$data)
 })
 
