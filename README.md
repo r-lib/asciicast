@@ -8,7 +8,7 @@
 <!-- badges: start -->
 
 [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/asciicast)](https://cran.r-project.org/package=asciicast)
 [![Codecov test
@@ -65,7 +65,7 @@ install.packages("asciicast")
 ## Examples
 
 See the [`inst/examples`
-directory](https://github.com/gaborcsardi/asciicast/tree/main/inst/examples)
+directory](https://github.com/r-lib/asciicast/tree/main/inst/examples)
 for these examples.
 
 ### Hello world
