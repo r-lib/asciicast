@@ -61,4 +61,17 @@ test_that("write_gif errors", {
     suppressMessages(write_gif()),
     "No phantom.js, exiting"
   )
+
+  mockery::stub(
+    write_gif,
+    "find_phantom",
+    asNamespace("processx")$get_tool("px")
+  )
+  cast <- record(textConnection("1+1\n"))
+  gif <- tempfile(fileext = ".gif")
+  on.exit(unlink(gif), add = TRUE)
+  expect_error(
+    write_gif(cast, gif),
+    "phantom.js failed"
+  )
 })

@@ -1,4 +1,6 @@
 
+# nocov start
+
 ## This is from the webshot package, see https://github.com/wch/webshot
 
 #' Install PhantomJS
@@ -127,3 +129,4 @@ find_phantom <- function() {
   path.expand(path)
 }
 
+# nocov end

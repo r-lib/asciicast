@@ -111,3 +111,11 @@ test_that("adjust_typing_speed", {
   empty <- data[integer(), ]
   expect_equal(adjust_typing_speed(empty, 0.05), empty)
 })
+
+test_that("find_rem error", {
+  mockery::stub(find_rem, "system.file", "")
+  expect_error(
+    find_rem(),
+    "Cannot find embedded R executable"
+  )
+})

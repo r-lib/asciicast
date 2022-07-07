@@ -78,3 +78,10 @@ test_that("play", {
 
   expect_false(is.null(path))
 })
+
+test_that("remove_last_line edge case", {
+  cast <- record(textConnection("1"), interactive = FALSE)
+  cast$output <- cast$output[cast$output$type != "o", ]
+
+  expect_equal(remove_last_line(cast), cast)
+})

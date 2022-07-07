@@ -166,11 +166,13 @@ const char *escape(const char *str) {
   return escape_len(str, strlen(str));
 }
 
-void rem_show_message(const char *message) {
-  double ts = get_time();
-  fprintf(sock_file, "[%f, \"rlib\", \"type: message\"]\n", ts);
-  fprintf(sock_file, "[%f, \"o\", \"%s\"]\n", ts, escape(message));
-}
+// I can't easily trigger this, but include it, just in case
+
+void rem_show_message(const char *message) {                        // __NO_COVERAGE__
+  double ts = get_time();                                           // __NO_COVERAGE__
+  fprintf(sock_file, "[%f, \"rlib\", \"type: message\"]\n", ts);    // __NO_COVERAGE__
+  fprintf(sock_file, "[%f, \"o\", \"%s\"]\n", ts, escape(message)); // __NO_COVERAGE__
+}                                                                   // __NO_COVERAGE__
 
 void rem_clean_up(SA_TYPE saveact, int status, int run_last) {
   // We never save the data, is this OK? (TODO)
@@ -188,12 +190,12 @@ void rem_clean_up(SA_TYPE saveact, int status, int run_last) {
     exit(status);
 }
 
-void rem_suicide(const char *message) {
-  double ts = get_time();
-  fprintf(sock_file, "[%f, \"rlib\", \"type: suicide\"]\n", ts);
-  fprintf(sock_file, "[%f, \"o\", \"%s\"]\n", ts, escape(message));
-  rem_clean_up(SA_SUICIDE, 2, 0);
-}
+void rem_suicide(const char *message) {                             // __NO_COVERAGE__
+  double ts = get_time();                                           // __NO_COVERAGE__
+  fprintf(sock_file, "[%f, \"rlib\", \"type: suicide\"]\n", ts);    // __NO_COVERAGE__
+  fprintf(sock_file, "[%f, \"o\", \"%s\"]\n", ts, escape(message)); // __NO_COVERAGE__
+  rem_clean_up(SA_SUICIDE, 2, 0);                                   // __NO_COVERAGE__
+}                                                                   // __NO_COVERAGE__
 
 void rem_busy(int which) {
   double ts = get_time();
@@ -206,9 +208,11 @@ void rem_write_console_ex(const char *buf, int buflen, int which) {
   fprintf(sock_file, "[%f, \"o\", \"%s\"]\n", ts, escape_len(buf, buflen));
 }
 
-void rem_write_console(const char *buf, int buflen) {
-  rem_write_console_ex(buf, buflen, 0);
-}
+// Not used if Ex version is present
+
+void rem_write_console(const char *buf, int buflen) {    // __NO_COVERAGE__
+  rem_write_console_ex(buf, buflen, 0);                  // __NO_COVERAGE__
+}                                                        // __NO_COVERAGE__
 
 int rem_read_console(const char *prompt,
                      unsigned char *buf,
@@ -227,13 +231,13 @@ int rem_read_console(const char *prompt,
       errno = 0;
       return 0;
     }
-    fprintf(
-      stderr,
-      "Error %d reading from file: %s\n",
-      errno,
-      strerror(errno)
-    );
-    exit(4);
+    fprintf(                                             // __NO_COVERAGE__
+      stderr,                                            // __NO_COVERAGE__
+      "Error %d reading from file: %s\n",                // __NO_COVERAGE__
+      errno,                                             // __NO_COVERAGE__
+      strerror(errno)                                    // __NO_COVERAGE__
+    );                                                   // __NO_COVERAGE__
+    exit(4);                                             // __NO_COVERAGE__
   }
 
   // We only do this after we read something, otherwise the timings are
@@ -284,9 +288,9 @@ int main(int argc, char **argv) {
       interactive = 1;
       idx++;
     } else if (!strcmp(argv[idx], "-v")) {
-      verbose = 1;
-      idx++;
-    } else {
+      verbose = 1;                                       // __NO_COVERAGE__
+      idx++;                                             // __NO_COVERAGE__
+    } else {                                             // __NO_COVERAGE__
       break;
     }
   }
@@ -296,50 +300,50 @@ int main(int argc, char **argv) {
   }
 
   if (verbose) {
-    fprintf(stderr, "starting up\n");
-  }
+    fprintf(stderr, "starting up\n");                    // __NO_COVERAGE__
+  }                                                      // __NO_COVERAGE__
 
   const char *name = argv[idx];
   int ret = processx_socket_connect(name, &sock);
   if (ret == -1) {
-    fprintf(
-      stderr,
-      "Failed to connect to socket at '%s': %s\n",
-      argv[idx],
-      processx_socket_error_message()
-    );
-    exit(6);
+    fprintf(                                             // __NO_COVERAGE__
+      stderr,                                            // __NO_COVERAGE__
+      "Failed to connect to socket at '%s': %s\n",       // __NO_COVERAGE__
+      argv[idx],                                         // __NO_COVERAGE__
+      processx_socket_error_message()                    // __NO_COVERAGE__
+    );                                                   // __NO_COVERAGE__
+    exit(6);                                             // __NO_COVERAGE__
   }
 
   if (verbose) {
-    fprintf(stderr, "opening socket\n");
-  }
+    fprintf(stderr, "opening socket\n");                 // __NO_COVERAGE__
+  }                                                      // __NO_COVERAGE__
 
   sock_file = fdopen(sock, "r+");
   if (sock_file == NULL) {
-    fprintf(
-      stderr,
-      "Cannot open socket at '%s' as file: %s\n",
-      argv[idx],
-      processx_socket_error_message()
-    );
-    exit(7);
+    fprintf(                                             // __NO_COVERAGE__
+      stderr,                                            // __NO_COVERAGE__
+      "Cannot open socket at '%s' as file: %s\n",        // __NO_COVERAGE__
+      argv[idx],                                         // __NO_COVERAGE__
+      processx_socket_error_message()                    // __NO_COVERAGE__
+    );                                                   // __NO_COVERAGE__
+    exit(7);                                             // __NO_COVERAGE__
   }
   setbuf(sock_file, NULL);
 
   if (verbose) {
-    fprintf(stderr, "sending header\n");
-  }
+    fprintf(stderr, "sending header\n");                 // __NO_COVERAGE__
+  }                                                      // __NO_COVERAGE__
 
   size_t header_len = strlen(cast_header);
   size_t written = processx_socket_write(&sock, (void*) cast_header,  header_len);
   if (written != header_len) {
-    fprintf(
-      stderr,
-      "Failed to write header to server socket: %s\n",
-      processx_socket_error_message()
-    );
-    exit(8);
+    fprintf(                                             // __NO_COVERAGE__
+      stderr,                                            // __NO_COVERAGE__
+      "Failed to write header to server socket: %s\n",   // __NO_COVERAGE__
+      processx_socket_error_message()                    // __NO_COVERAGE__
+    );                                                   // __NO_COVERAGE__
+    exit(8);                                             // __NO_COVERAGE__
   }
 
   char *argv2[]= {
@@ -353,14 +357,14 @@ int main(int argc, char **argv) {
   };
 
   if (verbose) {
-    fprintf(stderr, "initializing embedded R\n");
-  }
+    fprintf(stderr, "initializing embedded R\n");        // __NO_COVERAGE__
+  }                                                      // __NO_COVERAGE__
 
   Rf_initEmbeddedR(sizeof(argv2) / sizeof(argv2[0]), argv2);
 
   if (verbose) {
-    fprintf(stderr, "Setting callbacks\n");
-  }
+    fprintf(stderr, "Setting callbacks\n");              // __NO_COVERAGE__
+  }                                                      // __NO_COVERAGE__
 
   R_Interactive = interactive;
   R_Outputfile = NULL;
@@ -374,14 +378,14 @@ int main(int argc, char **argv) {
   ptr_R_CleanUp = rem_clean_up;
 
   if (verbose) {
-    fprintf(stderr, "initializing REPL\n");
-  }
+    fprintf(stderr, "initializing REPL\n");              // __NO_COVERAGE__
+  }                                                      // __NO_COVERAGE__
 
   R_ReplDLLinit();
 
   if (verbose) {
-    fprintf(stderr, "Running REPL\n");
-  }
+    fprintf(stderr, "Running REPL\n");                   // __NO_COVERAGE__
+  }                                                      // __NO_COVERAGE__
 
   run_Rmainloop();
 

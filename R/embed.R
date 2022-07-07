@@ -11,7 +11,7 @@ record_internal <- function(lines, timeout, process) {
     while (TRUE) {
       if (!processx::conn_is_incomplete(con)) {
         # R exited unexpectedly while evaluating an expression
-        return()                                          # __NO_COVERAGE__
+        return()                                                    # nocov
       }
 
       # if need more lines, but there is no more

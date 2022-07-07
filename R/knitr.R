@@ -166,19 +166,19 @@ eng_asciicastcpp11 <- function(options) {
     ), cpp11_file, useBytes = TRUE)
 
     code <- deparse(bquote({
-      cpp11::cpp_source(
+      cpp11::cpp_source(                                       # nocov start
         file = .(cpp11_file),
         env = .GlobalEnv,
         clean = .(options$clean %||% TRUE),
         quiet = .(options$quiet %||% FALSE),
         cxx_std = .(options$cxx_std %||% Sys.getenv("CXX_STD", "CXX11"))
-      )
+      )                                                       # nocov end
     }))
     writeLines(c(code, "\n"), cast_file, useBytes = TRUE)
 
     proc <- .GlobalEnv$.knitr_asciicast_process
     if (!is.null(proc) && !proc$is_alive()) {
-      stop("asciicast subprocess crashed")
+      stop("asciicast subprocess crashed")                    # nocov
     }
 
     cast <- record(cast_file, process = proc)
@@ -234,7 +234,7 @@ asciicast_knitr_svg <- function(cast, options) {
     file.copy(cached, filename, overwrite = TRUE)
   } else {
     write_svg(cast, filename)
-    if (options$cache > 0) file.copy(filename, cached)
+    if (options$cache > 0) file.copy(filename, cached)        # nocov
   }
 
   fig_proc <- knitr::opts_current$get("fig.process")

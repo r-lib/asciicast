@@ -1,4 +1,6 @@
 
+# nocov start
+
 # # Standalone file for better error handling ----------------------------
 #
 # If can allow package dependencies, then you are probably better off
@@ -1122,3 +1124,5 @@ throw_error      <- err$throw_error
 chain_error      <- err$chain_error
 chain_call       <- err$chain_call
 chain_clean_call <- err$chain_clean_call
+
+# nocov end
