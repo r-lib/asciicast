@@ -50,5 +50,5 @@ test_that("usage", {
   env <- setup_env()
   out <- processx::run(rem, env = env, error_on_status = FALSE)
   expect_equal(out$status, 5)
-  expect_match(out$stderr, "Usage:.*rem \\[-i\\] \\[-v\\] <unix-socket>")
+  expect_match(out$stderr, "Usage:.*rem.*-i")
 })
