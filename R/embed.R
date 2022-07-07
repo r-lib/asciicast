@@ -187,24 +187,8 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
                                     locales = get_locales(),
                                     options = NULL) {
 
-  env <- Sys.getenv()
-  env["ASCIICAST"] <- "true"
-  if (is_windows()) {
-    env["PATH"] <- paste0(R.home("bin"), ";", Sys.getenv("PATH"))
-  }
-  env[names(record_env)] <- record_env
-  env <- na_omit(env)
-
-  exec_name <- if (.Platform$OS.type == "windows") "rem.exe" else "rem"
-  exec_path <- system.file(
-    "bin",
-    .Platform$r_arch,
-    exec_name,
-    package = "asciicast"
-  )
-  if (exec_path == "") {
-    exec_path <- system.file("src", exec_name, package = "asciicast")
-  }
+  env <- setup_env(record_env)
+  exec_path <- find_rem()
 
   sock <- processx::conn_create_unix_socket()
   sock_name <- processx::conn_file_name(sock)
@@ -253,6 +237,34 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
 
   px
 }
+
+setup_env <- function(extra = NULL) {
+  env <- Sys.getenv()
+  env["ASCIICAST"] <- "true"
+  if (is_windows()) {
+    env["PATH"] <- paste0(R.home("bin"), ";", Sys.getenv("PATH"))
+  }
+  env[names(extra)] <- extra
+  env <- na_omit(env)
+}
+
+find_rem <- function() {
+  exec_name <- if (.Platform$OS.type == "windows") "rem.exe" else "rem"
+  exec_path <- system.file("src", exec_name, package = "asciicast")
+  if (exec_path == "") {
+    exec_path <- system.file(
+      "bin",
+      .Platform$r_arch,
+      exec_name,
+      package = "asciicast"
+    )
+  }
+  if (exec_path == "") {
+    throw(new_error("Cannot find embedded R executable ", exec_name))
+  }
+  exec_path
+}
+
 write_line <- function(px, line) {
   con <- attr(px, "sock")
   line <- paste0(line, "\n")
