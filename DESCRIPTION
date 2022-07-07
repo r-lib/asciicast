@@ -27,7 +27,7 @@ Imports:
     curl,
     jsonlite,
     magick (>= 2.2.9002),
-    processx (>= 3.6.1.9002),
+    processx (>= 3.7.0),
     tibble,
     utils,
     V8
@@ -45,8 +45,6 @@ Suggests:
     rstudioapi,
     testthat (>= 3.0.0),
     withr
-Remotes:
-    r-lib/processx
 Config/Needs/website:
     r-lib/downlit
 Encoding: UTF-8
