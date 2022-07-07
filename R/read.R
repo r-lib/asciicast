@@ -11,7 +11,7 @@
 #' @export
 #' @importFrom jsonlite fromJSON
 #' @family asciicast functions
-#' @examplesIf interactive() && curl::has_internet()
+#' @examplesIf interactive()
 #' c1 <- read_cast("https://asciinema.org/a/uHQwIVpiZvu0Ioio8KYx6Uwlj.cast?dl=1")
 #' play(c1)
 #'

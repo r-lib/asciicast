@@ -23,7 +23,7 @@
 #' @export
 #' @family SVG functions
 #' @importFrom V8 v8 JS
-#' @examplesIf asciicast:::is_svg_supported()
+#' @examplesIf !asciicast:::is_rcmd_check()
 #' cast <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
 #' svg_file <- tempfile(fileext = ".svg")
 #' write_svg(cast, svg_file)
@@ -136,7 +136,7 @@ rename_theme <- function(theme) {
 #'
 #' @family SVG functions
 #' @export
-#' @examplesIf asciicast:::is_svg_supported()
+#' @examplesIf !asciicast:::is_rcmd_check()
 #' cast <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
 #' svg_file <- tempfile(fileext = ".svg")
 #' mytheme <- modifyList(default_theme(), list(cursor = c(255, 0, 0)))
