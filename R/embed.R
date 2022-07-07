@@ -104,14 +104,19 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
                             record_env, startup, echo, speed, process,
                             interactive, locales, options) {
 
-  px <- process %||% asciicast_start_process(
-    startup,
-    timeout,
-    record_env,
-    interactive,
-    locales,
-    options
-  )
+  px <- process
+
+  if (is.null(px)) {
+    px <- asciicast_start_process(
+      startup,
+      timeout,
+      record_env,
+      interactive,
+      locales,
+      options
+    )
+    on.exit(close(attr(px, "sock")), add = TRUE)
+  }
 
   data <- record_internal(lines, timeout, px)
 
