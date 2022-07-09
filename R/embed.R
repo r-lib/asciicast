@@ -192,7 +192,7 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
 
   sock <- processx::conn_create_unix_socket()
   sock_name <- processx::conn_file_name(sock)
-  if (is_windows()) sock_name <- basename(sock_name)
+  if (is_windows()) sock_name <- basename(sock_name) # nocovif !is_windows()
 
   px <- processx::process$new(
     exec_path,
@@ -242,7 +242,7 @@ setup_env <- function(extra = NULL) {
   env <- Sys.getenv()
   env["ASCIICAST"] <- "true"
   if (is_windows()) {
-    env["PATH"] <- paste0(R.home("bin"), ";", Sys.getenv("PATH"))
+    env["PATH"] <- paste0(R.home("bin"), ";", Sys.getenv("PATH")) # nocovif !is_windows()
   }
   env[names(extra)] <- extra
   env <- na_omit(env)

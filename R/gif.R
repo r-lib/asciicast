@@ -75,7 +75,7 @@ write_gif <- function(cast, path, show = NULL, cols = NULL,
   }
   # without this, windows fails, because it takes c: as the protocol
   if (is_windows()) {
-    rndr_html <- paste0("file:///", rndr_html)
+    rndr_html <- paste0("file:///", rndr_html)      # nocovif !is_windows()
   }
   args <- c(rndr_js, rndr_html, cols %||% frames$width,
             rows %||% frames$height,
