@@ -83,7 +83,8 @@
 <span>  process <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  interactive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  locales <span class="op">=</span> <span class="fu"><a href="get_locales.html">get_locales</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  options <span class="op">=</span> <span class="fu"><a href="asciicast_options.html">asciicast_options</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  options <span class="op">=</span> <span class="fu"><a href="asciicast_options.html">asciicast_options</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  incomplete_error <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -194,6 +195,12 @@ executed in the subprocess. See <code><a href="asciicast_options.html">asciicast
 defaults. Supply a named list here to override the defaults or set
 additionsl ones. Passing large and/or complicated options here might
 not work, or might be slow.</p></dd>
+
+
+<dt>incomplete_error</dt>
+<dd><p>Whether to error on incomplete expressions.
+You might need to set this to <code>FALSE</code> for R code that does keyboard
+input, e.g. in <code><a href="https://rdrr.io/r/base/browser.html" class="external-link">browser()</a></code>.</p></dd>
 
 </dl></div>
     <div id="value">
