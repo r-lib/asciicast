@@ -24,6 +24,20 @@ record_internal <- function(lines, timeout, process,
         }
       }
 
+      # pause?
+      if (lines[ptr] == "#! --") {
+        # Unlikely, there is at least a prompt usually?
+        if (length(output) == 0) next
+        ts <- parse_line(output[[length(output)]])$timestamp
+        output <<- c(
+          output,
+          sprintf("[%f, \"rlib\", \"type: wait\"]", ts),
+          sprintf("[%f, \"o\", \"\"]", ts)
+        )
+        ptr <<- ptr + 1
+        next
+      }
+
       # send a line
       write_line(process, lines[ptr])
       ptr <<- ptr + 1
@@ -141,7 +155,9 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
 
   if (!echo) data <- remove_input(data)
 
-  if (empty_wait != 0) data <- add_empty_wait(data, empty_wait)
+  # Need to call this before adding the typing speed, because it moves
+  # rows around
+  data <- add_empty_wait(data, empty_wait)
 
   if (echo) data <- adjust_typing_speed(data, typing_speed)
 
@@ -310,11 +326,40 @@ shift <- function(v) {
 
 add_empty_wait <- function(data, wait) {
   empty <- which(
-    data$type == "rlib" & data$data == "type: input" &
-    shift(data$type) == "o" & shift(data$data) == "\r\n"
+    data$type == "rlib" & data$data %in% c("type: input", "type: wait") &
+    shift(data$type) == "o" & shift(data$data) %in% c("\r\n", "")
   )
 
   if (length(empty) == 0) return(data)
+
+  # If the next entry is a prompt, then move the wait after the prompt
+  for (eidx in empty) {
+    skip <- 0L
+    while (TRUE && eidx + 2L + skip <= nrow(data)) {
+      typ <- data$type[eidx + 2L + skip]
+      typ1 <- data$type[eidx + 2L + skip + 1L]
+      dat <- data$data[eidx + 2L + skip]
+      dat1 <- data$data[eidx + 2L + skip + 1L]
+      if (typ == "rlib" && dat == "type: read") {
+        skip <- skip + 1L
+      } else if (typ == "rlib" && dat == "type: prompt" && typ1 == "o") {
+        skip <- skip + 2L
+      } else {
+        break
+      }
+    }
+    if (skip > 0) {
+      data$time[eidx:(eidx+1)] <- data$time[eidx + 1 + skip]
+      data[eidx:(eidx + 1 + skip), ] <-
+        data[c((eidx + 2):(eidx + 1 + skip), eidx, eidx + 1L), ]
+    }
+  }
+
+  # we might have shifted them, so calculate again
+  empty <- which(
+    data$type == "rlib" & data$data %in% c("type: input", "type: wait") &
+    shift(data$type) == "o" & shift(data$data) %in% c("\r\n", "")
+  )
 
   shft <- rep(0, nrow(data))
   shft[empty] <- wait
