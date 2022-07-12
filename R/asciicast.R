@@ -39,6 +39,9 @@
 #' @param interactive Whether to run R in interactive mode. This argument
 #'   is ignored if `process` is specified. If `process` is `NULL` then
 #'   it is passed to [asciicast_start_process()].
+#' @param incomplete_error Whether to error on incomplete expressions.
+#'   You might need to set this to `FALSE` for R code that does keyboard
+#'   input, e.g. in `browser()`. The default is `TRUE`.
 #' @inheritParams asciicast_start_process
 #' @return An `asciicast` object, write this to
 #'   file with [write_json()].
@@ -56,7 +59,8 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
                    timeout = NULL, start_wait = NULL, end_wait = NULL,
                    record_env = NULL, startup = NULL, echo = TRUE,
                    speed = NULL, process = NULL, interactive = TRUE,
-                   locales = get_locales(), options = asciicast_options()) {
+                   locales = get_locales(), options = asciicast_options(),
+                   incomplete_error = NULL) {
 
   lines <- if (is.language(script)) {
     deparse(script)
@@ -79,6 +83,7 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
   end_wait <- as.numeric(get_param("end_wait", 5L, header))
   timeout <- as.numeric(get_param("timeout", 10, header))
   speed <- as.numeric(get_param("speed", 1.0, header))
+  incomplete_error <- as.logical(get_param("incomplete_error", TRUE, header))
   if (is.null(record_env) && !is.null(header$record_env)) {
     record_env <- eval(parse(text = header$record_env))
   }
@@ -106,7 +111,7 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
   output <- record_embedded(body, typing_speed, timeout, empty_wait,
                             start_wait, end_wait, record_env,
                             startup, echo, speed, process, interactive,
-                            locales, options)
+                            locales, options, incomplete_error)
 
   if (rows == "auto") {
     plain <- cli::ansi_strip(paste0(

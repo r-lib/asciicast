@@ -1,5 +1,6 @@
 
-record_internal <- function(lines, timeout, process) {
+record_internal <- function(lines, timeout, process,
+                            incomplete_error = TRUE) {
 
   to <- as.double(timeout, units = "secs") * 1000
 
@@ -16,7 +17,11 @@ record_internal <- function(lines, timeout, process) {
 
       # if need more lines, but there is no more
       if (ptr > length(lines)) {
-        throw(new_error("Incomplete asciicast expression"))
+        if (incomplete_error) {
+          throw(new_error("Incomplete asciicast expression"))
+        } else {
+          return()
+        }
       }
 
       # send a line
@@ -102,7 +107,8 @@ read_all <- function(px) {
 record_embedded <- function(lines, typing_speed, timeout, empty_wait,
                             start_wait, end_wait,
                             record_env, startup, echo, speed, process,
-                            interactive, locales, options) {
+                            interactive, locales, options,
+                            incomplete_error) {
 
   px <- process
 
@@ -118,7 +124,7 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
     on.exit(close(attr(px, "sock")), add = TRUE)
   }
 
-  data <- record_internal(lines, timeout, px)
+  data <- record_internal(lines, timeout, px, incomplete_error)
 
   if (nrow(data) > 0) {
     data$time <- data$time - data$time[1] + start_wait

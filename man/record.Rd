@@ -24,7 +24,8 @@ record(
   process = NULL,
   interactive = TRUE,
   locales = get_locales(),
-  options = asciicast_options()
+  options = asciicast_options(),
+  incomplete_error = TRUE
 )
 }
 \arguments{
@@ -94,6 +95,10 @@ executed in the subprocess. See \code{\link[=asciicast_options]{asciicast_option
 defaults. Supply a named list here to override the defaults or set
 additionsl ones. Passing large and/or complicated options here might
 not work, or might be slow.}
+
+\item{incomplete_error}{Whether to error on incomplete expressions.
+You might need to set this to \code{FALSE} for R code that does keyboard
+input, e.g. in \code{browser()}.}
 }
 \value{
 An \code{asciicast} object, write this to

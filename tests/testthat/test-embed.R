@@ -32,6 +32,13 @@ test_that("incomplete expression", {
   )
 })
 
+test_that("incomplete expression allowed", {
+  withr::local_options(asciicast_typing_speed = 0)
+  expect_silent(
+    record(textConnection("1 + (\n"), incomplete_error = FALSE)
+  )
+})
+
 test_that("timeout", {
   withr::local_options(asciicast_typing_speed = 0)
   expect_error(
