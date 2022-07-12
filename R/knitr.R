@@ -134,7 +134,7 @@ eng_asciicast <- function(options) {
   cast <- record(
     cast_file,
     process = proc,
-    echo = attr(proc, "echo") %||% TRUE
+    echo = options$asciicast_echo %||% attr(proc, "echo") %||% TRUE
   )
 
   if (options$cache > 0) cache_asciicast(cast, options$hash)
