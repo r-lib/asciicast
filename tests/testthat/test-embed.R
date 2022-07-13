@@ -126,3 +126,23 @@ test_that("find_rem error", {
     "Cannot find embedded R executable"
   )
 })
+
+test_that("forced pause", {
+  cast <- record(c(
+    "#! --",
+    "1 + 1",
+    "#! --",
+    "2 + 2"
+  ))
+  cmds <- grep("^type:", cast$output$data, value=TRUE)
+  expect_snapshot(cmds)
+})
+
+test_that("edge case with no wait", {
+  cast <- record(c(
+    "#! --",
+    "1 + 1"
+  ), end_wait = 0)
+  cmds <- grep("^type:", cast$output$data, value=TRUE)
+  expect_snapshot(cmds)
+})

@@ -60,3 +60,20 @@
        [9] "busy: 0"                     "type: read"                 
       [11] "type: wait"                  ""                           
 
+# forced pause
+
+    Code
+      cmds
+    Output
+       [1] "type: prompt" "type: input"  "type: stdout" "type: stdout" "type: stdout"
+       [6] "type: read"   "type: prompt" "type: wait"   "type: input"  "type: stdout"
+      [11] "type: stdout" "type: stdout" "type: read"   "type: wait"  
+
+# edge case with no wait
+
+    Code
+      cmds
+    Output
+      [1] "type: prompt" "type: input"  "type: stdout" "type: stdout" "type: stdout"
+      [6] "type: read"  
+

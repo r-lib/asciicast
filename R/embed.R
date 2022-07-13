@@ -27,7 +27,10 @@ record_internal <- function(lines, timeout, process,
       # pause?
       if (lines[ptr] == "#! --") {
         # Unlikely, there is at least a prompt usually?
-        if (length(output) == 0) next
+        if (length(output) == 0) {
+          ptr <<- ptr + 1
+          next
+        }
         ts <- parse_line(output[[length(output)]])$timestamp
         output <<- c(
           output,
