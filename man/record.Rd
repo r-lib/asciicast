@@ -25,7 +25,7 @@ record(
   interactive = TRUE,
   locales = get_locales(),
   options = asciicast_options(),
-  incomplete_error = TRUE
+  incomplete_error = NULL
 )
 }
 \arguments{
@@ -98,7 +98,7 @@ not work, or might be slow.}
 
 \item{incomplete_error}{Whether to error on incomplete expressions.
 You might need to set this to \code{FALSE} for R code that does keyboard
-input, e.g. in \code{browser()}.}
+input, e.g. in \code{browser()}. The default is \code{TRUE}.}
 }
 \value{
 An \code{asciicast} object, write this to
