@@ -80,7 +80,8 @@ Parameters for SVG files:
 a build-in theme, or a named list of theme properties,
 see \code{\link[=default_theme]{default_theme()}}.
 The built-in themes are \code{"asciinema"}, \code{"tango"}, \code{"solarized-dark"},
-\code{"solarized-light"}, \code{"seti"}, \code{"monokai"}, \code{"github-light"}.
+\code{"solarized-light"}, \code{"seti"}, \code{"monokai"}, \code{"github-light"},
+\code{"pkgdown"}.
 }
 }
 \seealso{
