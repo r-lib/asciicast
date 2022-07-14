@@ -1,5 +1,5 @@
 
-# development version
+# asciicast 2.0.0
 
 * Completely new `record()` implementation that uses an embedded R
   interpreter in a subprocess. This means that asciicast can now record
