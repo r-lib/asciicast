@@ -23,3 +23,6 @@
 ^dev-lib$
 ^src/.*[.]gcda$
 ^src/.*[.]gcno$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

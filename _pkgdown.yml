@@ -1,0 +1,11 @@
+url: https://r-lib.github.io/asciicast/
+
+template:
+  package: tidytemplate
+  bootstrap: 5
+  includes:
+    in_header: |
+      <script defer data-domain="/r-lib.github.io/asciicast,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script>
+
+development:
+  mode: auto
