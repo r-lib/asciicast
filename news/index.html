@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">asciicast</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -57,6 +57,25 @@
       <small>Source: <a href="https://github.com/r-lib/asciicast/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="2.0.0" id="asciicast-200">asciicast 2.0.0<small>2022-07-14</small><a class="anchor" aria-label="anchor" href="#asciicast-200"></a></h2>
+<ul><li>
+<p>Completely new <code><a href="../reference/record.html">record()</a></code> implementation that uses an embedded R interpreter in a subprocess. This means that asciicast can now record on Windows, and the recordings are of much faster and of higher quiality.</p>
+<p>Another benefit is that simulated typing does not happen in real time, but recordings are as fast as the script itself, and the simulated typing (if requested) is added after the recording.</p>
+<p>It is also possible to record R scripts that are not valid R code. (These will fail of course, but sometimes that’s what you want to show.)</p>
+<p><code><a href="../reference/record.html">record()</a></code> does not set the <code>error</code> option in the asciicast subprocess any more, but the output of errors is simply recorded.</p>
+</li>
+<li><p>New <code><a href="../reference/record_output.html">record_output()</a></code> which returns the recorded output as a character vector instead of an asciic cast.</p></li>
+<li><p>Adding a <code>#'</code> to a line omits the simulated typing for that line and the line will appear in one step.</p></li>
+<li><p>New <code><a href="../reference/write_gif.html">write_gif()</a></code> function to save a cast as a GIF. It needs phantom.js currently.</p></li>
+<li><p>SVG output can have themes now. The package comes with a bunch of predefined themes, or you can create your own. See <code><a href="../reference/default_theme.html">default_theme()</a></code>.</p></li>
+<li><p>knitr options are set temporarily now, and they are restored after the knitr run.</p></li>
+<li><p>The <code><a href="../reference/asciinema_player.html">asciinema_player()</a></code> HTML widget now properly sets the height and width of the player window, using the <code>height</code> and <code>width</code> parameters of the cast.</p></li>
+<li><p><code><a href="../reference/record.html">record()</a></code> now works with script files that end with a comment line (<a href="https://github.com/r-lib/asciicast/issues/13" class="external-link">#13</a>).</p></li>
+<li><p>The initial R prompt is now not left out when recording a cast.</p></li>
+<li><p><code><a href="../reference/asciinema_player.html">asciinema_player()</a></code> now creates an HTML widget that works well on Firefox as well.</p></li>
+<li><p>asciicast is properly tested now, so it should be much more stable.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.0" id="asciicast-100">asciicast 1.0.0<small>2019-12-13</small><a class="anchor" aria-label="anchor" href="#asciicast-100"></a></h2>
 <p>First release on CRAN.</p>
