@@ -50,8 +50,8 @@ records all terminal output in real time as it happens.
 -   asciicast needs an R build that contains a shared or static R
     library. This is true for most R builds currently.
 -   asciicast works best in an UTF-8 locale. It also works well if all
-    output is ASCII, but non-ASCII output.
-    (<https://github.com/r-lib/asciicast/issues/36>)
+    output is ASCII, but non-ASCII output might cause problems
+    (<https://github.com/r-lib/asciicast/issues/36>).
 
 ## Installation
 
