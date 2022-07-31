@@ -215,10 +215,10 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
   sock <- processx::conn_create_unix_socket()
   sock_name <- processx::conn_file_name(sock)
   if (is_windows()) sock_name <- basename(sock_name) # nocovif !is_windows()
-  Sys.setenv(R_ASCIICAST_SOCKET = sock_name)
-  Sys.setenv(R_ASCIICAST_INTERACTIVE = if (interactive) "true" else "false")
 
   env <- setup_env(record_env)
+  env[["R_ASCIICAST_SOCKET"]] <- sock_name
+  env[["R_ASCIICAST_INTERACTIVE"]] <- if (interactive) "true" else "false"
   px <- asciicast_start_process_internal(sock_name, env, interactive)
   attr(px, "sock") <- sock
 
