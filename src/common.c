@@ -69,7 +69,7 @@ int rem_clock_gettime(int clk_id, struct timespec *t) {
 }
 #else
 int rem_clock_gettime(int clk_id, struct timespec *t) {
-  return clock_gettime(a,b);
+  return clock_gettime(clk_id,t);
 }
 #endif
 
