@@ -120,7 +120,7 @@ test_that("adjust_typing_speed", {
 })
 
 test_that("find_rem error", {
-  mockery::stub(find_rem, "system.file", "")
+  mockery::stub(find_rem, "get_embedded", "")
   expect_error(
     find_rem(),
     "Cannot find embedded R executable"
