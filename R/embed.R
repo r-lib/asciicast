@@ -257,7 +257,8 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
 }
 
 asciicast_start_process_internal <- function(sock_name, env, interactive) {
-  embedded <- tolower(Sys.getenv("R_ASCIICAST_EMBEDDED", "true")) == "true"
+  default <- if (has_embedded()) "true" else "false"
+  embedded <- tolower(Sys.getenv("R_ASCIICAST_EMBEDDED", default)) == "true"
 
   if (embedded) {
     exec_path <- find_rem()
@@ -301,7 +302,7 @@ setup_env <- function(extra = NULL) {
   env <- na_omit(env)
 }
 
-find_rem <- function() {
+get_embedded <- function() {
   exec_name <- if (.Platform$OS.type == "windows") "rem.exe" else "rem"
   exec_path <- system.file("src", exec_name, package = "asciicast")
   if (exec_path == "") {
@@ -312,7 +313,17 @@ find_rem <- function() {
       package = "asciicast"
     )
   }
+  exec_path
+}
+
+has_embedded <- function() {
+  get_embedded() != ""
+}
+
+find_rem <- function() {
+  exec_path <- get_embedded()
   if (exec_path == "") {
+    exec_name <- if (.Platform$OS.type == "windows") "rem.exe" else "rem"
     throw(new_error("Cannot find embedded R executable ", exec_name))
   }
   exec_path

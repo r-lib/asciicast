@@ -21,3 +21,4 @@ Meta
 docs
 /src/asciicastclient.so
 /src/asciicastclient.dll
+/src/Makevars

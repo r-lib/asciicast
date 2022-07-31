@@ -46,6 +46,9 @@ test_that("Special characters go through JSON", {
 })
 
 test_that("usage", {
+  if (!has_embedded()) {
+    skip("Needs embedded R")
+  }
   rem <- find_rem()
   env <- setup_env()
   out <- processx::run(rem, env = env, error_on_status = FALSE)

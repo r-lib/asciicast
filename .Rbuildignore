@@ -16,6 +16,7 @@
 ^README_cache$
 ^inst/examples/github-readme_cache$
 ^appveyor\.yml$
+^src/Makevars$
 ^src/rem$
 ^src/rem[.]exe$
 ^src/r[.]o$
