@@ -52,5 +52,8 @@ test_that("print.asciicast", {
   cast <- record(textConnection("# comment\n1+1\n"))
   cast$output$time <- seq_along(cast$output$time) / 100
   cast$config$timestamp <- 1656941462
-  expect_snapshot(cast)
+  # We filter out the # i Use `print(n = ...)` to see more rows" line
+  expect_snapshot(cast, transform = function(x) {
+    grep("to see more rows", x, value = TRUE, invert = TRUE)
+  })
 })
