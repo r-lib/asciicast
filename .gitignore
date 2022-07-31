@@ -19,3 +19,5 @@ Meta
 /vignettes/asciicast-demo.html
 /dev-lib
 docs
+/src/asciicastclient.so
+/src/asciicastclient.dll

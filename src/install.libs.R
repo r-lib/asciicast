@@ -1,8 +1,8 @@
 
 progs <- if (WINDOWS) {
-           "rem.exe"
+           c("rem.exe", "asciicastclient.dll")
          } else {
-           "rem"
+           c("rem", "asciicastclient.so")
          }
 
 dest <- file.path(R_PACKAGE_DIR, paste0("bin", R_ARCH))
