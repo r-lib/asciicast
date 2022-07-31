@@ -11,7 +11,7 @@ library(asciicast)
 
 if (Sys.getenv("NOT_CRAN") == "true") {
   test_check("asciicast", reporter = "summary")
-  if (!is_windows() && asciicast:::has_embedded()) {
+  if (.Platform$OS.type != "windows" && asciicast:::has_embedded()) {
     Sys.setenv(R_ASCIICAST_EMBEDDED = "false")
     test_check("asciicast", reporter = "summary")
   }

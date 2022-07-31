@@ -271,9 +271,10 @@ asciicast_start_process_internal <- function(sock_name, env, interactive) {
       )
 
   } else {
+    r <- file.path(R.home(component="bin"), "R")
     px <- processx::process$new(
       # TODO: find R executable, like in callr
-      "R",
+      r,
       c(
         "-q",
         "--vanilla",
