@@ -48,8 +48,6 @@ Suggests:
 Config/Needs/website:
     r-lib/downlit,
     tidyverse/tidytemplate
-Config/Needs/check:
-    r-lib/testthat@fix/location-srcref-check
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0.9000
