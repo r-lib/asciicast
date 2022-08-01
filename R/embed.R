@@ -257,10 +257,7 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
 }
 
 asciicast_start_process_internal <- function(sock_name, env, interactive) {
-  default <- if (has_embedded()) "true" else "false"
-  embedded <- tolower(Sys.getenv("R_ASCIICAST_EMBEDDED", default)) == "true"
-
-  if (embedded) {
+  if (is_embedded()) {
     exec_path <- find_rem()
     px <- processx::process$new(
       exec_path,
@@ -319,6 +316,11 @@ get_embedded <- function() {
 
 has_embedded <- function() {
   get_embedded() != ""
+}
+
+is_embedded <- function() {
+  default <- if (has_embedded()) "true" else "false"
+  tolower(Sys.getenv("R_ASCIICAST_EMBEDDED", default)) == "true"
 }
 
 find_rem <- function() {
