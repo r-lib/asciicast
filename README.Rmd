@@ -12,11 +12,13 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
-asciicast::init_knitr_engine()
-options(
-  asciicast_at = NULL,
-  asciicast_knitr_svg = TRUE,
-  asciicast_end_wait = 3
+asciicast::init_knitr_engine(
+  options = list(
+    asciicast_at = NULL,
+    asciicast_knitr_svg = TRUE,
+    asciicast_end_wait = 3,
+    asciicast_omit_last_line = TRUE
+  )
 )
 ```
 # asciicast

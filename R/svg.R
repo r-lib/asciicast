@@ -78,6 +78,12 @@ write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
     theme = theme))
 
   svg <- ct$call("svgterm.render", json, options)
+  svg <- gsub(
+    "<text",
+    paste0("<text font-size=\"", theme$fontSize, "\""),
+    svg,
+    fixed = TRUE
+  )
   cat(svg, file = path)
 
   invisible()
