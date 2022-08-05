@@ -1,6 +1,4 @@
 
-# nocov start
-
 # # Standalone file for better error handling ----------------------------
 #
 # If can allow package dependencies, then you are probably better off
@@ -130,6 +128,11 @@
 # ### 3.0.0 -- 2022-04-19
 #
 # * Major rewrite, use rlang compatible error objects. New API.
+#
+# ##3 3.0.1 -- 2022-06-17
+#
+# * Remove the `rlang_error` and `rlang_trace` classes, because our new
+#   deparsed `call` column in the trace is not compatible with rlang.
 
 err <- local({
 
@@ -176,7 +179,7 @@ err <- local({
 
   new_error <- function(..., call. = TRUE, srcref = NULL, domain = NA) {
     cond <- new_cond(..., call. = call., domain = domain, srcref = srcref)
-    class(cond) <- c("rlib_error_3_0", "rlib_error", "rlang_error", "error", "condition")
+    class(cond) <- c("rlib_error_3_0", "rlib_error", "error", "condition")
     cond
   }
 
@@ -343,7 +346,7 @@ err <- local({
         name <- native_name(.NAME)
         err <- new_error("Native call to `", name, "` failed", call. = call1)
         cerror <- if (inherits(e, "simpleError")) "c_error"
-        class(err) <- c(cerror, "rlib_error_3_0", "rlib_error", "rlang_error", "error", "condition")
+        class(err) <- c(cerror, "rlib_error_3_0", "rlib_error", "error", "condition")
         throw_error(err, parent = e)
       }
     )
@@ -377,7 +380,7 @@ err <- local({
         name <- native_name(.NAME)
         err <- new_error("Native call to `", name, "` failed", call. = call1)
         cerror <- if (inherits(e, "simpleError")) "c_error"
-        class(err) <- c(cerror, "rlib_error_3_0", "rlib_error", "rlang_error", "error", "condition")
+        class(err) <- c(cerror, "rlib_error_3_0", "rlib_error", "error", "condition")
         throw_error(err, parent = e)
       }
     )
@@ -536,7 +539,7 @@ err <- local({
     )
     trace$call <- calls
 
-    class(trace) <- c("rlib_trace_3_0", "rlang_trace", "rlib_trace", "tbl", "data.frame")
+    class(trace) <- c("rlib_trace_3_0", "rlib_trace", "tbl", "data.frame")
     trace
   }
 
@@ -1124,5 +1127,3 @@ throw_error      <- err$throw_error
 chain_error      <- err$chain_error
 chain_call       <- err$chain_call
 chain_clean_call <- err$chain_clean_call
-
-# nocov end

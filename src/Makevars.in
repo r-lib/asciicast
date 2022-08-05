@@ -1,0 +1,13 @@
+
+tools: @REM@ asciicastclient$(SHLIB_EXT)
+
+rem: r.o common.o
+	$(MAIN_LINK) -o $@ r.o common.o $(LIBR) $(LIBS)
+
+asciicastclient$(SHLIB_EXT): client.o common.o
+	$(SHLIB_LINK) -o asciicastclient$(SHLIB_EXT) \
+		client.o common.o $(PKG_LIBS) \
+		$(SHLIB_LIBADD) $(LIBR)
+
+clean:
+	@rm -f Makevars rem r.o client.o asciicastclient$(SHLIB_EXT)

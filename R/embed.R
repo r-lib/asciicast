@@ -212,21 +212,14 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
                                     locales = get_locales(),
                                     options = NULL) {
 
-  env <- setup_env(record_env)
-  exec_path <- find_rem()
-
   sock <- processx::conn_create_unix_socket()
   sock_name <- processx::conn_file_name(sock)
   if (is_windows()) sock_name <- basename(sock_name) # nocovif !is_windows()
 
-  px <- processx::process$new(
-    exec_path,
-    c(if (interactive) "-i", sock_name),
-    env = env,
-    stdout = "|",
-    stderr = "2>&1"
-  )
-
+  env <- setup_env(record_env)
+  env[["R_ASCIICAST_SOCKET"]] <- sock_name
+  env[["R_ASCIICAST_INTERACTIVE"]] <- if (interactive) "true" else "false"
+  px <- asciicast_start_process_internal(sock_name, env, interactive)
   attr(px, "sock") <- sock
 
   pr <- processx::poll(list(sock), 5000)[[1]]
@@ -263,6 +256,40 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
   px
 }
 
+asciicast_start_process_internal <- function(sock_name, env, interactive) {
+  if (is_embedded()) {
+    exec_path <- find_rem()
+    px <- processx::process$new(
+      exec_path,
+      c(if (interactive) "-i", sock_name),
+      env = env,
+      stdout = "|",
+      stderr = "2>&1"
+      )
+
+  } else {
+    r <- file.path(R.home(component="bin"), "R")
+    px <- processx::process$new(
+      # TODO: find R executable, like in callr
+      r,
+      c(
+        "-q",
+        "--vanilla",
+        "--no-restore",
+        "--no-save",
+        "--no-readline"
+      ),
+      env = env,
+      stdin = "|", stdout = "|", stderr = "2>&1"
+    )
+    client <- find_client()
+    cmd <- sprintf("dyn.load('%s')\n", client)
+    px$write_input(cmd)
+  }
+
+  px
+}
+
 setup_env <- function(extra = NULL) {
   env <- Sys.getenv()
   env["ASCIICAST"] <- "true"
@@ -273,7 +300,7 @@ setup_env <- function(extra = NULL) {
   env <- na_omit(env)
 }
 
-find_rem <- function() {
+get_embedded <- function() {
   exec_name <- if (.Platform$OS.type == "windows") "rem.exe" else "rem"
   exec_path <- system.file("src", exec_name, package = "asciicast")
   if (exec_path == "") {
@@ -284,10 +311,46 @@ find_rem <- function() {
       package = "asciicast"
     )
   }
+  exec_path
+}
+
+has_embedded <- function() {
+  get_embedded() != ""
+}
+
+is_embedded <- function() {
+  default <- if (has_embedded()) "true" else "false"
+  tolower(Sys.getenv("R_ASCIICAST_EMBEDDED", default)) == "true"
+}
+
+find_rem <- function() {
+  exec_path <- get_embedded()
   if (exec_path == "") {
+    exec_name <- if (.Platform$OS.type == "windows") "rem.exe" else "rem"
     throw(new_error("Cannot find embedded R executable ", exec_name))
   }
   exec_path
+}
+
+find_client <- function() {
+  lib_name <- if (.Platform$OS.type == "windows") {
+    "asciicastclient.dll"
+  } else {
+    "asciicastclient.so"
+  }
+  lib_path <- system.file("src", lib_name, package = "asciicast")
+  if (lib_path == "") {
+    lib_path <- system.file(
+      "bin",
+      .Platform$r_arch,
+      lib_name,
+      package = "asciicast"
+    )
+  }
+  if (lib_path == "") {
+    throw(new_error("Cannot find embedded R executable ", lib_name))
+  }
+  lib_path
 }
 
 write_line <- function(px, line) {
