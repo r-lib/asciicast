@@ -1,5 +1,6 @@
 # asciicast (development version)
 
+* SVG output now looks correct in Firefox with large fonts (#42).
 
 # asciicast 2.0.0
 
