@@ -4,6 +4,9 @@
   ascii cast. HTML otuput is now the default in pkgdown, for snapshots.
   For animations we still need to use SVG files.
 
+* asciicast can now record casts on R installations that do not have an R
+  shared or static library.
+
 * SVG output now looks correct in Firefox with large fonts (#42).
 
 # asciicast 2.0.0
