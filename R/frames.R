@@ -15,11 +15,13 @@ load_svg_term <- function() {
 #' Extract / create complete screen frames from an ascii cast
 #'
 #' @param cast aciicast object
+#' @param height Number of rows. (`NA` for default.)
+#' @param width Number of columns. (`NA` for default.)
 #' @return `asciicast_frames` object.
 #'
 #' @keywords internal
 
-load_frames <- function(cast) {
+load_frames <- function(cast, height = NA, width = NA) {
 
   # Start with this, because it is faster
   json <- paste(as_json(cast), collapse = "\n")
@@ -30,7 +32,7 @@ load_frames <- function(cast) {
   ct$source(ldjs)
 
   ct$assign("json", json)
-  options <- list(fps = 15)
+  options <- list(fps = 15, height = height, width = width)
   structure(
     ct$call("get_cast", json, options),
     class = "aciicast_frames"

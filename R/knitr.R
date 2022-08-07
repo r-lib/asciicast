@@ -13,6 +13,7 @@
 
 asciicast_knitr_options <- function() {
   list(
+    asciicast_knitr_output = "auto",
     asciicast_knitr_svg = TRUE,
     asciicast_at = "end",
     asciicast_typing_speed = 0.05,
@@ -20,6 +21,7 @@ asciicast_knitr_options <- function() {
     asciicast_window = FALSE,
     asciicast_omit_last_line = FALSE,
     asciicast_cursor = FALSE,
+    asciicast_theme = "pkgdown",
     width = 100,
     asciicast_rows = "auto",
     asciicast_cols = 100,
@@ -80,9 +82,13 @@ init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
   knitr::knit_engines$set("asciicastcpp11" = eng_asciicastcpp11)
   knitr::cache_engines$set("asciicast" = cache_eng_asciicast)
 
-  if (!eng_asciicast_is_svg()) {
+  output_type <- eng_asciicast_output_type()
+  if (output_type == "widget") {
     deps <- htmlwidgets::getDependency("asciinema_player", "asciicast")
     knitr::knit_meta_add(deps)
+  }
+  if (knitr::is_html_output()) {
+
   }
 
   default_echo <- knitr::opts_chunk$get("echo")
@@ -195,6 +201,30 @@ cache_eng_asciicast <- function(options) {
   eng_asciicast_print(cast, options)
 }
 
+eng_asciicast_output_type <- function() {
+  opt <- getOption("asciicast_knitr_output", "auto")
+  if (!identical(opt, "auto")) return(opt)
+
+  at <- getOption("asciicast_at")
+  pkgdown <- identical(Sys.getenv("IN_PKGDOWN"), "true")
+  if (pkgdown) {
+    if (is.null(at)) {
+      # animation
+      "svg"
+    } else {
+      # screenshot
+      "html"
+    }
+
+  } else {
+    if (eng_asciicast_is_svg()) {
+      "svg"
+    } else {
+      "widget"
+    }
+  }
+}
+
 eng_asciicast_is_svg <- function() {
   svg <- getOption("asciicast_knitr_svg", NULL) %||%
     Sys.getenv("ASCIICAST_KNITR_SVG", "")
@@ -202,13 +232,32 @@ eng_asciicast_is_svg <- function() {
 }
 
 eng_asciicast_print <- function(cast, options) {
-  svg <- eng_asciicast_is_svg()
+  output <- eng_asciicast_output_type()
   extra <- if (!options$include) {
     NULL
-  } else if (svg) {
+  } else if (output == "svg") {
     asciicast_knitr_svg(cast, options)
-  } else {
+  } else if (output == "widget") {
     knitr::knit_print(asciinema_player(cast), options = options)
+  } else {
+    # html
+    tmp <- tempfile("ascii-", fileext = ".html")
+    on.exit(unlink(tmp), add = TRUE)
+    prefix <- knitr::opts_chunk$get("comment")
+    if (nchar(prefix) != 0) prefix <- paste0(prefix, " ")
+    write_html(cast, tmp, at = getOption("asciicast_at", "end"), prefix = prefix)
+    theme <- interpret_theme(NULL)
+    html <- c(
+      "<style type=\"text/css\">",
+      to_html_theme(theme),
+      "</style>",
+      readLines(tmp)
+    )
+    knitr::engine_output(
+      knitr::opts_chunk$merge(list(results = "asis", echo = FALSE)),
+      code = NULL,
+      out = html
+    )
   }
 
   knitr::engine_output(options, options$code, '', extra)
@@ -219,7 +268,9 @@ eng_asciicast_print <- function(cast, options) {
 cache_asciicast <- function(cast, path) {
   message("(1) Saving ", paste0(path, ".cast"))
   saveRDS(cast, paste0(path, ".cast"))
-  if (eng_asciicast_is_svg()) write_svg(cast, paste0(path, ".svg"))
+  if (eng_asciicast_output_type() == "avg") {
+    write_svg(cast, paste0(path, ".svg"))
+  }
 }
 
 asciicast_knitr_svg <- function(cast, options) {

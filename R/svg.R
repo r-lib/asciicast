@@ -2,7 +2,7 @@
 #' Create animated SVG from an asciicast
 #'
 #' @param cast `asciicast` object.
-#' @param path Path to SVG file to create.
+#' @param path Path to the SVG file to create.
 #' @param window Render with window decorations.
 #' @param start_at Lower range of timeline to render in seconds.
 #' @param end_at Upper range of timeline to render in seconds.
@@ -58,14 +58,7 @@ write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
 
   if (omit_last_line) cast <- remove_last_line(cast)
 
-  theme <- theme %||% getOption("asciicast_theme")
-  if (is.character(theme) && length(theme) == 1) {
-    if (!theme %in% names(themes)) {
-      throw(new_error("Unknown theme: ", theme))
-    }
-    theme <- themes[[theme]]
-  }
-  theme <- rename_theme(modify_list(default_theme(), theme))
+  theme <- rename_theme(interpret_theme(theme))
 
   tmp <- tempfile()
   on.exit(unlink(tmp), add = TRUE)

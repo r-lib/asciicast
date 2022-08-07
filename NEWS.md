@@ -1,5 +1,9 @@
 # asciicast (development version)
 
+* The new `write_html()` function can create a themed HTML snapshot of an
+  ascii cast. HTML otuput is now the default in pkgdown, for snapshots.
+  For animations we still need to use SVG files.
+
 * SVG output now looks correct in Firefox with large fonts (#42).
 
 # asciicast 2.0.0
