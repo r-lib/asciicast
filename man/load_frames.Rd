@@ -4,10 +4,14 @@
 \alias{load_frames}
 \title{Extract / create complete screen frames from an ascii cast}
 \usage{
-load_frames(cast)
+load_frames(cast, height = NA, width = NA)
 }
 \arguments{
 \item{cast}{aciicast object}
+
+\item{height}{Number of rows. (\code{NA} for default.)}
+
+\item{width}{Number of columns. (\code{NA} for default.)}
 }
 \value{
 \code{asciicast_frames} object.

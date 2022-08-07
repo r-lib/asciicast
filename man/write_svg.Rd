@@ -24,7 +24,7 @@ write_svg(
 \arguments{
 \item{cast}{\code{asciicast} object.}
 
-\item{path}{Path to SVG file to create.}
+\item{path}{Path to the SVG file to create.}
 
 \item{window}{Render with window decorations.}
 
