@@ -1,96 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>https://r-lib.github.io/asciicast/404.html</loc>
   </url>
   <url>
-    <loc>/CODE_OF_CONDUCT.html</loc>
+    <loc>https://r-lib.github.io/asciicast/CODE_OF_CONDUCT.html</loc>
   </url>
   <url>
-    <loc>/CONTRIBUTING.html</loc>
+    <loc>https://r-lib.github.io/asciicast/CONTRIBUTING.html</loc>
   </url>
   <url>
-    <loc>/ISSUE_TEMPLATE.html</loc>
+    <loc>https://r-lib.github.io/asciicast/ISSUE_TEMPLATE.html</loc>
   </url>
   <url>
-    <loc>/LICENSE-text.html</loc>
+    <loc>https://r-lib.github.io/asciicast/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>/LICENSE.html</loc>
+    <loc>https://r-lib.github.io/asciicast/LICENSE.html</loc>
   </url>
   <url>
-    <loc>/SUPPORT.html</loc>
+    <loc>https://r-lib.github.io/asciicast/SUPPORT.html</loc>
   </url>
   <url>
-    <loc>/articles/asciicast-demo.html</loc>
+    <loc>https://r-lib.github.io/asciicast/articles/asciicast-demo.html</loc>
   </url>
   <url>
-    <loc>/articles/index.html</loc>
+    <loc>https://r-lib.github.io/asciicast/articles/index.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>https://r-lib.github.io/asciicast/authors.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>https://r-lib.github.io/asciicast/index.html</loc>
   </url>
   <url>
-    <loc>/news/index.html</loc>
+    <loc>https://r-lib.github.io/asciicast/news/index.html</loc>
   </url>
   <url>
-    <loc>/reference/asciicast-package.html</loc>
+    <loc>https://r-lib.github.io/asciicast/reference/asciicast-package.html</loc>
   </url>
   <url>
-    <loc>/reference/asciicast_knitr_options.html</loc>
+    <loc>https://r-lib.github.io/asciicast/reference/asciicast_knitr_options.html</loc>
   </url>
   <url>
-    <loc>/reference/asciicast_options.html</loc>
+    <loc>https://r-lib.github.io/asciicast/reference/asciicast_options.html</loc>
   </url>
   <url>
-    <loc>/reference/asciicast_start_process.html</loc>
+    <loc>https://r-lib.github.io/asciicast/reference/asciicast_start_process.html</loc>
   </url>
   <url>
-    <loc>/reference/asciinema_player.html</loc>
+    <loc>https://r-lib.github.io/asciicast/reference/asciinema_player.html</loc>
   </url>
   <url>
-    <loc>/reference/default_theme.html</loc>
+    <loc>https://r-lib.github.io/asciicast/reference/default_theme.html</loc>
   </url>
   <url>
-    <loc>/reference/get_locales.html</loc>
+    <loc>https://r-lib.github.io/asciicast/reference/get_locales.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://r-lib.github.io/asciicast/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/init_knitr_engine.html</loc>
+    <loc>https://r-lib.github.io/asciicast/reference/init_knitr_engine.html</loc>
   </url>
   <url>
-    <loc>/reference/install_phantomjs.html</loc>
+    <loc>https://r-lib.github.io/asciicast/reference/install_phantomjs.html</loc>
   </url>
   <url>
-    <loc>/reference/load_frames.html</loc>
+    <loc>https://r-lib.github.io/asciicast/reference/load_frames.html</loc>
   </url>
   <url>
-    <loc>/reference/merge_casts.html</loc>
+    <loc>https://r-lib.github.io/asciicast/reference/merge_casts.html</loc>
   </url>
   <url>
-    <loc>/reference/play.html</loc>
+    <loc>https://r-lib.github.io/asciicast/reference/play.html</loc>
   </url>
   <url>
-    <loc>/reference/read_cast.html</loc>
+    <loc>https://r-lib.github.io/asciicast/reference/read_cast.html</loc>
   </url>
   <url>
-    <loc>/reference/record.html</loc>
+    <loc>https://r-lib.github.io/asciicast/reference/record.html</loc>
   </url>
   <url>
-    <loc>/reference/record_output.html</loc>
+    <loc>https://r-lib.github.io/asciicast/reference/record_output.html</loc>
   </url>
   <url>
-    <loc>/reference/write_gif.html</loc>
+    <loc>https://r-lib.github.io/asciicast/reference/write_gif.html</loc>
   </url>
   <url>
-    <loc>/reference/write_json.html</loc>
+    <loc>https://r-lib.github.io/asciicast/reference/write_html.html</loc>
   </url>
   <url>
-    <loc>/reference/write_svg.html</loc>
+    <loc>https://r-lib.github.io/asciicast/reference/write_json.html</loc>
+  </url>
+  <url>
+    <loc>https://r-lib.github.io/asciicast/reference/write_svg.html</loc>
   </url>
 </urlset>
