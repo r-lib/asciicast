@@ -247,16 +247,25 @@ eng_asciicast_print <- function(cast, options) {
     knitr::knit_print(asciinema_player(cast), options = options)
   } else {
     # html
+    css <- isTRUE(getOption("asciicast_include_style", TRUE))
     tmp <- tempfile("ascii-", fileext = ".html")
     on.exit(unlink(tmp), add = TRUE)
     prefix <- knitr::opts_chunk$get("comment")
     if (nchar(prefix) != 0) prefix <- paste0(prefix, " ")
-    write_html(cast, tmp, at = getOption("asciicast_at", "end"), prefix = prefix)
+    write_html(
+      cast,
+      tmp,
+      at = getOption("asciicast_at", "end"),
+      prefix = prefix,
+      details = getOption("asciicast_html_details", FALSE)
+    )
     theme <- interpret_theme(NULL)
     html <- c(
-      "<style type=\"text/css\">",
-      to_html_theme(theme),
-      "</style>",
+      if (css) c(
+        "<style type=\"text/css\">",
+        to_html_theme(theme),
+        "</style>"
+      ),
       readLines(tmp)
     )
     knitr::engine_output(
@@ -267,6 +276,25 @@ eng_asciicast_print <- function(cast, options) {
   }
 
   knitr::engine_output(options, options$code, '', extra)
+}
+
+#' CSS for a theme
+#'
+#' @param theme Theme overrides, see `theme` argument of [write_svg()].
+#'   `NULL` is the current default theme.
+#' @return Character vector of HTML/CSS lines that you can include in an
+#'   HTML file.
+#'
+#' @export
+
+print_html_style <- function(theme = NULL) {
+  theme <- interpret_theme(theme)
+  html <- c(
+    "<style type=\"text/css\">",
+    to_html_theme(theme),
+    "</style>"
+  )
+  html
 }
 
 ## Caching support. We cache both the cast and the SVG file as well,

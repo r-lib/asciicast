@@ -11,7 +11,9 @@ write_html(
   omit_last_line = NULL,
   prefix = "",
   full_html = FALSE,
-  theme = NULL
+  theme = NULL,
+  details = FALSE,
+  summary = "Output"
 )
 }
 \arguments{
@@ -33,6 +35,11 @@ purposes.}
 
 \item{theme}{A theme name to use, or a a named list to override the
 default theme (see \code{\link[=default_theme]{default_theme()}}).}
+
+\item{details}{Whether to put the output in a \verb{<details>} tag.}
+
+\item{summary}{Summary of the \verb{<details>} tag, ignored if \code{details} is
+FALSE.}
 }
 \description{
 Create a HTML snapshot of an asciicast

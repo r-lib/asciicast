@@ -13,11 +13,15 @@
 #'   purposes.
 #' @param theme A theme name to use, or a a named list to override the
 #'   default theme (see [default_theme()]).
+#' @param details Whether to put the output in a `<details>` tag.
+#' @param summary Summary of the `<details>` tag, ignored if `details` is
+#'   FALSE.
 #'
 #' @export
 
 write_html <- function(cast, path, at = "end", omit_last_line = NULL,
-                       prefix = "", full_html = FALSE, theme = NULL) {
+                       prefix = "", full_html = FALSE, theme = NULL,
+                       details = FALSE, summary = "Output") {
 
   omit_last_line <- as.logical(get_param("omit_last_line", TRUE))
   if (omit_last_line) cast <- remove_last_line(cast)
@@ -34,9 +38,11 @@ write_html <- function(cast, path, at = "end", omit_last_line = NULL,
   lines <- frames$frames[[which_frame]][[2]]$screen$lines
 
   lines <- c(
+    if (details) c("<details><summary>", summary, "</summary>"),
     "<div class=\"asciicast\"><pre>",
     vapply(lines, format_html_line, character(1), prefix = prefix),
-    "</pre></div>"
+    "</pre></div>",
+    if (details) "</details>"
   )
 
   if (full_html) {
