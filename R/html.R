@@ -21,7 +21,7 @@
 
 write_html <- function(cast, path, at = "end", omit_last_line = NULL,
                        prefix = "", full_html = FALSE, theme = NULL,
-                       details = FALSE, summary = "Output") {
+                       details = FALSE, summary = "See output") {
 
   omit_last_line <- as.logical(get_param("omit_last_line", TRUE))
   if (omit_last_line) cast <- remove_last_line(cast)

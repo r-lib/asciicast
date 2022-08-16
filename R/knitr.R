@@ -239,6 +239,7 @@ eng_asciicast_is_svg <- function() {
 
 eng_asciicast_print <- function(cast, options) {
   output <- eng_asciicast_output_type()
+  details <- getOption("asciicast_html_details", FALSE)
   extra <- if (!options$include) {
     NULL
   } else if (output == "svg") {
@@ -257,7 +258,7 @@ eng_asciicast_print <- function(cast, options) {
       tmp,
       at = getOption("asciicast_at", "end"),
       prefix = prefix,
-      details = getOption("asciicast_html_details", FALSE)
+      details = details
     )
     theme <- interpret_theme(NULL)
     html <- c(
