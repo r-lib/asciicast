@@ -13,7 +13,7 @@ write_html(
   full_html = FALSE,
   theme = NULL,
   details = FALSE,
-  summary = "Output"
+  summary = "See output"
 )
 }
 \arguments{
