@@ -11,6 +11,7 @@ init_knitr_engine(
   startup = NULL,
   record_env = NULL,
   echo_input = TRUE,
+  interactive = TRUE,
   options = list()
 )
 }
@@ -31,6 +32,9 @@ starting the recording.}
 \item{record_env}{Environment variables to set for the R subprocess.}
 
 \item{echo_input}{Whether to echo the input in the asciicast recording.}
+
+\item{interactive}{Whether to run R in interactive mode. Note that in
+interactive mode R might ask for terminal input.}
 
 \item{options}{R options to set (via the \code{R.options} chunk option of
 knitr), in the current R process that performs the recording.

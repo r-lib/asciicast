@@ -1,5 +1,8 @@
 # asciicast (development version)
 
+* `init_knitr_engine()` has an `interactive` argument now, to allow
+  non-interactive mode.
+
 # asciicast 2.1.0
 
 * The new `write_html()` function can create a themed HTML snapshot of an

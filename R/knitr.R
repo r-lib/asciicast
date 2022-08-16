@@ -76,6 +76,7 @@ asciicast_knitr_options <- function() {
 init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
                               timeout = 10, startup = NULL,
                               record_env = NULL, echo_input = TRUE,
+                              interactive = TRUE,
                               options = list()) {
 
   knitr::knit_engines$set("asciicast" = eng_asciicast)
@@ -101,7 +102,12 @@ init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
   knitr::opts_chunk$set(R.options = ropts)
 
   if (same_process) {
-    proc <- asciicast_start_process(startup, timeout, record_env)
+    proc <- asciicast_start_process(
+      startup,
+      timeout,
+      record_env,
+      interactive = interactive
+    )
     oldproc <- .GlobalEnv$.knitr_asciicast_process
     if (!is.null(oldproc)) {
       try(close(oldproc$get_input_connection()), silent = TRUE)
