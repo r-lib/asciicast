@@ -94,7 +94,7 @@ wait_for <- function(px, type = "", value = "", timeout = 1000, linum = "???") {
       err <- new_error(
         "asciicast timeout after line ", linum,
         "\noutput:\n", paste(utils::tail(output), collapse = "\n"),
-        "nstdout:\n", px$read_output()
+        "\nstdout:\n", px$read_output()
       )
       throw(err)
     }
