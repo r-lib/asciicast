@@ -91,7 +91,11 @@ wait_for <- function(px, type = "", value = "", timeout = 1000, linum = "???") {
   while (TRUE) {
     ret <- processx::poll(list(con), timeout)
     if (ret[[1]] == "timeout") {
-      throw(new_error("asciicast timeout after line ", linum))
+      err <- new_error(
+        "asciicast timeout after line ", linum,
+        "\noutput:\n", paste(output, collapse = "\n")
+      )
+      throw(err)
     }
     line <- processx::conn_read_lines(con, 1)
     if (length(line)) {
