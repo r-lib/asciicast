@@ -162,36 +162,75 @@ format_html_line <- function(line, prefix = "") {
 
 format_html_piece <- function(pc) {
   txt <- escape_html(pc[[1]])
-  markup <- vapply(
+  mkp <- lapply(
     seq_along(pc[[2]]),
-    function(i) create_markup(names(pc[[2]])[i], pc[[2]][[i]]),
-    character(1)
+    function(i) create_markup(names(pc[[2]])[i], pc[[2]][[i]])
   )
 
+  classes <- na_omit(map_chr(mkp, function(x) x$class %||% NA_character_))
+  styles <- na_omit(map_chr(mkp, function(x) x$style %||% NA_character_))
+
   paste0(
-    if (length(markup)) {
-      paste0("<span class=\"", paste(markup, collapse = " "), "\">")
+    if (length(classes) + length(styles)) {
+      "<span"
+    },
+    if (length(classes)) {
+      paste0(" class=\"", paste(classes, collapse = " "), "\"")
+    },
+    if (length(styles)) {
+      paste0(" style=\"", paste(styles, collapse = ";"), "\"")
+    },
+    if (length(classes) + length(styles)) {
+      ">"
     },
     txt,
-    if (length(markup)) {
+    if (length(classes) + length(styles)) {
       "</span>"
     }
   )
 }
 
+create_markup_fg <- function(col) {
+  if (length(col) == 1) {
+    list(class = paste0("ansi-color-", col))
+  } else if (length(col) == 3) {
+    list(style = paste(
+      "color:",
+      grDevices::rgb(col[[1]] / 255, col[[2]] / 255, col[[3]] / 255)
+    ))
+  } else {
+    warning("Unknown color markup: ", format(col))
+    NULL
+  }
+}
+
+create_markup_bg <- function(col) {
+  if (length(col) == 1) {
+    list(class = paste0("ansi-bg-color-", col))
+  } else if (length(col) == 3) {
+    list(style = paste(
+      "background-color:",
+      grDevices::rgb(col[[1]] / 255, col[[2]] / 255, col[[3]] / 255)
+    ))
+  } else {
+    warning("Unknown color markup: ", format(col))
+    NULL
+  }
+}
+
 create_markup <- function(nm, vl) {
   switch(
     nm,
-    "fg" = paste0("ansi-color-", vl),
-    "bg" = paste0("ansi-bg-color-", vl),
-    "bold" = if (vl) "ansi-bold" else "",
-    "italic" = if (vl) "ansi-italic" else "",
-    "underline" = if (vl) "ansi-underline" else "",
+    "fg" = create_markup_fg(vl),
+    "bg" = create_markup_bg(vl),
+    "bold" = if (vl) list(class = "ansi-bold"),
+    "italic" = if (vl) list(class = "ansi-italic"),
+    "underline" = if (vl) list(class = "ansi-underline"),
     # blink?
     # hide/hidden?
     # crossedout/strikethrough?
     # links?
-    ""
+    NULL
   )
 }
 
