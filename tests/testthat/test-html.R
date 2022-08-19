@@ -84,5 +84,11 @@ test_that("prefix", {
 })
 
 test_that("true color", {
-  # TODO
+  cast <- record(quote(
+    cli::ansi_palette_show("dichro", colors = cli::truecolor)
+  ))
+  tmp <- tempfile("ac-html-", fileext = ".html")
+  on.exit(unlink(tmp), add = TRUE)
+  write_html(cast, tmp)
+  expect_snapshot_file(tmp, name = "html-truecolor.html")
 })
