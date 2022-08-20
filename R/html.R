@@ -241,5 +241,6 @@ escape_html <- function(x) {
   x <- gsub("&", "&amp;", x, fixed = TRUE)
   x <- gsub("<", "&lt;", x, fixed = TRUE)
   x <- gsub(">", "&gt;", x, fixed = TRUE)
+  x <- gsub("%", "&#37;", x, fixed = TRUE)
   x
 }
