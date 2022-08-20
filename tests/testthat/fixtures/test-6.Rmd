@@ -1,0 +1,24 @@
+---
+output: github_document
+always_allow_html: true
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  cache = TRUE
+)
+asciicast::init_knitr_engine(
+  options = list(
+    asciicast_end_wait = 3,
+    asciicast_theme = list(),
+    asciicast_knitr_output = "html"
+  )
+)
+
+```
+
+Simple SVG image at end
+
+```{asciicast 1-letters}
+cat(cli::col_red("this is red"))
+```

@@ -239,7 +239,6 @@ eng_asciicast_is_svg <- function() {
 
 eng_asciicast_print <- function(cast, options) {
   output <- eng_asciicast_output_type()
-  details <- getOption("asciicast_html_details", FALSE)
   extra <- if (!options$include) {
     NULL
   } else if (output == "svg") {
@@ -247,36 +246,32 @@ eng_asciicast_print <- function(cast, options) {
   } else if (output == "widget") {
     knitr::knit_print(asciinema_player(cast), options = options)
   } else {
-    # html
-    css <- isTRUE(getOption("asciicast_include_style", TRUE))
-    tmp <- tempfile("ascii-", fileext = ".html")
-    on.exit(unlink(tmp), add = TRUE)
-    prefix <- knitr::opts_chunk$get("comment")
-    if (nchar(prefix) != 0) prefix <- paste0(prefix, " ")
-    write_html(
-      cast,
-      tmp,
-      at = getOption("asciicast_at", "end"),
-      prefix = prefix,
-      details = details
-    )
-    theme <- interpret_theme(NULL)
-    html <- c(
-      if (css) c(
-        "<style type=\"text/css\">",
-        to_html_theme(theme),
-        "</style>"
-      ),
-      readLines(tmp)
-    )
-    knitr::engine_output(
-      knitr::opts_chunk$merge(list(results = "asis", echo = FALSE)),
-      code = NULL,
-      out = html
-    )
+    asciicast_knitr_html(cast, options)
   }
 
   knitr::engine_output(options, options$code, '', extra)
+}
+
+eng_write_html <- function(cast, path) {
+  ocon <- file(path, open = "wb")
+
+  css <- isTRUE(getOption("asciicast_include_style", TRUE))
+  if (css) {
+    writeLines(print_html_style(), con = ocon)
+  }
+
+  prefix <- knitr::opts_chunk$get("comment")
+  if (nchar(prefix) != 0) prefix <- paste0(prefix, " ")
+
+  details <- getOption("asciicast_html_details", FALSE)
+  write_html(
+    cast,
+    ocon,
+    at = getOption("asciicast_at", "end"),
+    prefix = prefix,
+    details = details
+  )
+  close(ocon)
 }
 
 #' CSS for a theme
@@ -303,8 +298,11 @@ print_html_style <- function(theme = NULL) {
 cache_asciicast <- function(cast, path) {
   message("(1) Saving ", paste0(path, ".cast"))
   saveRDS(cast, paste0(path, ".cast"))
-  if (eng_asciicast_output_type() == "avg") {
+  otype <- eng_asciicast_output_type()
+  if (otype == "svg") {
     write_svg(cast, paste0(path, ".svg"))
+  } else if (otype == "html") {
+    eng_write_html(cast, paste0(path, ".html"))
   }
 }
 
@@ -327,4 +325,27 @@ asciicast_knitr_svg <- function(cast, options) {
   if (!is.null(fig_proc)) filename <- fig_proc(filename)
 
   knitr::knit_hooks$get('plot')(filename, options)
+}
+
+asciicast_knitr_html <- function(cast, options) {
+  cached <- paste0(options$hash, ".hmtl")
+  if (options$cache > 0 && file.exists(cached)) {
+    html <- readLines(cached)                                 # nocov
+  } else {
+    if (options$cache > 0) {
+      path <- cached
+    } else {
+      path <- tempfile("ascii-", fileext = ".html")
+      on.exit(unlink(path), add = TRUE)
+    }
+
+    eng_write_html(cast, path)
+    html <- readLines(path)
+  }
+
+  knitr::engine_output(
+    knitr::opts_chunk$merge(list(results = "asis", echo = FALSE)),
+    code = NULL,
+    out = html
+  )
 }

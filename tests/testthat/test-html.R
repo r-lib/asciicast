@@ -92,3 +92,29 @@ test_that("true color", {
   write_html(cast, tmp)
   expect_snapshot_file(tmp, name = "html-truecolor.html")
 })
+
+test_that("create_markup_{fg,bg}", {
+  expect_snapshot({
+    create_markup_fg(4)
+    create_markup_fg(12)
+    create_markup_fg(c(1,2,3))
+  })
+  expect_snapshot({
+    create_markup_bg(4)
+    create_markup_bg(12)
+    create_markup_bg(c(1,2,3))
+  })
+})
+
+test_that("unknown color spec", {
+  expect_warning(
+    create_markup_fg(1:10)
+  )
+  expect_warning(
+    create_markup_bg(1:2)
+  )
+})
+
+test_that("create_markup unknown", {
+  expect_null(create_markup("foobar", 1:3))
+})

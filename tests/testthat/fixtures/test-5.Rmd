@@ -1,0 +1,51 @@
+---
+output: github_document
+always_allow_html: true
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  cache = FALSE
+)
+asciicast::init_knitr_engine(
+  options = list(
+    asciicast_end_wait = 3,
+    asciicast_theme = list(),
+    asciicast_knitr_output = "html",
+    asciicast_include_style = FALSE
+  )
+)
+
+```
+
+Simple SVG image at end
+
+```{asciicast 1-letters}
+letters
+```
+
+`eval = FALSE` works. Need to `echo = TRUE` explicitly, the default is no
+echo.
+
+```{asciicast 2-no-eval, eval = FALSE, echo = TRUE}
+stop("do not run me")
+```
+
+Config in header is OK.
+
+```{asciicast 3-header}
+#' cols: 40
+1:100
+```
+
+`eval = TRUE` + `echo = TRUE`
+
+```{asciicast 3-echo, echo = TRUE}
+1:10
+```
+
+`include = FALSE`
+
+```{asciicast 4-no-include, include = FALSE}
+"Now you don't see me"
+```

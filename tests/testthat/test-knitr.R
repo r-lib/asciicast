@@ -112,3 +112,49 @@ test_that("cpp11", {
     expect_snapshot_file(svg)
   }
 })
+
+test_that("eng_asciicast_output_type", {
+  withr::local_options(asciicast_knitr_output = "html")
+  expect_equal(eng_asciicast_output_type(), "html")
+
+  withr::local_options(asciicast_knitr_output = NULL, asciicast_at = NULL)
+  withr::local_envvar(IN_PKGDOWN = "true")
+  expect_equal(eng_asciicast_output_type(), "svg")
+
+  withr::local_options(asciicast_at = "end")
+  expect_equal(eng_asciicast_output_type(), "html")
+
+  withr::local_options(asciicast_knitr_output = NULL, asciicast_at = NULL)
+  withr::local_envvar(IN_PKGDOWN = NA_character_)
+  withr::local_options(asciicast_knitr_svg = TRUE)
+  expect_equal(eng_asciicast_output_type(), "svg")
+
+  withr::local_options(asciicast_knitr_svg = FALSE)
+  expect_equal(eng_asciicast_output_type(), "widget")
+})
+
+test_that("html output", {
+  dir.create(tmp <- tempfile())
+  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+
+  opath <- test_path("fixtures", "test-5.Rmd")
+  tpath <- file.path(tmp, basename(opath))
+  file.copy(opath, tpath)
+  rmarkdown::render(tpath, quiet = TRUE)
+
+  mdpath <- sub(".Rmd$", ".md", tpath)
+  expect_snapshot_file(mdpath)
+})
+
+test_that("html output with style", {
+  dir.create(tmp <- tempfile())
+  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+
+  opath <- test_path("fixtures", "test-6.Rmd")
+  tpath <- file.path(tmp, basename(opath))
+  file.copy(opath, tpath)
+  rmarkdown::render(tpath, quiet = TRUE)
+
+  mdpath <- sub(".Rmd$", ".md", tpath)
+  expect_snapshot_file(mdpath)
+})
