@@ -30,7 +30,8 @@ Imports:
     processx (>= 3.7.0),
     tibble,
     utils,
-    V8
+    V8,
+    withr
 LinkingTo:
     processx
 Suggests:
@@ -43,8 +44,7 @@ Suggests:
     mockery,
     rmarkdown,
     rstudioapi,
-    testthat (>= 3.0.0),
-    withr
+    testthat (>= 3.0.0)
 Config/Needs/website:
     r-lib/downlit,
     tidyverse/tidytemplate

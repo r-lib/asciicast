@@ -33,19 +33,6 @@ options(asciicast_theme = "asciinema")
 asciicast::init_knitr_engine()
 ```
 
-Next we need to set an option to use SVG files instead of the asciinema
-player HTML widget.
-
-````
-```{r, include = FALSE}`r ''`
-options(asciicast_knitr_svg = TRUE)
-```
-````
-
-```{r, include = FALSE}
-options(asciicast_knitr_svg = TRUE)
-```
-
 Now we are ready to include casts. The current default is to create a
 snapshot of the screen after the code has run:
 
@@ -68,23 +55,23 @@ loadedNamespaces()
 
 ## Proper ASCII casts
 
-To use animated casts instead of screen shots, we need to set the `at`
-option to `NULL`. (It is not currently possible to do this from the
-header.) We also set `end_wait` to wait three second before
+To use animated casts instead of screen shots, we need to set the
+`at` option to `all`. We also set `end_wait` to wait five second before
 restarting the animation. By default asciicast creates animated SVG files:
 
 ````
-```{asciicast, cache = TRUE, R.options = list(asciicast_at = NULL)}`r ''`
+```{asciicast, cache = TRUE}`r ''`
 #' Rows: 10
-#' End_wait: 3
+#' End_wait: 5
+#' At: all
 # This is an asciicast example
 loadedNamespaces()
 ```
 ````
 
-```{asciicast, cache = TRUE, R.options = list(asciicast_at = NULL)}
-#' Rows: 10
-#' End_wait: 3
+```{asciicast, cache = TRUE}
+#' At: all
+#' End_wait: 5
 # This is an asciicast example
 loadedNamespaces()
 ```

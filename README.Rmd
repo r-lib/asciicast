@@ -10,16 +10,10 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "100%",
+  asciicast_at = "all"
 )
-asciicast::init_knitr_engine(
-  options = list(
-    asciicast_at = NULL,
-    asciicast_knitr_svg = TRUE,
-    asciicast_end_wait = 3,
-    asciicast_omit_last_line = TRUE
-  )
-)
+asciicast::init_knitr_engine()
 ```
 # asciicast
 

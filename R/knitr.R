@@ -1,37 +1,4 @@
 
-#' Default R options to set in the background R process for knits
-#'
-#' You can pass these options to [init_knitr_engine()], after possibly
-#' overriding some of them.
-#'
-#' @return List of options.
-#'
-#' @export
-#' @family asciicast in Rmd
-#' @examples
-#' asciicast_knitr_options()
-
-asciicast_knitr_options <- function() {
-  list(
-    asciicast_knitr_output = "auto",
-    asciicast_knitr_svg = TRUE,
-    asciicast_at = "end",
-    asciicast_typing_speed = 0.05,
-    asciicast_padding = 20,
-    asciicast_window = FALSE,
-    asciicast_omit_last_line = FALSE,
-    asciicast_cursor = FALSE,
-    asciicast_theme = "pkgdown",
-    width = 100,
-    asciicast_rows = "auto",
-    asciicast_cols = 100,
-    asciicast_end_wait = 0,
-    crayon.enabled = TRUE,
-    crayon.colors = 256
-  )
-}
-
-
 #' Initialize the asciicast knitr engine
 #'
 #' Call this function in your Rmd file to enable creating asciinema
@@ -49,9 +16,6 @@ asciicast_knitr_options <- function() {
 #'   R process. To restart this R process, call `init_knitr_engine()`
 #'   again.
 #' @param echo_input Whether to echo the input in the asciicast recording.
-#' @param options R options to set (via the `R.options` chunk option of
-#'   knitr), in the current R process that performs the recording.
-#'   See [asciicast_knitr_options()] for the defaults.
 #' @inheritParams asciicast_start_process
 #'
 #' @export
@@ -76,8 +40,7 @@ asciicast_knitr_options <- function() {
 init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
                               timeout = 10, startup = NULL,
                               record_env = NULL, echo_input = TRUE,
-                              interactive = TRUE,
-                              options = list()) {
+                              interactive = TRUE) {
 
   knitr::knit_engines$set("asciicast" = eng_asciicast)
   knitr::knit_engines$set("asciicastcpp11" = eng_asciicastcpp11)
@@ -95,11 +58,6 @@ init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
   default_echo <- knitr::opts_chunk$get("echo")
   attr(default_echo, "asciicast") <- echo
   knitr::opts_chunk$set(echo = default_echo)
-
-  roptsold <- knitr::opts_chunk$get("R.options")
-  roptsnew <- utils::modifyList(asciicast_knitr_options(), options)
-  ropts <- utils::modifyList(as.list(roptsold), as.list(roptsnew))
-  knitr::opts_chunk$set(R.options = ropts)
 
   if (same_process) {
     proc <- asciicast_start_process(
@@ -120,11 +78,17 @@ init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
   }
 }
 
+knitr_asciicast_options <- function(opts) {
+  opts[grepl("^asciicast_", names(opts))]
+}
+
 eng_asciicast <- function(options) {
   # If 'echo' was specified directly, then attr(options$echo, "asciicast")
   # will be NULL, and we use the directly specified value.
   # otherwise we use the asciicast default, which is FALSE
   options$echo <- attr(options$echo, "asciicast") %||% options$echo
+
+  withr::local_options(knitr_asciicast_options(options))
 
   if (!options$eval) {
     options$engine <- "r"
@@ -156,6 +120,7 @@ eng_asciicast <- function(options) {
 }
 
 eng_asciicastcpp11 <- function(options) {
+  withr::local_options(knitr_asciicast_options(options))
   if (options$eval) {
     # separate the headers
     ishead <- grepl("^#include", options$code)
@@ -223,18 +188,8 @@ eng_asciicast_output_type <- function() {
     }
 
   } else {
-    if (eng_asciicast_is_svg()) {
-      "svg"
-    } else {
-      "widget"
-    }
+    "svg"
   }
-}
-
-eng_asciicast_is_svg <- function() {
-  svg <- getOption("asciicast_knitr_svg", NULL) %||%
-    Sys.getenv("ASCIICAST_KNITR_SVG", "")
-  isTRUE(as.logical(svg))
 }
 
 eng_asciicast_print <- function(cast, options) {

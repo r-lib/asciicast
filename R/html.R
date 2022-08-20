@@ -74,7 +74,10 @@ write_html <- function(cast, path, at = "end", omit_last_line = NULL,
 }
 
 interpret_theme <- function(theme) {
-  theme <- theme %||% getOption("asciicast_theme")
+  theme <- theme %||%
+    getOption("asciicast_theme") %||%
+    if (Sys.getenv("IN_PKGDOWN") == "true") "pkgdown"
+
   if (is.character(theme) && length(theme) == 1) {
     if (!theme %in% names(themes)) {
       throw(new_error("Unknown theme: ", theme))

@@ -1,7 +1,23 @@
 # asciicast (development version)
 
+* Much better parameterization of asciicast in knitr. You can now set
+  asciicast parameters via chunk options. Relatedly, the
+  `init_knitr_engine()` does not have an `options` argument any more.
+  Set knitr chunk options instead. See the `README.Rmd` file of the package
+  or the included `github-readme.Rmd` for examples.
+
 * `init_knitr_engine()` has an `interactive` argument now, to allow
   non-interactive mode.
+
+* asciicast in knitr now caches HTML output much better.
+
+* asciicast now supports true color ANSI escapes in HTML output (#46).
+
+* If the `asciicast_html_details` option is set, then asciicast puts the
+  HTML output in a `<details>` tag.
+
+* New `interactive` parameter of `init_knitr_engine()` allows recording in
+  non-interactive R sessions. The default is (still) `interactive = TRUE`.
 
 # asciicast 2.1.0
 

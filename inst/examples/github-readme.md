@@ -13,13 +13,6 @@ First we need to initialize the asciicast engine, as usual:
     asciicast::init_knitr_engine()
     ```
 
-Next we need to set an option to use SVG files instead of the asciinema
-player HTML widget.
-
-    ```{r, include = FALSE}
-    options(asciicast_knitr_svg = TRUE)
-    ```
-
 Now we are ready to include casts. The current default is to create a
 snapshot of the screen after the code has run:
 
@@ -33,23 +26,24 @@ set to `"end"`, but that is the default currently:
     loadedNamespaces()
     ```
 
-<img src="man/figures/README-/unnamed-chunk-4.svg" width="100%" />
+<img src="man/figures/README-/unnamed-chunk-3.svg" width="100%" />
 
 ## Proper ASCII casts
 
 To use animated casts instead of screen shots, we need to set the `at`
-option to `NULL`. (It is not currently possible to do this from the
-header.) We also set `end_wait` to wait three second before restarting
-the animation. By default asciicast creates animated SVG files:
+option to `all`. We also set `end_wait` to wait five second before
+restarting the animation. By default asciicast creates animated SVG
+files:
 
-    ```{asciicast, cache = TRUE, R.options = list(asciicast_at = NULL)}
+    ```{asciicast, cache = TRUE}
     #' Rows: 10
-    #' End_wait: 3
+    #' End_wait: 5
+    #' At: all
     # This is an asciicast example
     loadedNamespaces()
     ```
 
-<img src="man/figures/README-/unnamed-chunk-5.svg" width="100%" />
+<img src="man/figures/README-/unnamed-chunk-4.svg" width="100%" />
 
 ## ANSI colors
 
@@ -60,4 +54,4 @@ enabled in the asciicast subprocess:
     cli::ansi_palette_show()
     ```
 
-<img src="man/figures/README-/unnamed-chunk-6.svg" width="100%" />
+<img src="man/figures/README-/unnamed-chunk-5.svg" width="100%" />

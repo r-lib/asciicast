@@ -89,8 +89,9 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
   }
 
   ## Default values for attributes
+  in_knitr <- isTRUE(getOption("knitr.in.progress"))
   cols <- get_param("cols", 80L, header)
-  rows <- get_param("rows", 24L, header)
+  rows <- get_param("rows", if (in_knitr) "auto" else 24L, header)
   config <- not_null(list(
     version = 2L,
     command = "R -q",

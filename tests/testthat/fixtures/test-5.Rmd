@@ -5,17 +5,11 @@ always_allow_html: true
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  cache = FALSE
+  cache = FALSE,
+  asciicast_theme = list(),
+  asciicast_include_style = FALSE
 )
-asciicast::init_knitr_engine(
-  options = list(
-    asciicast_end_wait = 3,
-    asciicast_theme = list(),
-    asciicast_knitr_output = "html",
-    asciicast_include_style = FALSE
-  )
-)
-
+asciicast::init_knitr_engine()
 ```
 
 Simple SVG image at end

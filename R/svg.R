@@ -36,24 +36,30 @@ write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
 
   ct <- load_svg_term()
 
-  window <- as.logical(get_param("window", TRUE))
+  in_knitr <- isTRUE(getOption("knitr.in.progress"))
+
+  window <- as.logical(get_param("window", !in_knitr))
   start_at <- get_param("start_at")
   end_at <- get_param("end_at")
-  at <- get_param("at")
+  at <- get_param("at", if (in_knitr) "end")
   if (identical(at, "end")) at <- utils::tail(cast$output$time, 1)
-  cursor <- as.logical(get_param("cursor"))
-  rows <- get_param("rows") %||% cast$config$height
+  cursor <- as.logical(get_param(
+    "cursor",
+    if (in_knitr) is.null(at) || at == "all"
+  ))
+  rows <- get_param("rows", if (in_knitr) "auto", config = NULL) %||% cast$config$height
   cols <- get_param("cols") %||% cast$config$width
-  padding <- get_param("padding")
+  padding <- get_param("padding", if (in_knitr) 20)
   padding_x <- get_param("padding_x") %||% padding
   padding_y <- get_param("padding_y") %||% padding
   if (!is.null(padding_x)) padding_x <- as.numeric(padding_x)
   if (!is.null(padding_y)) padding_y <- as.numeric(padding_y)
 
-  omit_last_line <- as.logical(get_param("omit_last_line", FALSE))
+  omit_last_line <- as.logical(get_param("omit_last_line", in_knitr))
 
   if (!is.null(start_at)) start_at <- start_at * 1000
   if (!is.null(end_at)) end_at <- end_at * 1000
+  if (identical(at, "all")) at <- NULL
   if (!is.null(at)) at <- at * 1000
 
   if (omit_last_line) cast <- remove_last_line(cast)

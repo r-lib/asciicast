@@ -130,7 +130,7 @@ test_that("eng_asciicast_output_type", {
   expect_equal(eng_asciicast_output_type(), "svg")
 
   withr::local_options(asciicast_knitr_svg = FALSE)
-  expect_equal(eng_asciicast_output_type(), "widget")
+  expect_equal(eng_asciicast_output_type(), "svg")
 })
 
 test_that("html output", {

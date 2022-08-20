@@ -7,12 +7,7 @@ always_allow_html: true
 knitr::opts_chunk$set(
   cache = FALSE
 )
-asciicast::init_knitr_engine(
-  options = list(
-    asciicast_end_wait = 3
-  )
-)
-
+asciicast::init_knitr_engine()
 ```
 
 ```{r}

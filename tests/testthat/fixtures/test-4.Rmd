@@ -7,11 +7,7 @@ always_allow_html: true
 knitr::opts_chunk$set(
   cache = FALSE
 )
-asciicast::init_knitr_engine(
-  options = list(
-    asciicast_theme = list()
-  )
-)
+asciicast::init_knitr_engine()
 ```
 
 Test cpp11 integration.

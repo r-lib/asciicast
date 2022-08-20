@@ -7,13 +7,7 @@ always_allow_html: true
 knitr::opts_chunk$set(
   cache = FALSE
 )
-asciicast::init_knitr_engine(
-  options = list(
-    asciicast_end_wait = 3,
-    asciicast_theme = list()
-  )
-)
-
+asciicast::init_knitr_engine()
 ```
 
 Simple SVG image at end
@@ -33,6 +27,7 @@ Config in header is OK.
 
 ```{asciicast 3-header}
 #' cols: 40
+options(width = 40)
 1:100
 ```
 
