@@ -168,6 +168,7 @@ eng_asciicastcpp11 <- function(options) {
 
 cache_eng_asciicast <- function(options) {
   options$echo <- attr(options$echo, "asciicast") %||% options$echo
+  withr::local_options(knitr_asciicast_options(options))
   cast <- readRDS(paste0(options$hash, ".cast"))
   eng_asciicast_print(cast, options)
 }
