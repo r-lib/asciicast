@@ -52,8 +52,13 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="asciicast-development-version">asciicast (development version)<a class="anchor" aria-label="anchor" href="#asciicast-development-version"></a></h2>
-<ul><li>
-<code><a href="../reference/init_knitr_engine.html">init_knitr_engine()</a></code> has an <code>interactive</code> argument now, to allow non-interactive mode.</li></ul></div>
+<ul><li><p>Much better parameterization of asciicast in knitr. You can now set asciicast parameters via chunk options. Relatedly, the <code><a href="../reference/init_knitr_engine.html">init_knitr_engine()</a></code> does not have an <code>options</code> argument any more. Set knitr chunk options instead. See the <code>README.Rmd</code> file of the package or the included <code>github-readme.Rmd</code> for examples.</p></li>
+<li><p><code><a href="../reference/init_knitr_engine.html">init_knitr_engine()</a></code> has an <code>interactive</code> argument now, to allow non-interactive mode.</p></li>
+<li><p>asciicast in knitr now caches HTML output much better.</p></li>
+<li><p>asciicast now supports true color ANSI escapes in HTML output (<a href="https://github.com/r-lib/asciicast/issues/46" class="external-link">#46</a>).</p></li>
+<li><p>If the <code>asciicast_html_details</code> option is set, then asciicast puts the HTML output in a <code>&lt;details&gt;</code> tag.</p></li>
+<li><p>New <code>interactive</code> parameter of <code><a href="../reference/init_knitr_engine.html">init_knitr_engine()</a></code> allows recording in non-interactive R sessions. The default is (still) <code>interactive = TRUE</code>.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.1.0" id="asciicast-210">asciicast 2.1.0<a class="anchor" aria-label="anchor" href="#asciicast-210"></a></h2><p class="text-muted">CRAN release: 2022-08-07</p>
 <ul><li><p>The new <code><a href="../reference/write_html.html">write_html()</a></code> function can create a themed HTML snapshot of an ascii cast. HTML otuput is now the default in pkgdown, for snapshots. For animations we still need to use SVG files.</p></li>
