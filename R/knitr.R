@@ -283,7 +283,7 @@ asciicast_knitr_svg <- function(cast, options) {
 }
 
 asciicast_knitr_html <- function(cast, options) {
-  cached <- paste0(options$hash, ".hmtl")
+  cached <- paste0(options$hash, ".html")
   if (options$cache > 0 && file.exists(cached)) {
     html <- readLines(cached)                                 # nocov
   } else {
