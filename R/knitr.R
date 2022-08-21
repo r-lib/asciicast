@@ -51,9 +51,6 @@ init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
     deps <- htmlwidgets::getDependency("asciinema_player", "asciicast")
     knitr::knit_meta_add(deps)
   }
-  if (knitr::is_html_output()) {
-
-  }
 
   default_echo <- knitr::opts_chunk$get("echo")
   attr(default_echo, "asciicast") <- echo
@@ -180,7 +177,7 @@ eng_asciicast_output_type <- function() {
   at <- getOption("asciicast_at")
   pkgdown <- identical(Sys.getenv("IN_PKGDOWN"), "true")
   if (pkgdown) {
-    if (is.null(at)) {
+    if (identical(at, "all")) {
       # animation
       "svg"
     } else {
