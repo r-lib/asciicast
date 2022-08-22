@@ -9,8 +9,6 @@
 #'   often just the prompt, and sometimes it is not worth showing.
 #' @param prefix Prefix to add to the beginning to every line. E.g.
 #'   `#> ` is usually added to knitr output.
-#' @param full_html Whether to output a full HTML file. Mainly for testing
-#'   purposes.
 #' @param theme A theme name to use, or a a named list to override the
 #'   default theme (see [default_theme()]).
 #' @param details Whether to put the output in a `<details>` tag.
