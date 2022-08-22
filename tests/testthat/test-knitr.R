@@ -117,7 +117,7 @@ test_that("eng_asciicast_output_type", {
   withr::local_options(asciicast_knitr_output = "html")
   expect_equal(eng_asciicast_output_type(), "html")
 
-  withr::local_options(asciicast_knitr_output = NULL, asciicast_at = NULL)
+  withr::local_options(asciicast_knitr_output = NULL, asciicast_at = "all")
   withr::local_envvar(IN_PKGDOWN = "true")
   expect_equal(eng_asciicast_output_type(), "svg")
 

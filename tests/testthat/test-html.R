@@ -53,23 +53,10 @@ test_that("256 colors", {
   expect_snapshot_file(tmp, name = "html-256-colors.html")
 })
 
-test_that("full html", {
-  withr::local_options(asciicast_typing_speed = 0)
-  cast <- record(quote({
-    options(cli.num_colors = 256)
-    mycol <- cli::make_ansi_style("orange")
-    cat(paste("pre", mycol("orange"), "post"))
-  }), echo = FALSE, rows = 2)
-  tmp <- tempfile("ac-html-", fileext = ".html")
-  on.exit(unlink(tmp), add = TRUE)
-  write_html(cast, tmp, full = TRUE, theme = "asciinema")
-  expect_snapshot_file(tmp, name = "html-full.html")
-})
-
 test_that("unknown theme", {
   cast <- record("ls()")
   expect_error(
-    write_html(cast, tempfile(), theme = basename(tempfile()), full_html = TRUE),
+    write_html(cast, tempfile(), theme = basename(tempfile())),
     "Unknown theme"
   )
 })
@@ -94,24 +81,26 @@ test_that("true color", {
 })
 
 test_that("create_markup_{fg,bg}", {
+  theme <- to_html_theme(interpret_theme(NULL))
   expect_snapshot({
-    create_markup_fg(4)
-    create_markup_fg(12)
-    create_markup_fg(c(1,2,3))
+    create_markup_fg(4, theme = theme)
+    create_markup_fg(12, theme = theme)
+    create_markup_fg(c(1,2,3), theme = theme)
   })
   expect_snapshot({
-    create_markup_bg(4)
-    create_markup_bg(12)
-    create_markup_bg(c(1,2,3))
+    create_markup_bg(4, theme = theme)
+    create_markup_bg(12, theme = theme)
+    create_markup_bg(c(1,2,3), theme = thene)
   })
 })
 
 test_that("unknown color spec", {
+  theme <- to_html_theme(interpret_theme(NULL))
   expect_warning(
-    create_markup_fg(1:10)
+    create_markup_fg(1:10, theme = theme)
   )
   expect_warning(
-    create_markup_bg(1:2)
+    create_markup_bg(1:2, theme = theme)
   )
 })
 
