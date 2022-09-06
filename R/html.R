@@ -161,7 +161,9 @@ format_html_piece <- function(pc, theme) {
   )
   paste0(
     if (nchar(style)) paste0("<span style=\"", style, "\">"),
+    if (!is.na(pc$link)) paste0("<a href=\"", pc$link, "\">"),
     escape_html(pc$segment),
+    if (!is.na(pc$link)) "</a>",
     if (nchar(style)) "</span>"
   )
 }

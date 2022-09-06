@@ -93,3 +93,24 @@ test_that("create_markup_{fg,bg}", {
     create_markup_bg("#010203", theme = thene)
   })
 })
+
+test_that("hyperlink", {
+  withr::local_options(asciicast_typing_speed = 0)
+  cast <- record(quote({
+    options(cli.num_colors = 256, cli.hyperlink = TRUE)
+    st_from_bel <- function(x) {
+      gsub("\007", "\033\\", x, fixed = TRUE)
+    }
+    cat(paste(
+      "pre",
+      st_from_bel(
+        cli::style_hyperlink("text", "https://example.com")
+      ),
+      "post"
+    ))
+  }), echo = FALSE, rows = 2)
+  tmp <- tempfile("ac-html-", fileext = ".html")
+  on.exit(unlink(tmp), add = TRUE)
+  write_html(cast, tmp)
+  expect_snapshot_file(tmp, name = "html-hyperlink.html")
+})
