@@ -24,28 +24,30 @@ write_html <- function(cast, path, at = "end", omit_last_line = NULL,
   omit_last_line <- as.logical(get_param("omit_last_line", TRUE))
   if (omit_last_line) cast <- remove_last_line(cast)
 
-  if (identical(at, "end")) at <- utils::tail(cast$output$time, 1)
+  cast$output <- cast$output[cast$output$type == "o", ]
+  if (!identical(at, "end")) {
+    cast$output <- cast$output[cast$output$time <= at, ]
+  }
 
-  frames <- load_frames(
-    cast,
-    height = cast$config$height,
-    width = cast$config$width
-  )
-  ts <- vapply(frames$frames, "[[", double(1), 1)
-  which_frame <- utils::tail(which(ts <= at), 1)
-  lines <- frames$frames[[which_frame]][[2]]$screen$lines
+  height <- cast$config$height
+  width <- cast$config$width
+  screen <- cli::vt_output(cast$output$data, width = width , height = height)
 
   theme <- to_html_theme(interpret_theme(theme))
 
-  lines <- c(
+  lines <- lapply(seq_len(max(screen$lineno)), function(l) {
+    format_html_line(screen[screen$lineno == l, ], prefix = prefix, theme = theme)
+  })
+
+  alllines <- c(
     if (details) c("<details><summary>", summary, "</summary>"),
     paste0("<div class=\"asciicast\" style=\"", theme[["div.asciicast"]], "\"><pre>"),
-    vapply(lines, format_html_line, character(1), prefix = prefix, theme = theme),
+    unlist(lines),
     "</pre></div>",
     if (details) "</details>"
   )
 
-  cat(lines, file = path, sep = "\n")
+  cat(alllines, file = path, sep = "\n")
 
   invisible()
 }
@@ -132,12 +134,14 @@ to_html_theme <- function(theme) {
 }
 
 format_html_line <- function(
-  line,
+  segments,
   theme = to_html_theme(interpret_theme(NULL)),
   prefix = "") {
 
   out <- paste(unlist(
-    lapply(line, format_html_piece, theme = theme)
+    lapply(seq_len(nrow(segments)), function(i) {
+      format_html_piece(segments[i, ], theme = theme)
+    })
   ), collapse = "")
 
   if (nchar(prefix) != 0) {
@@ -148,77 +152,34 @@ format_html_line <- function(
 }
 
 format_html_piece <- function(pc, theme) {
-  txt <- escape_html(pc[[1]])
-  mkp <- lapply(
-    seq_along(pc[[2]]),
-    function(i) create_markup(names(pc[[2]])[i], pc[[2]][[i]], theme = theme)
+  style <- paste0("",
+    if (pc$bold) theme[[".ansi-bold"]],
+    if (pc$italic) theme[[".ansi-italic"]],
+    if (pc$underline) theme[[".ansi-underline"]],
+    if (!is.na(pc$color)) create_markup_fg(pc$color, theme),
+    if (!is.na(pc$background_color)) create_markup_bg(pc$background_color, theme)
   )
-
-  classes <- na_omit(map_chr(mkp, function(x) x$class %||% NA_character_))
-  styles <- na_omit(map_chr(mkp, function(x) x$style %||% NA_character_))
-
   paste0(
-    if (length(classes) + length(styles)) {
-      "<span"
-    },
-    if (length(classes)) {
-      paste0(" class=\"", paste(classes, collapse = " "), "\"")
-    },
-    if (length(styles)) {
-      paste0(" style=\"", paste(styles, collapse = ";"), "\"")
-    },
-    if (length(classes) + length(styles)) {
-      ">"
-    },
-    txt,
-    if (length(classes) + length(styles)) {
-      "</span>"
-    }
+    if (nchar(style)) paste0("<span style=\"", style, "\">"),
+    escape_html(pc$segment),
+    if (nchar(style)) "</span>"
   )
 }
 
 create_markup_fg <- function(col, theme) {
-  if (length(col) == 1) {
-    list(style = theme[[paste0(".ansi-color-", col)]])
-  } else if (length(col) == 3) {
-    list(style = paste(
-      "color:",
-      grDevices::rgb(col[[1]] / 255, col[[2]] / 255, col[[3]] / 255)
-    ))
+  if (substr(col, 1, 1) != "#") {
+    paste0(theme[[paste0(".ansi-color-", col)]], ";")
   } else {
-    warning("Unknown color markup: ", format(col))
-    NULL
+    paste0("color:", col, ";")
   }
 }
 
 create_markup_bg <- function(col, theme) {
-  if (length(col) == 1) {
-    list(style = theme[[paste0(".ansi-bg-color-", col)]])
-  } else if (length(col) == 3) {
-    list(style = paste(
-      "background-color:",
-      grDevices::rgb(col[[1]] / 255, col[[2]] / 255, col[[3]] / 255)
-    ))
+  if (substr(col, 1, 1) != "#") {
+    paste0(theme[[paste0(".ansi-bg-color-", col)]], ";")
   } else {
-    warning("Unknown color markup: ", format(col))
-    NULL
+    paste0("color:", col, ";")
   }
-}
-
-create_markup <- function(nm, vl, theme) {
-  switch(
-    nm,
-    "fg" = create_markup_fg(vl, theme),
-    "bg" = create_markup_bg(vl, theme),
-    "bold" = if (vl) list(style = theme[[".ansi-bold"]]),
-    "italic" = if (vl) list(style = theme[[".ansi-italic"]]),
-    "underline" = if (vl) list(style = theme[[".ansi-underline"]]),
-    # blink?
-    # hide/hidden?
-    # crossedout/strikethrough?
-    # links?
-    NULL
-  )
 }
 
 escape_html <- function(x) {

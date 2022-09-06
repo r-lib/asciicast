@@ -83,27 +83,13 @@ test_that("true color", {
 test_that("create_markup_{fg,bg}", {
   theme <- to_html_theme(interpret_theme(NULL))
   expect_snapshot({
-    create_markup_fg(4, theme = theme)
-    create_markup_fg(12, theme = theme)
-    create_markup_fg(c(1,2,3), theme = theme)
+    create_markup_fg("4", theme = theme)
+    create_markup_fg("12", theme = theme)
+    create_markup_fg("#010203", theme = theme)
   })
   expect_snapshot({
-    create_markup_bg(4, theme = theme)
-    create_markup_bg(12, theme = theme)
-    create_markup_bg(c(1,2,3), theme = thene)
+    create_markup_bg("4", theme = theme)
+    create_markup_bg("12", theme = theme)
+    create_markup_bg("#010203", theme = thene)
   })
-})
-
-test_that("unknown color spec", {
-  theme <- to_html_theme(interpret_theme(NULL))
-  expect_warning(
-    create_markup_fg(1:10, theme = theme)
-  )
-  expect_warning(
-    create_markup_bg(1:2, theme = theme)
-  )
-})
-
-test_that("create_markup unknown", {
-  expect_null(create_markup("foobar", 1:3))
 })
