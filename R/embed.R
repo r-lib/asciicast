@@ -298,7 +298,7 @@ asciicast_start_process_internal <- function(sock_name, env, interactive) {
 setup_env <- function(extra = NULL) {
   env <- Sys.getenv()
   env["ASCIICAST"] <- "true"
-  env["CLI_HYPERLINK_MODE"] <- "posix"
+  env["R_CLI_HYPERLINK_MODE"] <- "posix"
   if (is_windows()) {
     env["PATH"] <- paste0(R.home("bin"), ";", Sys.getenv("PATH")) # nocovif !is_windows()
   }
