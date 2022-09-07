@@ -72,8 +72,11 @@ test_that("prefix", {
 
 test_that("true color", {
   cast <- record(quote(
-    cli::ansi_palette_show("dichro", colors = cli::truecolor)
-  ))
+    withr::with_options(
+      list(cli.num_colors = cli::truecolor),
+      cli::ansi_palette_show("dichro", colors = cli::truecolor)
+    )
+  ), cols = 200, rows = "auto")
   tmp <- tempfile("ac-html-", fileext = ".html")
   on.exit(unlink(tmp), add = TRUE)
   write_html(cast, tmp)
