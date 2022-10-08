@@ -23,7 +23,7 @@ void usage(const char *argv0) {
   exit(5);
 }
 
-extern void run_Rmainloop();
+extern void run_Rmainloop(void);
 
 int main(int argc, char **argv) {
 

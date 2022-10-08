@@ -73,7 +73,7 @@ int rem_clock_gettime(int clk_id, struct timespec *t) {
 }
 #endif
 
-double get_time() {
+double get_time(void) {
   struct timespec t;
   int ret = rem_clock_gettime(CLOCK_MONOTONIC, &t);
   if (ret) {

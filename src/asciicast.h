@@ -5,7 +5,7 @@
 #include <time.h>
 
 int rem_clock_gettime(int clk_id, struct timespec *t);
-double get_time();
+double get_time(void);
 const char *escape_len(const char *str, size_t len);
 const char *escape(const char *str);
 
