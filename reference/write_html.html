@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">asciicast</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,8 +63,9 @@
 <span>  at <span class="op">=</span> <span class="st">"end"</span>,</span>
 <span>  omit_last_line <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  prefix <span class="op">=</span> <span class="st">""</span>,</span>
-<span>  full_html <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  theme <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  theme <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  details <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  summary <span class="op">=</span> <span class="st">"See output"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -93,14 +94,18 @@ often just the prompt, and sometimes it is not worth showing.</p></dd>
 <code>#&gt; </code> is usually added to knitr output.</p></dd>
 
 
-<dt>full_html</dt>
-<dd><p>Whether to output a full HTML file. Mainly for testing
-purposes.</p></dd>
-
-
 <dt>theme</dt>
 <dd><p>A theme name to use, or a a named list to override the
 default theme (see <code><a href="default_theme.html">default_theme()</a></code>).</p></dd>
+
+
+<dt>details</dt>
+<dd><p>Whether to put the output in a <code>&lt;details&gt;</code> tag.</p></dd>
+
+
+<dt>summary</dt>
+<dd><p>Summary of the <code>&lt;details&gt;</code> tag, ignored if <code>details</code> is
+FALSE.</p></dd>
 
 </dl></div>
 
