@@ -1,10 +1,14 @@
 # asciicast (development version)
 
+* `write_html()` now supports ANSI hyperlinks.
+
 * Much better parameterization of asciicast in knitr. You can now set
   asciicast parameters via chunk options. Relatedly, the
   `init_knitr_engine()` does not have an `options` argument any more.
   Set knitr chunk options instead. See the `README.Rmd` file of the package
   or the included `github-readme.Rmd` for examples.
+
+* HTML output now works better in roxygen2/Rd.
 
 * `init_knitr_engine()` has an `interactive` argument now, to allow
   non-interactive mode.
