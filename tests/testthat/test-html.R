@@ -71,7 +71,7 @@ test_that("prefix", {
 })
 
 test_that("true color", {
-  mode <- if (cli::is_utf8_output()) "utf8" else "ascii"
+  mode <- if (l10n_info()[["UTF-8"]]) "utf8" else "ascii"
   cast <- record(quote(
     withr::with_options(
       list(cli.num_colors = cli::truecolor),
