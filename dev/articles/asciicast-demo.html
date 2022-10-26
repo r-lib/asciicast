@@ -75,7 +75,8 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>asciicast example vignette</h1>
-                        <h4 data-toc-skip class="author">Gábor Csárdi</h4>
+                        <h4 data-toc-skip class="author">Gábor
+Csárdi</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/r-lib/asciicast/blob/HEAD/vignettes/asciicast-demo.Rmd" class="external-link"><code>vignettes/asciicast-demo.Rmd</code></a></small>
@@ -87,11 +88,14 @@
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>This is an example vignette for creating asciinema screen casts. To include a screencast in your document, you need to do two steps. The first is to initialize the asciicast engine:</p>
+<p>This is an example vignette for creating asciinema screen casts. To
+include a screencast in your document, you need to do two steps. The
+first is to initialize the asciicast engine:</p>
 <pre><code>```{r echo = FALSE, results = "hide", purl = FALSE}
 asciicast::init_knitr_engine()
 ```</code></pre>
-<p>After this, for the chunks that you want to display in an asciinema player, use the asciicast engine:</p>
+<p>After this, for the chunks that you want to display in an asciinema
+player, use the asciicast engine:</p>
 <pre><code>```{asciicast}
 # This will be an ascii cast
 # Let's evaluate some code
@@ -116,7 +120,8 @@ head(mtcars)
 <div class="section level2">
 <h2 id="changing-parameters">Changing parameters<a class="anchor" aria-label="anchor" href="#changing-parameters"></a>
 </h2>
-<p>You can include a DCF header in the asciicast, to set some parameters, e.g. the height of the widget.</p>
+<p>You can include a DCF header in the asciicast, to set some
+parameters, e.g. the height of the widget.</p>
 <pre><code>```{asciicast}
 #' Rows: 5
 
@@ -136,7 +141,10 @@ head(mtcars)
 <div class="section level2">
 <h2 id="caching">Caching<a class="anchor" aria-label="anchor" href="#caching"></a>
 </h2>
-<p>Recording the asciinema casts might take long, as everything happens in real time. You can tell knitr to cache the results, as long as the code of the chunk is unchanged. E.g. the previous chunk with caching looks like this:</p>
+<p>Recording the asciinema casts might take long, as everything happens
+in real time. You can tell knitr to cache the results, as long as the
+code of the chunk is unchanged. E.g. the previous chunk with caching
+looks like this:</p>
 <pre><code>```{asciicast cache = TRUE}
 #' Rows: 5
 
@@ -147,7 +155,9 @@ head(mtcars)
 <div class="section level2">
 <h2 id="casting-a-script-from-a-file">Casting a script from a file<a class="anchor" aria-label="anchor" href="#casting-a-script-from-a-file"></a>
 </h2>
-<p>It is possible to read the R code of a cast from a file, instead of specifying it in the code chunk. The advantage of this is that it is easier to use the code in the R scripts for other purposes.</p>
+<p>It is possible to read the R code of a cast from a file, instead of
+specifying it in the code chunk. The advantage of this is that it is
+easier to use the code in the R scripts for other purposes.</p>
 <pre><code>```{asciicast code = readLines("../inst/examples/hello.R")}
 ```</code></pre>
 <div class="asciicast" style="color: #172431;font-family: 'Fira Code',Monaco,Consolas,Menlo,'Bitstream Vera Sans Mono','Powerline Symbols',monospace;line-height: 1.300000">
@@ -160,7 +170,13 @@ head(mtcars)
 <div class="section level2">
 <h2 id="using-svg-files">Using SVG files<a class="anchor" aria-label="anchor" href="#using-svg-files"></a>
 </h2>
-<p>Sometimes the asciinema player widget cannot be used, because custom JavaScript code is forbidden on the page. A common example is README (and other) markdown files on GitHub. acsiicast can also use animated SVG images instead of the asciinema player HTML widget. For this set the <code>asciicast_knitr_svg</code> option to <code>TRUE</code>, or the <code>ASCIICAST_KNITR_SVG</code> environment variable to <code>TRUE</code>. (The former takes precedence if both are set.)</p>
+<p>Sometimes the asciinema player widget cannot be used, because custom
+JavaScript code is forbidden on the page. A common example is README
+(and other) markdown files on GitHub. acsiicast can also use animated
+SVG images instead of the asciinema player HTML widget. For this set the
+<code>asciicast_knitr_svg</code> option to <code>TRUE</code>, or the
+<code>ASCIICAST_KNITR_SVG</code> environment variable to
+<code>TRUE</code>. (The former takes precedence if both are set.)</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>asciicast_knitr_svg <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code>```{asciicast}
@@ -174,7 +190,8 @@ cli::rule(center = "TITLE", line = "~-", line_col = "blue")
 ##                                                                                 
 </pre>
 </div>
-<p>You can also use SVG files to show still screenshots, with the state of the screen after running the R code.</p>
+<p>You can also use SVG files to show still screenshots, with the state
+of the screen after running the R code.</p>
 <pre><code>```{asciicast}
 #' Rows: 3
 #' At: end
@@ -194,14 +211,19 @@ cli::rule(center = "TITLE", line = "~-", line_col = "blue")
 <div class="section level2">
 <h2 id="showing-the-code">Showing the code<a class="anchor" aria-label="anchor" href="#showing-the-code"></a>
 </h2>
-<p>By default asciicast code chunks do not show the code, i.e. the <code>echo</code> kntr option is set to <code>FALSE</code> for them. You can override this locally for a code chunk, or globally, by supplying the <code>echo</code> argument to <code><a href="../reference/init_knitr_engine.html">asciicast::init_knitr_engine()</a></code>.</p>
+<p>By default asciicast code chunks do not show the code, i.e. the
+<code>echo</code> kntr option is set to <code>FALSE</code> for them. You
+can override this locally for a code chunk, or globally, by supplying
+the <code>echo</code> argument to
+<code><a href="../reference/init_knitr_engine.html">asciicast::init_knitr_engine()</a></code>.</p>
 <pre><code>```{asciicast echo = TRUE}
 #' Rows: 5
 #' At: end
 # This code will be shown
 head(mtcars, 3)
 ```</code></pre>
-<p>This will show the code above the SVG image. The header is not shown:</p>
+<p>This will show the code above the SVG image. The header is not
+shown:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This code will be shown</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
@@ -218,7 +240,8 @@ head(mtcars, 3)
 <div class="section level2">
 <h2 id="cpp11-integration">cpp11 integration<a class="anchor" aria-label="anchor" href="#cpp11-integration"></a>
 </h2>
-<p>Use the <code>asciicastcpp11</code> knitr engine to compile cpp11 functions in the asciicast subprocess:</p>
+<p>Use the <code>asciicastcpp11</code> knitr engine to compile cpp11
+functions in the asciicast subprocess:</p>
 <pre><code>```{asciicastcpp11}
 double mean_cpp(doubles x) {
   int n = x.size();
@@ -229,7 +252,8 @@ double mean_cpp(doubles x) {
   return total / n;
 }
 ```</code></pre>
-<p>Then you can use these functions in regular <code>asciicast</code> chunks:</p>
+<p>Then you can use these functions in regular <code>asciicast</code>
+chunks:</p>
 <pre><code>```{asciicast}
 mean_cpp(1:10000*1.0)
 ```</code></pre>
