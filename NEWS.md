@@ -1,4 +1,4 @@
-# asciicast (development version)
+# asciicast 2.2.0
 
 * `write_html()` now supports ANSI hyperlinks.
 
