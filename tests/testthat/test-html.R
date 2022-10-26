@@ -71,6 +71,7 @@ test_that("prefix", {
 })
 
 test_that("true color", {
+  mode <- if (cli::is_utf8_output()) "utf8" else "ascii"
   cast <- record(quote(
     withr::with_options(
       list(cli.num_colors = cli::truecolor),
@@ -80,7 +81,7 @@ test_that("true color", {
   tmp <- tempfile("ac-html-", fileext = ".html")
   on.exit(unlink(tmp), add = TRUE)
   write_html(cast, tmp)
-  expect_snapshot_file(tmp, name = "html-truecolor.html")
+  expect_snapshot_file(tmp, name = "html-truecolor.html", variant = mode)
 })
 
 test_that("create_markup_{fg,bg}", {
