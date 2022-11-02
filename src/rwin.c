@@ -356,6 +356,7 @@ int main(int argc, char **argv) {
 
   structRstart rp;
   Rstart Rp = &rp;
+  char *RHome;
 
   R_setStartTime();
 #if R_VERSION >= R_Version(4,2,0)
