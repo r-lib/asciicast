@@ -356,13 +356,6 @@ int main(int argc, char **argv) {
 
   structRstart rp;
   Rstart Rp = &rp;
-  char Rversion[25], *RHome;
-
-  snprintf(Rversion, 25, "%s.%s", R_MAJOR, R_MINOR);
-  if(strcmp(getDLLVersion(), Rversion) != 0) {
-    fprintf(stderr, "Error: R.DLL version does not match\n");
-    exit(9);
-  }
 
   R_setStartTime();
 #if R_VERSION >= R_Version(4,2,0)
