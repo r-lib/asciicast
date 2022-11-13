@@ -45,6 +45,8 @@ Suggests:
     rmarkdown,
     rstudioapi,
     testthat (>= 3.0.0)
+Remotes:
+    r-lib/cli
 Config/Needs/website:
     r-lib/downlit,
     tidyverse/tidytemplate
