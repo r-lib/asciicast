@@ -1,5 +1,8 @@
 # asciicast (development version)
 
+* New `expect_snapshot_r_process()` function to run a testthat snapshot
+  test in an asciicast subprocess.
+
 # asciicast 2.2.0
 
 * `write_html()` now supports ANSI hyperlinks.
