@@ -15,6 +15,9 @@
 #'   the code.
 #' @param echo Whether to echo the code in the subprocess before running
 #'   it.
+#' @param startup Expression to evaluate in the subprocess before
+#'   recording the snapshot. By default it loads and attaches the calling
+#'   package, including its internal functions.
 #' @param transform Passed to [testthat::expect_snapshot()].
 #' @param variant Passed to [testthat::expect_snapshot()].
 #'
@@ -25,7 +28,9 @@
 #' expect_snapshot_r_process(Sys.getpid())
 
 expect_snapshot_r_process <- function(..., interactive = TRUE, echo = TRUE,
-                                      transform = NULL, variant = NULL) {
+                                      startup = NULL, transform = NULL,
+                                      variant = NULL) {
+
   # errors.R assumes non-interactive in testthat, but we don't want that
   withr::local_envvar(TESTTHAT = NA_character_)
   dots <- eval(substitute(alist(...)))
@@ -38,10 +43,23 @@ expect_snapshot_r_process <- function(..., interactive = TRUE, echo = TRUE,
   code <- unlist(lapply(dots[code_pos], deparse))
   args <- dots[!code_pos]
 
+  if (is.null(startup)) {
+    startup <- substitute(
+      attach(asNamespace(pkg), name = paste0("package:", pkg)),
+      list(pkg = environmentName(topenv(parent.frame())))
+    )
+  }
+  rec_args <- list(
+    interactive = interactive,
+    echo = echo,
+    startup = startup
+  )
+
   record_output <- record_output
   output <- do.call(
     "record_output",
-    c(list(code), args, interactive = interactive, echo = echo)
+    c(list(code), args, rec_args),
+    quote = TRUE
   )
 
   r_process <- function() writeLines(output)

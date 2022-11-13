@@ -8,6 +8,7 @@ expect_snapshot_r_process(
   ...,
   interactive = TRUE,
   echo = TRUE,
+  startup = NULL,
   transform = NULL,
   variant = NULL
 )
@@ -23,6 +24,10 @@ the code.}
 
 \item{echo}{Whether to echo the code in the subprocess before running
 it.}
+
+\item{startup}{Expression to evaluate in the subprocess before
+recording the snapshot. By default it loads and attaches the calling
+package, including its internal functions.}
 
 \item{transform}{Passed to \code{\link[testthat:expect_snapshot]{testthat::expect_snapshot()}}.}
 
