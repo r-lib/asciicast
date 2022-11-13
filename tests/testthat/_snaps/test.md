@@ -19,6 +19,6 @@
     Code
       r_process()
     Output
-      > cat(cli::col_red(cli::style_bold("boldred")))
+      > cat("\033[31m\033[1mboldred\033[22m\033[39m")
       [31m[1mboldred[22m[39m
 
