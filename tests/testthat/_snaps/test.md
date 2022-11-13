@@ -3,8 +3,8 @@
     Code
       r_process()
     Output
-      > getRversion()
-      [1] ‘4.2.2’
+      > cat("'4.2.2'")
+      '4.2.2'
 
 ---
 
