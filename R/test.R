@@ -52,7 +52,8 @@ expect_snapshot_r_process <- function(..., interactive = TRUE, echo = TRUE,
   rec_args <- list(
     interactive = interactive,
     echo = echo,
-    startup = startup
+    startup = startup,
+    record_env = c("R_CLI_HIDE_CURSOR" = "false")
   )
 
   record_output <- record_output
