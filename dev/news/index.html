@@ -52,7 +52,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="asciicast-development-version">asciicast (development version)<a class="anchor" aria-label="anchor" href="#asciicast-development-version"></a></h2>
-<ul><li>New <code><a href="../reference/expect_snapshot_r_process.html">expect_snapshot_r_process()</a></code> function to run a testthat snapshot test in an asciicast subprocess.</li>
+<ul><li><p>New <code><a href="../reference/expect_snapshot_r_process.html">expect_snapshot_r_process()</a></code> function to run a testthat snapshot test in an asciicast subprocess.</p></li>
+<li><p>On Windows asciicast does not error if the patch version of the current R version is different from the one asciiast was built with. This happens often when installing asciicast from binaries, and these R versions should be fully compatible.</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.2.0" id="asciicast-220">asciicast 2.2.0<a class="anchor" aria-label="anchor" href="#asciicast-220"></a></h2><p class="text-muted">CRAN release: 2022-10-26</p>
