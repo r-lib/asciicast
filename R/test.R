@@ -2,7 +2,7 @@
 #' testthat snapshot test with asciicast
 #'
 #' This function is very similar to [testthat::expect_snapshot_output()],
-#' but it runs the code in an asciciast subprocess, uwing [record_output()].
+#' but it runs the code in an asciciast subprocess, using [record_output()].
 #'
 #' THe `Code` part of the snapshot is always the same, but the
 #' `Output` part shows the code, assuming `echo = TRUE` (the default).
