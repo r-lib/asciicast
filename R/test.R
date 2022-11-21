@@ -45,7 +45,7 @@ expect_snapshot_r_process <- function(..., interactive = TRUE, echo = TRUE,
 
   if (is.null(startup)) {
     startup <- substitute(
-      attach(asNamespace(pkg), name = paste0("package:", pkg)),
+      do.call("attach", list(asNamespace(pkg), name = paste0("package:", pkg))),
       list(pkg = environmentName(topenv(parent.frame())))
     )
   }
