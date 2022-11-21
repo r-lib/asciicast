@@ -1,6 +1,6 @@
 Package: asciicast
 Title: Create 'Ascii' Screen Casts from R Scripts
-Version: 2.2.1
+Version: 2.2.1.9000
 Authors@R: c(
     person(given = "Gábor",
            family = "Csárdi",

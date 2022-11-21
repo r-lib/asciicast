@@ -1,3 +1,5 @@
+# asciicast (development version)
+
 # asciicast 2.2.1
 
 * New `expect_snapshot_r_process()` function to run a testthat snapshot
