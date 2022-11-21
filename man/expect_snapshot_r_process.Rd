@@ -42,7 +42,9 @@ THe \code{Code} part of the snapshot is always the same, but the
 \code{Output} part shows the code, assuming \code{echo = TRUE} (the default).
 }
 \examples{
+\dontshow{if (!asciicast:::is_rcmd_check()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 Sys.getpid()
 testthat::local_edition(3)
 expect_snapshot_r_process(Sys.getpid())
+\dontshow{\}) # examplesIf}
 }

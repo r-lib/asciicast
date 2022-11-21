@@ -22,7 +22,7 @@
 #' @param variant Passed to [testthat::expect_snapshot()].
 #'
 #' @export
-#' @examples
+#' @examplesIf !asciicast:::is_rcmd_check()
 #' Sys.getpid()
 #' testthat::local_edition(3)
 #' expect_snapshot_r_process(Sys.getpid())
