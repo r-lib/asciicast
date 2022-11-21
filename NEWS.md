@@ -3,6 +3,11 @@
 * New `expect_snapshot_r_process()` function to run a testthat snapshot
   test in an asciicast subprocess.
 
+* On Windows asciicast does not error if the patch version of the current
+  R version is different from the one asciiast was built with. This happens
+  often when installing asciicast from binaries, and these R versions should
+  be fully compatible.
+
 # asciicast 2.2.0
 
 * `write_html()` now supports ANSI hyperlinks.
