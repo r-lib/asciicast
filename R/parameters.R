@@ -74,7 +74,9 @@
 #'    see [default_theme()].
 #'    The built-in themes are `"asciinema"`, `"tango"`, `"solarized-dark"`,
 #'    `"solarized-light"`, `"seti"`, `"monokai"`, `"github-light"`,
-#'    `"pkgdown"`.
+#'    `"github-dark"`, `"pkgdown"` ,`"readme"`.
+#'    `"readme"` is a special theme the switches between light and dark
+#'    mode automatically in `README.md` files on GitHub.
 #'
 #' @name asciicast-package
 #' @family asciicast functions

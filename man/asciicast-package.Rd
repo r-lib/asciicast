@@ -81,7 +81,9 @@ a build-in theme, or a named list of theme properties,
 see \code{\link[=default_theme]{default_theme()}}.
 The built-in themes are \code{"asciinema"}, \code{"tango"}, \code{"solarized-dark"},
 \code{"solarized-light"}, \code{"seti"}, \code{"monokai"}, \code{"github-light"},
-\code{"pkgdown"}.
+\code{"github-dark"}, \code{"pkgdown"} ,\code{"readme"}.
+\code{"readme"} is a special theme the switches between light and dark
+mode automatically in \code{README.md} files on GitHub.
 }
 }
 \seealso{

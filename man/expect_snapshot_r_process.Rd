@@ -35,7 +35,7 @@ package, including its internal functions.}
 }
 \description{
 This function is very similar to \code{\link[testthat:expect_snapshot_output]{testthat::expect_snapshot_output()}},
-but it runs the code in an asciciast subprocess, uwing \code{\link[=record_output]{record_output()}}.
+but it runs the code in an asciciast subprocess, using \code{\link[=record_output]{record_output()}}.
 }
 \details{
 THe \code{Code} part of the snapshot is always the same, but the
