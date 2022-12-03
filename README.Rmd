@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%",
   asciicast_at = "all",
-  asciicast_theme = "readme"
+  asciicast_theme = if (Sys.getenv("IN_PKGDOWN") == "true") "pkgdown" else "readme"
 )
 asciicast::init_knitr_engine()
 ```
