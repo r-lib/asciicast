@@ -280,7 +280,7 @@ themes <- list(
     magenta       = c(grDevices::col2rgb("#8b57b5")),
     cyan          = c(grDevices::col2rgb("#8ec43d")),
     white         = c(grDevices::col2rgb("#eeeeee")),
-    light_black   = c(grDevices::col2rgb("#323232")),
+    light_black   = c(grDevices::col2rgb("#525252")),
     light_red     = c(grDevices::col2rgb("#c22832")),
     light_green   = c(grDevices::col2rgb("#8ec43d")),
     light_yellow  = c(grDevices::col2rgb("#e0c64f")),
@@ -340,6 +340,29 @@ themes <- list(
     text          = c(grDevices::col2rgb("#657b83"))
   ),
 
+  "github-dark" = list(
+    black         = c(grDevices::col2rgb("#272822")),
+    red           = c(grDevices::col2rgb("#dc322f")),
+    green         = c(grDevices::col2rgb("#859900")),
+    yellow        = c(grDevices::col2rgb("#b58900")),
+    blue          = c(grDevices::col2rgb("#268bd2")),
+    magenta       = c(grDevices::col2rgb("#d33682")),
+    cyan          = c(grDevices::col2rgb("#2aa198")),
+    white         = c(grDevices::col2rgb("#eee8d5")),
+    light_black   = c(grDevices::col2rgb("#75715e")),
+    light_red     = c(grDevices::col2rgb("#f92672")),
+    light_green   = c(grDevices::col2rgb("#a6e22e")),
+    light_yellow  = c(grDevices::col2rgb("#f4bf75")),
+    light_blue    = c(grDevices::col2rgb("#66d9ef")),
+    light_magenta = c(grDevices::col2rgb("#ae81ff")),
+    light_cyan    = c(grDevices::col2rgb("#a1efe4")),
+    light_white   = c(grDevices::col2rgb("#f9f8f5")),
+    background    = c(grDevices::col2rgb("#161b22")),
+    cursor        = c(grDevices::col2rgb("#c9d1d9")),
+    bold          = c(grDevices::col2rgb("#c9d1d9")),
+    text          = c(grDevices::col2rgb("#c9d1d9"))
+  ),
+
   "pkgdown" = list(
     black         = c(grDevices::col2rgb("#073642")),
     red           = c(grDevices::col2rgb("#dc322f")),
@@ -349,7 +372,7 @@ themes <- list(
     magenta       = c(grDevices::col2rgb("#d33682")),
     cyan          = c(grDevices::col2rgb("#2aa198")),
     white         = c(grDevices::col2rgb("#eee8d5")),
-    light_black   = c(grDevices::col2rgb("#002b36")),
+    light_black   = c(grDevices::col2rgb("#525252")),
     light_red     = c(grDevices::col2rgb("#cb4b16")),
     light_green   = c(grDevices::col2rgb("#586e75")),
     light_yellow  = c(grDevices::col2rgb("#657c83")),

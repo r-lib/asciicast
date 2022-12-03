@@ -229,7 +229,15 @@ cache_asciicast <- function(cast, path) {
   saveRDS(cast, paste0(path, ".cast"))
   otype <- eng_asciicast_output_type()
   if (otype == "svg") {
-    write_svg(cast, paste0(path, ".svg"))
+    theme <- getOption("asciicast_theme") %||%
+      if (Sys.getenv("IN_PKGDOWN") == "true") "pkgdown"
+    is_readme <- identical(theme, "readme")
+    if (is_readme) {
+      withr::local_options(asciicast_theme = "github-light")
+      write_svg(cast, paste0(path, ".svg"))
+      withr::local_options(asciicast_theme = "github-dark")
+      write_svg(cast, paste0(path, "-dark.svg"))
+    }
   } else if (otype == "html") {
     eng_write_html(cast, paste0(path, ".html"))
   }
@@ -241,19 +249,61 @@ asciicast_knitr_svg <- function(cast, options) {
     paste0(options$label, ".svg"))
   mkdirp(dirname(filename))
 
+  theme <- getOption("asciicast_theme") %||%
+    if (Sys.getenv("IN_PKGDOWN") == "true") "pkgdown"
+  is_readme <- identical(theme, "readme")
+
   ## This might be cached already. If not cached, we cache it now.
   cached <- paste0(options$hash, ".svg")
   if (options$cache > 0 && file.exists(cached)) {
     file.copy(cached, filename, overwrite = TRUE)
   } else {
+    if (is_readme) {
+      withr::local_options(asciicast_theme = "github-light")
+    }
     write_svg(cast, filename)
     if (options$cache > 0) file.copy(filename, cached)        # nocov
   }
 
-  fig_proc <- knitr::opts_current$get("fig.process")
-  if (!is.null(fig_proc)) filename <- fig_proc(filename)
+  ## Maybe we need to create a dark version as well
+  if (is_readme) {
+    filename2 <- file.path(
+      knitr::opts_current$get("fig.path"),
+      paste0(options$label, "-dark.svg")
+    )
+    mkdirp(dirname(filename2))
+    cached2 <- paste0(options$hash, "-dark.svg")
+    if (options$cache > 0 && file.exists(cached2)) {
+      file.copy(cached2, filename2, overwrite = TRUE)
+    } else {
+      withr::local_options(asciicast_theme = "github-dark")
+      write_svg(cast, filename2)
+      if (options$cache > 0) file.copy(filename, cached2)
+    }
+  }
 
-  knitr::knit_hooks$get('plot')(filename, options)
+  fig_proc <- knitr::opts_current$get("fig.process")
+  if (!is.null(fig_proc)) {
+    filename <- fig_proc(filename)
+    if (is_readme) {
+      filename2 <- fig_proc(filename2)
+    }
+  }
+
+  img <- knitr::knit_hooks$get('plot')(filename, options)
+
+  if (is_readme) {
+    img_dark <- knitr::knit_hooks$get('plot')(filename2, options)
+    file_dark <- sub("^.*src=\"([^\"]+)\".*$", "\\1", img_dark)
+    paste0(
+      "<picture>\n",
+      "  <source media=\"(prefers-color-scheme: dark)\" srcset=\"", file_dark, "\">\n",
+      "  ", img, "\n",
+      "</picture>\n"
+    )
+  } else {
+    img
+  }
 }
 
 asciicast_knitr_html <- function(cast, options) {

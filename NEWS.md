@@ -1,5 +1,12 @@
 # asciicast (development version)
 
+* New SVG theme: `readme`, to be used in `README.Rmd` (and similar) files on
+  GitHub. It generates two SVG files, one for light and one for dark mode,
+  and creates a `README.md` file that automatically uses the correct one
+  when viewed on GitHub.
+
+* New SVG theme: `github-dark`.
+
 # asciicast 2.2.1
 
 * New `expect_snapshot_r_process()` function to run a testthat snapshot

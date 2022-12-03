@@ -22,34 +22,34 @@ records all terminal output in real time as it happens.
 
 ## Features
 
--   Input is an R script, output is a [v2 asciicast
-    recording](https://github.com/asciinema/asciinema/blob/develop/doc/asciicast-v2.md).
--   Record all terminal output in real time, as it happens.
--   Simulate typing in the commands, with a configurable, randomized
-    speed.
--   Alternatively, whole comment blocks or expressions can just appear
-    on the screen.
--   Convert casts to SVG images using
-    [svg-term](https://github.com/marionebl/svg-term). The package comes
-    with its own svg-term bundle, no external dependencies are needed.
--   Render a single frame of a cast as an SVG image.
--   Configurable delay at the beginning, at the end and between
-    paragraphs.
--   [HTML widget](http://www.htmlwidgets.org), to be used in Rmarkdown
-    documents, e.g. in vignettes.
--   Read casts from asciinema JSON files (version 2), or from
-    <https://asciinema.org> directly.
--   Special knitr engine to create R markdown files with ascii casts.
-    See the `asciicast-demo` vignette.
--   Create ascii casts in GitHub READMEs via animated SVG files. See an
-    example in `inst/examples` or the `README.Rmd` source of the README
-    file you are reading.
+- Input is an R script, output is a [v2 asciicast
+  recording](https://github.com/asciinema/asciinema/blob/develop/doc/asciicast-v2.md).
+- Record all terminal output in real time, as it happens.
+- Simulate typing in the commands, with a configurable, randomized
+  speed.
+- Alternatively, whole comment blocks or expressions can just appear on
+  the screen.
+- Convert casts to SVG images using
+  [svg-term](https://github.com/marionebl/svg-term). The package comes
+  with its own svg-term bundle, no external dependencies are needed.
+- Render a single frame of a cast as an SVG image.
+- Configurable delay at the beginning, at the end and between
+  paragraphs.
+- [HTML widget](http://www.htmlwidgets.org), to be used in Rmarkdown
+  documents, e.g. in vignettes.
+- Read casts from asciinema JSON files (version 2), or from
+  <https://asciinema.org> directly.
+- Special knitr engine to create R markdown files with ascii casts. See
+  the `asciicast-demo` vignette.
+- Create ascii casts in GitHub READMEs via animated SVG files. See an
+  example in `inst/examples` or the `README.Rmd` source of the README
+  file you are reading.
 
 ## Limitations
 
--   asciicast works best in an UTF-8 locale. It also works well if all
-    output is ASCII, but non-ASCII output might cause problems
-    (<https://github.com/r-lib/asciicast/issues/36>).
+- asciicast works best in an UTF-8 locale. It also works well if all
+  output is ASCII, but non-ASCII output might cause problems
+  (<https://github.com/r-lib/asciicast/issues/36>).
 
 ## Installation
 
@@ -76,7 +76,10 @@ print("Hello world!")
 
 The result:
 
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="man/figures/README-/unnamed-chunk-3-dark.svg">
 <img src="man/figures/README-/unnamed-chunk-3.svg" width="100%" />
+</picture>
 
 ### Asciicast demo in asciicast
 
@@ -112,7 +115,10 @@ svg <- tempfile(fileext = ".svg")
 asciicast::write_svg(cast, svg, window = TRUE)
 ```
 
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="man/figures/README-/unnamed-chunk-5-dark.svg">
 <img src="man/figures/README-/unnamed-chunk-5.svg" width="100%" />
+</picture>
 
 ### Errors are recorded
 
@@ -132,15 +138,18 @@ callr::r(function() library("another-failure"))
 .Last.error
 ```
 
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="man/figures/README-/unnamed-chunk-7-dark.svg">
 <img src="man/figures/README-/unnamed-chunk-7.svg" width="100%" />
+</picture>
 
 ## Related tools
 
--   asciinema: <https://asciinema.org/>
--   The original terminal session recorder:
-    <https://github.com/asciinema/asciinema>
--   svg-term: <https://github.com/marionebl/svg-term>,
-    <https://github.com/marionebl/svg-term-cli>
+- asciinema: <https://asciinema.org/>
+- The original terminal session recorder:
+  <https://github.com/asciinema/asciinema>
+- svg-term: <https://github.com/marionebl/svg-term>,
+  <https://github.com/marionebl/svg-term-cli>
 
 ## License
 

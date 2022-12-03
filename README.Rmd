@@ -5,16 +5,18 @@ always_allow_html: yes
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include = FALSE}
+```{r, include = FALSE, cache = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
   out.width = "100%",
-  asciicast_at = "all"
+  asciicast_at = "all",
+  asciicast_theme = "readme"
 )
 asciicast::init_knitr_engine()
 ```
+
 # asciicast
 
 > Turn R scripts into terminal screencasts
