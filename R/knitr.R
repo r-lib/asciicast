@@ -293,7 +293,9 @@ asciicast_knitr_svg <- function(cast, options) {
   img <- knitr::knit_hooks$get('plot')(filename, options)
 
   if (is_readme) {
+    if (substr(img, 1, 1) == "!") img <- md_image_to_img(img)
     img_dark <- knitr::knit_hooks$get('plot')(filename2, options)
+    if (substr(img_dark, 1, 1) == "!") img_dark <- md_image_to_img(img_dark)
     file_dark <- sub("^.*src=\"([^\"]+)\".*$", "\\1", img_dark)
     paste0(
       "<picture>\n",
@@ -304,6 +306,14 @@ asciicast_knitr_svg <- function(cast, options) {
   } else {
     img
   }
+}
+
+md_image_to_img <- function(md) {
+  paste0(
+    "<img src=\"",
+    sub(".*[(]([^)]+)[)].*$", "\\1", md),
+    "\" />"
+  )
 }
 
 asciicast_knitr_html <- function(cast, options) {
