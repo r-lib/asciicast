@@ -3,7 +3,7 @@ pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   asciicast-demo: asciicast-demo.html
-last_built: 2022-12-05T11:20Z
+last_built: 2022-12-05T13:26Z
 urls:
   reference: https://r-lib.github.io/asciicast/reference
   article: https://r-lib.github.io/asciicast/articles
