@@ -69,7 +69,7 @@ test_that("write_svg errors", {
 test_that("play", {
   path <- NULL
   on.exit(unlink(path), add = TRUE)
-  mockery::stub(play, "utils::browseURL", function(x) path <<- x)
+  mockery::stub(play, "play_svg", function(x, ...) path <<- x)
 
   hello <- system.file(package = "asciicast", "examples", "hello.R")
   cast <- record(hello, interactive = FALSE)
