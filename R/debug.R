@@ -22,7 +22,7 @@ get_debug_level <- function() {
 debug <- function(level, ..., .envir = parent.frame()) {
   current <- get_debug_level()
   if (debug_levels[current] >= debug_levels[level]) {
-    cli::Cli_alert(..., .envir = .envur)
+    cli::cli_alert(..., .envir = .envur)
   }
 }
 
