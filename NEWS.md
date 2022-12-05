@@ -1,5 +1,8 @@
 # asciicast (development version)
 
+* `record()` has a new argument: `show_output`, to show the output from the
+  subprocess in real time.
+
 * New SVG theme: `readme`, to be used in `README.Rmd` (and similar) files on
   GitHub. It generates two SVG files, one for light and one for dark mode,
   and creates a `README.md` file that automatically uses the correct one

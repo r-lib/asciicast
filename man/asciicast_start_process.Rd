@@ -10,7 +10,8 @@ asciicast_start_process(
   record_env = NULL,
   interactive = TRUE,
   locales = get_locales(),
-  options = NULL
+  options = NULL,
+  show_output = FALSE
 )
 }
 \arguments{
@@ -36,6 +37,9 @@ executed in the subprocess. See \code{\link[=asciicast_options]{asciicast_option
 defaults. Supply a named list here to override the defaults or set
 additionsl ones. Passing large and/or complicated options here might
 not work, or might be slow.}
+
+\item{show_output}{Whether to show the output of the subprocess in
+real time.}
 }
 \value{
 The R process, a \link[processx:process]{processx::process} object.

@@ -25,7 +25,8 @@ record(
   interactive = TRUE,
   locales = get_locales(),
   options = asciicast_options(),
-  incomplete_error = NULL
+  incomplete_error = NULL,
+  show_output = FALSE
 )
 }
 \arguments{
@@ -99,6 +100,9 @@ not work, or might be slow.}
 \item{incomplete_error}{Whether to error on incomplete expressions.
 You might need to set this to \code{FALSE} for R code that does keyboard
 input, e.g. in \code{browser()}. The default is \code{TRUE}.}
+
+\item{show_output}{Whether to show the output of the subprocess in
+real time.}
 }
 \value{
 An \code{asciicast} object, write this to

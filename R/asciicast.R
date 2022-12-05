@@ -42,6 +42,8 @@
 #' @param incomplete_error Whether to error on incomplete expressions.
 #'   You might need to set this to `FALSE` for R code that does keyboard
 #'   input, e.g. in `browser()`. The default is `TRUE`.
+#' @param show_output Whether to show the output of the subprocess in
+#'   real time.
 #' @inheritParams asciicast_start_process
 #' @return An `asciicast` object, write this to
 #'   file with [write_json()].
@@ -60,7 +62,7 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
                    record_env = NULL, startup = NULL, echo = TRUE,
                    speed = NULL, process = NULL, interactive = TRUE,
                    locales = get_locales(), options = asciicast_options(),
-                   incomplete_error = NULL) {
+                   incomplete_error = NULL, show_output = FALSE) {
 
   lines <- if (is.language(script)) {
     deparse(script)
@@ -112,7 +114,8 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
   output <- record_embedded(body, typing_speed, timeout, empty_wait,
                             start_wait, end_wait, record_env,
                             startup, echo, speed, process, interactive,
-                            locales, options, incomplete_error)
+                            locales, options, incomplete_error,
+                            show_output)
 
   if (rows == "auto") {
     plain <- cli::ansi_strip(paste0(

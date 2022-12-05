@@ -1,6 +1,7 @@
 
 record_internal <- function(lines, timeout, process,
-                            incomplete_error = TRUE) {
+                            incomplete_error = TRUE,
+                            show_output = FALSE) {
 
   to <- as.double(timeout, units = "secs") * 1000
 
@@ -47,10 +48,10 @@ record_internal <- function(lines, timeout, process,
 
       # wait until we see the "input" line, here we might read the
       # leftover from the output
-      output <<- c(output, wait_for(process, "^rlib$", "^type: input$", to, ptr - 1))
+      output <<- c(output, wait_for(process, "^rlib$", "^type: input$", to, ptr - 1, show_output))
 
       # wait until we get back a "busy" linem that means that it is running
-      output <<- c(output, wait_for(process, "^rlib$", "^busy:", to, ptr - 1))
+      output <<- c(output, wait_for(process, "^rlib$", "^busy:", to, ptr - 1, show_output))
 
       # if busy: 1, then the command is running, nothing more to send
       if (length(output) >= 1) {
@@ -62,18 +63,18 @@ record_internal <- function(lines, timeout, process,
     }
   }
 
-  wait_for_done <- function() {
-    output <<- c(output, wait_for(process, "^rlib$", "^busy: 0$", to, ptr - 1))
+  wait_for_done <- function(show_output) {
+    output <<- c(output, wait_for(process, "^rlib$", "^busy: 0$", to, ptr - 1, show_output))
   }
 
   while (ptr <= length(lines)) {
     send_next_command()
-    wait_for_done()
+    wait_for_done(show_output)
     if (!processx::conn_is_incomplete(con)) break;
   }
 
   # there might we some more messages in the output, read those
-  output <- c(output, read_all(process))
+  output <- c(output, read_all(process, show_output))
 
   msgs <- lapply(output, parse_line)
   data <- tibble::tibble(
@@ -85,7 +86,14 @@ record_internal <- function(lines, timeout, process,
   data
 }
 
-wait_for <- function(px, type = "", value = "", timeout = 1000, linum = "???") {
+wait_for <- function(
+  px,
+  type = "",
+  value = "",
+  timeout = 1000,
+  linum = "???",
+  show_output = FALSE) {
+
   con <- attr(px, "sock")
   output <- character()
   while (TRUE) {
@@ -100,6 +108,7 @@ wait_for <- function(px, type = "", value = "", timeout = 1000, linum = "???") {
     }
     line <- processx::conn_read_lines(con, 1)
     if (length(line)) {
+      if (show_output) show_line(line)
       output[length(output) + 1L] <- line
       msg <- parse_line(line)
       if (grepl(type, msg$type) && grepl(value, msg$value)) break
@@ -111,7 +120,7 @@ wait_for <- function(px, type = "", value = "", timeout = 1000, linum = "???") {
   output
 }
 
-read_all <- function(px) {
+read_all <- function(px, show_output = FALSE) {
   con <- attr(px, "sock")
   output <- character()
   while (TRUE) {
@@ -119,6 +128,7 @@ read_all <- function(px) {
     if (ret[[1]] == "timeout") break
     line <- processx::conn_read_lines(con, 1)
     if (length(line)) {
+      show_line(line)
       output[[length(output) + 1L]] <- line
     }
     if (!processx::conn_is_incomplete(con)) break
@@ -130,7 +140,7 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
                             start_wait, end_wait,
                             record_env, startup, echo, speed, process,
                             interactive, locales, options,
-                            incomplete_error) {
+                            incomplete_error, show_output) {
 
   px <- process
 
@@ -141,12 +151,13 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
       record_env,
       interactive,
       locales,
-      options
+      options,
+      show_output = show_output
     )
     on.exit(close(attr(px, "sock")), add = TRUE)
   }
 
-  data <- record_internal(lines, timeout, px, incomplete_error)
+  data <- record_internal(lines, timeout, px, incomplete_error, show_output)
 
   if (nrow(data) > 0) {
     data$time <- data$time - data$time[1] + start_wait
@@ -198,6 +209,8 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
 #'   defaults. Supply a named list here to override the defaults or set
 #'   additionsl ones. Passing large and/or complicated options here might
 #'   not work, or might be slow.
+#' @param show_output Whether to show the output of the subprocess in
+#'   real time.
 #' @return The R process, a [processx::process] object.
 #'
 #' @family asciicast functions
@@ -215,7 +228,7 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
 asciicast_start_process <- function(startup = NULL, timeout = 10,
                                     record_env = NULL, interactive = TRUE,
                                     locales = get_locales(),
-                                    options = NULL) {
+                                    options = NULL, show_output = FALSE) {
 
   sock <- processx::conn_create_unix_socket()
   sock_name <- processx::conn_file_name(sock)
@@ -234,7 +247,7 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
   processx::conn_accept_unix_socket(sock)
 
   to <- as.double(timeout, units = "secs") * 1000
-  wait_for(px, "^rlib$", "^busy: 0$", timeout = to)
+  wait_for(px, "^rlib$", "^busy: 0$", timeout = to, show_output = show_output)
   read_all(px)
 
   # throw away the output of the startup code
@@ -252,7 +265,12 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
     set_options_code,
     if (!is.null(startup)) deparse(startup)
   )
-  output <- record_internal(lines, timeout, process = px)
+  output <- record_internal(
+    lines,
+    timeout,
+    process = px,
+    show_output = show_output
+  )
 
   if (!processx::conn_is_incomplete(sock)) {
     throw(new_error("asciicast process exited while running `startup`"))
