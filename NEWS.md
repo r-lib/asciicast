@@ -1,5 +1,10 @@
 # asciicast (development version)
 
+* New `show` argument in `write_svg()` to show the SVG on the screen.
+  It is `TRUE` by default in RStudio.
+  
+* `play()` now show the output in the viewer pane in RStudio.
+
 # asciicast 2.3.0
 
 * `record()` has a new argument: `show_output`, to show the output from the

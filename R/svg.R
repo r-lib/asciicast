@@ -19,6 +19,8 @@
 #'   often just the prompt, and sometimes it is not worth showing.
 #' @param theme A named list to override the default theme
 #'   (see [default_theme()]).
+#' @param show Whether to show the SVG file on the screen, in the viewer
+#'   pane in RStudio, or in the web browser.
 #'
 #' @export
 #' @family SVG functions
@@ -32,7 +34,7 @@
 write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
                       at = NULL, cursor = NULL, rows = NULL, cols = NULL,
                       padding = NULL, padding_x = NULL, padding_y = NULL,
-                      omit_last_line = NULL, theme = NULL) {
+                      omit_last_line = NULL, theme = NULL, show = NULL) {
 
   ct <- load_svg_term()
 
@@ -84,6 +86,9 @@ write_svg <- function(cast, path, window = NULL, start_at = NULL, end_at = NULL,
     fixed = TRUE
   )
   cat(svg, file = path)
+
+  show <- show %||% is_rstudio()
+  if (show) play_svg(path)
 
   invisible()
 }
@@ -427,15 +432,41 @@ themes <- list(
 #' play(cast)
 
 play <- function(cast, ...) {
-  tmpsvg <- tempfile(fileext = ".svg")
+  tmpsvg <- tempfile("asciicast", fileext = ".svg")
+  write_svg(cast, path = tmpsvg, ...)
+  play_svg(tmpsvg)
+}
+
+play_svg <- function(path) {
+  if (startsWith(path, tempdir()) && endsWith(path, ".svg")) {
+    tmpsvg <- path
+  } else {
+    tmpsvg <- tempfile("asciicast", fileext = ".svg")
+    if (!file.copy(path, tmpsvg)) {
+      stop(cli::format_error(c(
+        "Cannot copy {.path {path}} to {.path {tmpsvg}}."
+      )))
+    }
+  }
   tmphtml <- tempfile(fileext = ".html")
 
-  write_svg(cast, path = tmpsvg, ...)
+  rs <- is_rstudio()
+  width <- if (rs) "100%" else ""
 
-  cat(sep = "", file = tmphtml,
-      "<html><body><img src=\"", basename(tmpsvg), "\"></body></html>")
+  cat(
+    sep = "",
+    file = tmphtml,
+    "<html><body><img width=\"", width, "\" src=\"",
+    basename(tmpsvg),
+    "\"></body></html>"
+  )
 
-  utils::browseURL(tmphtml)
+  if (rs) {
+    rstudioapi::viewer(tmphtml)
+  } else {
+    utils::browseURL(tmphtml)
+  }
+
   invisible(tmpsvg)
 }
 
