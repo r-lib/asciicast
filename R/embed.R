@@ -154,7 +154,7 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
       options,
       show_output = show_output
     )
-    on.exit(close(attr(px, "sock")), add = TRUE)
+    on.exit({ close(attr(px, "sock")); px$wait(1000); px$kill() }, add = TRUE)
   }
 
   data <- record_internal(lines, timeout, px, incomplete_error, show_output)
