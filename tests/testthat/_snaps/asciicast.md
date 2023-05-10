@@ -91,5 +91,5 @@
        8  0.08 o     "o"            
        9  0.09 o     "m"            
       10  0.1  o     "m"            
-      # ... with 25 more rows
+      # i 25 more rows
 
