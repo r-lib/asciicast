@@ -25,7 +25,7 @@ char *output_buffer = NULL;
 
 #define rem_clock_gettime(a,b) clock_gettime(a,b)
 
-double get_time() {
+double get_time(void) {
   struct timespec t;
   int ret = rem_clock_gettime(CLOCK_MONOTONIC, &t);
   if (ret) {
@@ -248,7 +248,7 @@ int rem_read_console(const char *prompt,
   return 1;
 }
 
-void rem_callback() {
+void rem_callback(void) {
   // shall we use this for something?
 }
 
@@ -280,7 +280,7 @@ void rem_suicide(const char *message) {
   rem_clean_up(SA_SUICIDE, 2, 0);
 }
 
-void rem_void() { }
+void rem_void(void) { }
 #endif
 
 void usage(const char *argv0) {
@@ -288,7 +288,7 @@ void usage(const char *argv0) {
   exit(5);
 }
 
-extern void run_Rmainloop();
+extern void run_Rmainloop(void);
 
 int main(int argc, char **argv) {
 
