@@ -2,7 +2,7 @@
 
     Code
       write_gif(cast, gif, show = FALSE, rows = "auto")
-    Message <cliMessage>
+    Message
       i Finding phantom.js
       v Finding phantom.js ... done
       

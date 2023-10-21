@@ -2,7 +2,7 @@
 
     Code
       with_cli_process("I am practicing, mom!", 1:10)
-    Message <cliMessage>
+    Message
       i I am practicing, mom!
       v I am practicing, mom! ... done
       
