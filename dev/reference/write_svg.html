@@ -155,7 +155,9 @@ pane in RStudio, or in the web browser.</p></dd>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">cast</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_cast.html">read_cast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples"</span>, <span class="st">"hello.cast"</span>, package <span class="op">=</span> <span class="st">"asciicast"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">svg_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".svg"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">write_svg</span><span class="op">(</span><span class="va">cast</span>, <span class="va">svg_file</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># \dontshow{</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">svg_file</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -165,7 +167,7 @@ pane in RStudio, or in the web browser.</p></dd>
    </div>
   <footer><div class="container">
   <div class="pkgdown-footer-left">
-  <p></p><p>Developed by <a href="https://github.com/gaborcsardi" class="external-link">Gábor Csárdi</a>, Romain Francois, Mario Nebl, Marcin Kulik.</p>
+  <p></p><p>Developed by <a href="https://github.com/gaborcsardi" class="external-link">Gábor Csárdi</a>, Romain Francois, Mario Nebl, Marcin Kulik, <a href="https://www.posit.co" class="external-link"><img src="https://www.tidyverse.org/posit-logo.svg" alt="Posit" height="16" style="margin-bottom: 3px;"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
