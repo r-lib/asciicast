@@ -1,5 +1,10 @@
 as_json <- function(cast) {
-  stopifnot(inherits(cast, "asciicast"))
+  if (!inherits(cast, "asciicast")) {
+    throw(cli::format_error(c(
+      "{.var cast} must be an {.cls asciicast}, object.",
+      i = "It is a {.type {cast}}."
+    )))
+  }
   con <- textConnection(NULL, "w", local = TRUE)
   on.exit(close(con), add = TRUE)
   write_json_con(cast, con)

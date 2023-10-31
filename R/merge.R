@@ -65,7 +65,7 @@ merge_casts <- function(...) {
   casts <- lapply(list(...), handle_merge_cast)
   types <- map_chr(casts, "[[", "type")
   if (!"cast" %in% types) {
-    stop("You need to include at least one cast in `merge_cast()`.")
+    throw(cli::format_error("You need to include at least one cast in {.fn merge_casts}."))
   }
   wconf <- which(types == "cast")[[1]]
   new_cast <- structure(

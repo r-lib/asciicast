@@ -100,7 +100,7 @@ eng_asciicast <- function(options) {
 
   proc <- .GlobalEnv$.knitr_asciicast_process
   if (!is.null(proc) && !proc$is_alive()) {
-    stop("asciicast subprocess crashed")
+    throw(cli::format_error("asciicast subprocess crashed"))
   }
   cast <- record(
     cast_file,
@@ -150,7 +150,7 @@ eng_asciicastcpp11 <- function(options) {
 
     proc <- .GlobalEnv$.knitr_asciicast_process
     if (!is.null(proc) && !proc$is_alive()) {
-      stop("asciicast subprocess crashed") # nocov
+      throw(cli::format_error("asciicast subprocess crashed")) # nocov
     }
 
     cast <- record(cast_file, process = proc)

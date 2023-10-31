@@ -73,10 +73,9 @@ install_phantomjs <- function(version = "2.1.1",
   }
   unlink(c(zipdir, zipfile), recursive = TRUE)
   if (!success) {
-    stop(
-      "Unable to install PhantomJS to any of these dirs: ",
-      paste(dirs, collapse = ", ")
-    )
+    throw(cli::format_error(c(
+      "Unable to install PhantomJS to {?/any of} {?this/these} dir{?s}: {.or {.path {dirs}}}."
+    )))
   }
   if (!quiet) {
     message("phantomjs has been installed to ", normalizePath(destdir))

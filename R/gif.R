@@ -36,7 +36,7 @@ write_gif <- function(cast, path, show = NULL, cols = NULL,
                       optimize = TRUE) {
   with_cli_process("Finding phantom.js", {
     phexe <- find_phantom()
-    if (is.null(phexe)) stop("No phantom.js, exiting.")
+    if (is.null(phexe)) throw(cli::format_error("No phantom.js, exiting."))
   })
 
   frames <- load_frames(cast)

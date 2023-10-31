@@ -101,11 +101,10 @@ is_svg_supported <- function() {
 
 check_svg_support <- function() {
   if (!is_svg_supported()) {
-    stop(
-      "Writing SVG files needs a more recent Node library, see the ",
-      "documentation of the V8 package, e.g. ",
-      "https://github.com/jeroen/v8#readme"
-    )
+    throw(cli::format_error(c(
+      "Writing SVG files needs a more recent Node library.",
+      i = "See the documentation of the V8 package: {.url https://github.com/jeroen/v8#readme}."
+    )))
   }
 }
 
@@ -438,7 +437,7 @@ play_svg <- function(path) {
   } else {
     tmpsvg <- tempfile("asciicast", fileext = ".svg")
     if (!file.copy(path, tmpsvg)) {
-      stop(cli::format_error(c(
+      throw(cli::format_error(c(
         "Cannot copy {.path {path}} to {.path {tmpsvg}}."
       )))
     }
