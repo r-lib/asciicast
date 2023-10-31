@@ -15,7 +15,7 @@ Description: Record 'asciicast' screen casts from R scripts. Convert them
     'knitr' engine, to embed 'ascii' screen casts in 'Rmarkdown'
     documents.
 License: MIT + file LICENSE
-URL: https://github.com/r-lib/asciicast,
+URL: https://asciicast.r-lib.org/,
     https://r-lib.github.io/asciicast/
 BugReports: https://github.com/r-lib/asciicast/issues
 Imports:
