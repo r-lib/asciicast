@@ -1,4 +1,3 @@
-
 test_that("record_output", {
   code <- c(
     "1:50",

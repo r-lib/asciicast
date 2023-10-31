@@ -1,4 +1,3 @@
-
 new_merge_cast_command <- function(command, output) {
   structure(
     list(command = command, output = list(output = output)),
@@ -62,11 +61,10 @@ handle_merge_cast <- function(x) {
 #' cast2 <- read_cast(system.file("examples", "dplyr.cast", package = "asciicast"))
 #' cast <- merge_casts(cast1, pause(3), clear_screen(), cast2)
 #' play(cast)
-
 merge_casts <- function(...) {
   casts <- lapply(list(...), handle_merge_cast)
   types <- map_chr(casts, "[[", "type")
-  if (! "cast" %in% types) {
+  if (!"cast" %in% types) {
     stop("You need to include at least one cast in `merge_cast()`.")
   }
   wconf <- which(types == "cast")[[1]]
@@ -80,7 +78,7 @@ merge_casts <- function(...) {
 }
 
 shift_output <- function(recs) {
-  last <- map_dbl(recs, function(x) utils::tail(x$time, 1)) + 1/10000
+  last <- map_dbl(recs, function(x) utils::tail(x$time, 1)) + 1 / 10000
   shift <- utils::head(cumsum(c(0, last)), -1)
   for (i in seq_along(recs)) {
     recs[[i]]$time <- recs[[i]]$time + shift[[i]]

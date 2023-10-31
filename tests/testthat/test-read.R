@@ -1,4 +1,3 @@
-
 test_that("read_cast from file", {
   code <- paste(
     sep = "\n",

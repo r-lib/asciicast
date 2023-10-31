@@ -1,4 +1,3 @@
-
 #' Export ascii screencast to animated GIF file
 #'
 #' @param cast `asciicast` object.
@@ -35,7 +34,6 @@ write_gif <- function(cast, path, show = NULL, cols = NULL,
                       rows = NULL, theme = NULL, scale = 2.0, speed = 1.0,
                       max_colors = 256, loop = 0, end_wait = 10,
                       optimize = TRUE) {
-
   with_cli_process("Finding phantom.js", {
     phexe <- find_phantom()
     if (is.null(phexe)) stop("No phantom.js, exiting.")
@@ -69,22 +67,26 @@ write_gif <- function(cast, path, show = NULL, cols = NULL,
   rndr_html <- system.file(
     "page",
     "asciicast2gif.html",
-    package = "asciicast")
+    package = "asciicast"
+  )
   if (identical(rows, "auto")) {
     rows <- sum(unlist(strsplit(cast$output$data, "")) == "\n")
   }
   # without this, windows fails, because it takes c: as the protocol
   if (is_windows()) {
-    rndr_html <- paste0("file:///", rndr_html)      # nocovif !is_windows()
+    rndr_html <- paste0("file:///", rndr_html) # nocovif !is_windows()
   }
-  args <- c(rndr_js, rndr_html, cols %||% frames$width,
-            rows %||% frames$height,
-            theme %||% cast$config$theme %||% "asciinema", scale)
+  args <- c(
+    rndr_js, rndr_html, cols %||% frames$width,
+    rows %||% frames$height,
+    theme %||% cast$config$theme %||% "asciinema", scale
+  )
 
   status <- cli_status("{.alert-info Creating {length(screens)} snapshot{?s}}")
   env <- c(Sys.getenv(), c("PHJS_DEBUG" = "1"))
   phjs <- process$new(
-    phexe, args, stdin = sin, stdout = "|", stderr = "|", env = env,
+    phexe, args,
+    stdin = sin, stdout = "|", stderr = "|", env = env,
     poll_connection = TRUE
   )
 
@@ -97,16 +99,16 @@ write_gif <- function(cast, path, show = NULL, cols = NULL,
       cli_status_update(status, "{.alert-info Creating snapshot {i}}")
     })
     pr <- phjs$poll_io(500)
-    if (pr[["process"]] == "ready") break;
+    if (pr[["process"]] == "ready") break
   }
 
   phjs$wait(3000)
   phjs$kill()
 
   if (phjs$get_exit_status() != 0) {
-     cnd <- new_error("phantom.js failed, see `$stderr` for standard error")
-     cnd$stderr <- err
-     throw(cnd)
+    cnd <- new_error("phantom.js failed, see `$stderr` for standard error")
+    cnd$stderr <- err
+    throw(cnd)
   }
 
   cli_status_clear(
@@ -119,7 +121,9 @@ write_gif <- function(cast, path, show = NULL, cols = NULL,
   with_cli_process(msg, {
     imgs <- image_read(png_files)
     anim <- image_animate(
-      imgs, optimize = optimize, loop = loop, delay = delays)
+      imgs,
+      optimize = optimize, loop = loop, delay = delays
+    )
   })
 
   if (optimize) {

@@ -1,4 +1,3 @@
-
 #' Import an asciicast from an asciicast JSON file
 #'
 #' @param json Path to JSON asciicast file, version 2:
@@ -21,7 +20,6 @@
 #' @examplesIf interactive()
 #' c3 <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
 #' play(c3)
-
 read_cast <- function(json) {
   if (is.numeric(json)) {
     anurl <- sprintf("https://asciinema.org/a/%d.cast?dl=1", json)
@@ -45,12 +43,14 @@ read_cast <- function(json) {
   output <- tibble::tibble(
     time = double(nrec),
     type = character(nrec),
-    data = character(nrec))
+    data = character(nrec)
+  )
 
   for (i in seq_along(lines)[-1]) {
     l <- chain_error(
       fromJSON(lines[i], simplifyVector = FALSE),
-      new_parse_error(json, line = i))
+      new_parse_error(json, line = i)
+    )
     if (!is.numeric(l[[1]]) || !is.character(l[[2]]) || !is.character(l[[3]])) {
       throw(new_parse_error(json, line = i))
     }
@@ -63,7 +63,8 @@ read_cast <- function(json) {
 new_parse_error <- function(file, line = 1L) {
   msg <- paste0(
     "Parse error in ", file, ":", line, ".",
-    if (line == 1L) " Only version 2 asciicast files are supported")
+    if (line == 1L) " Only version 2 asciicast files are supported"
+  )
   cnd <- new_error(msg)
   class(cnd) <- c("asciicast_parse_error", class(cnd))
   cnd$file <- file

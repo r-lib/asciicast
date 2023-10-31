@@ -1,6 +1,5 @@
-
 test_that("Unicode output", {
-  if (! l10n_info()$`UTF-8`) {
+  if (!l10n_info()$`UTF-8`) {
     skip("Needs UTF-8 system")
   }
 
@@ -15,14 +14,14 @@ test_that("Unicode output", {
 })
 
 test_that("Invalid UTF-8", {
-  if (! l10n_info()$`UTF-8`) {
+  if (!l10n_info()$`UTF-8`) {
     skip("Needs UTF-8 system")
   }
 
   withr::local_options(asciicast_typing_speed = 0)
 
   cast <- record(textConnection(c(
-    'cat(rawToChar(as.raw(c(226, 148))))',
+    "cat(rawToChar(as.raw(c(226, 148))))",
     'cast("nope")'
   )))
 
@@ -30,7 +29,7 @@ test_that("Invalid UTF-8", {
 })
 
 test_that("Special characters go through JSON", {
-  if (! l10n_info()$`UTF-8`) {
+  if (!l10n_info()$`UTF-8`) {
     skip("Needs UTF-8 system")
   }
 

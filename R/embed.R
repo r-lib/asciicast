@@ -1,8 +1,6 @@
-
 record_internal <- function(lines, timeout, process,
                             incomplete_error = TRUE,
                             show_output = FALSE) {
-
   to <- as.double(timeout, units = "secs") * 1000
 
   ptr <- 1
@@ -13,7 +11,7 @@ record_internal <- function(lines, timeout, process,
     while (TRUE) {
       if (!processx::conn_is_incomplete(con)) {
         # R exited unexpectedly while evaluating an expression
-        return()                                                    # nocov
+        return() # nocov
       }
 
       # if need more lines, but there is no more
@@ -70,7 +68,7 @@ record_internal <- function(lines, timeout, process,
   while (ptr <= length(lines)) {
     send_next_command()
     wait_for_done(show_output)
-    if (!processx::conn_is_incomplete(con)) break;
+    if (!processx::conn_is_incomplete(con)) break
   }
 
   # there might we some more messages in the output, read those
@@ -87,13 +85,12 @@ record_internal <- function(lines, timeout, process,
 }
 
 wait_for <- function(
-  px,
-  type = "",
-  value = "",
-  timeout = 1000,
-  linum = "???",
-  show_output = FALSE) {
-
+    px,
+    type = "",
+    value = "",
+    timeout = 1000,
+    linum = "???",
+    show_output = FALSE) {
   con <- attr(px, "sock")
   output <- character()
   while (TRUE) {
@@ -141,7 +138,6 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
                             record_env, startup, echo, speed, process,
                             interactive, locales, options,
                             incomplete_error, show_output) {
-
   px <- process
 
   if (is.null(px)) {
@@ -154,7 +150,14 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
       options,
       show_output = show_output
     )
-    on.exit({ close(attr(px, "sock")); px$wait(1000); px$kill() }, add = TRUE)
+    on.exit(
+      {
+        close(attr(px, "sock"))
+        px$wait(1000)
+        px$kill()
+      },
+      add = TRUE
+    )
   }
 
   data <- record_internal(lines, timeout, px, incomplete_error, show_output)
@@ -224,12 +227,10 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
 #' cast2 <- record(textConnection(script2), process = process)
 #' cast1
 #' cast2
-
 asciicast_start_process <- function(startup = NULL, timeout = 10,
                                     record_env = NULL, interactive = TRUE,
                                     locales = get_locales(),
                                     options = NULL, show_output = FALSE) {
-
   sock <- processx::conn_create_unix_socket()
   sock_name <- processx::conn_file_name(sock)
   if (is_windows()) sock_name <- basename(sock_name) # nocovif !is_windows()
@@ -288,10 +289,9 @@ asciicast_start_process_internal <- function(sock_name, env, interactive) {
       env = env,
       stdout = "|",
       stderr = "2>&1"
-      )
-
+    )
   } else {
-    r <- file.path(R.home(component="bin"), "R")
+    r <- file.path(R.home(component = "bin"), "R")
     px <- processx::process$new(
       # TODO: find R executable, like in callr
       r,
@@ -417,10 +417,12 @@ shift <- function(v) {
 add_empty_wait <- function(data, wait) {
   empty <- which(
     data$type == "rlib" & data$data %in% c("type: input", "type: wait") &
-    shift(data$type) == "o" & shift(data$data) %in% c("\r\n", "")
+      shift(data$type) == "o" & shift(data$data) %in% c("\r\n", "")
   )
 
-  if (length(empty) == 0) return(data)
+  if (length(empty) == 0) {
+    return(data)
+  }
 
   # If the next entry is a prompt, then move the wait after the prompt
   for (eidx in empty) {
@@ -439,7 +441,7 @@ add_empty_wait <- function(data, wait) {
       }
     }
     if (skip > 0) {
-      data$time[eidx:(eidx+1)] <- data$time[eidx + 1 + skip]
+      data$time[eidx:(eidx + 1)] <- data$time[eidx + 1 + skip]
       data[eidx:(eidx + 1 + skip), ] <-
         data[c((eidx + 2):(eidx + 1 + skip), eidx, eidx + 1L), ]
     }
@@ -448,7 +450,7 @@ add_empty_wait <- function(data, wait) {
   # we might have shifted them, so calculate again
   empty <- which(
     data$type == "rlib" & data$data %in% c("type: input", "type: wait") &
-    shift(data$type) == "o" & shift(data$data) %in% c("\r\n", "")
+      shift(data$type) == "o" & shift(data$data) %in% c("\r\n", "")
   )
 
   shft <- rep(0, nrow(data))
@@ -462,13 +464,17 @@ add_empty_wait <- function(data, wait) {
 adjust_typing_speed <- function(data, typing_speed) {
   inp <- which(
     data$type == "rlib" & data$data == "type: input" &
-    shift(data$type) == "o" & !grepl("#[!]\\s*$", shift(data$data))
+      shift(data$type) == "o" & !grepl("#[!]\\s*$", shift(data$data))
   )
 
   data$data <- sub("\\s+#[!]\\s*$", "\r\n", data$data)
 
-  if (typing_speed == 0) return(data)
-  if (length(inp) == 0) return(data)
+  if (typing_speed == 0) {
+    return(data)
+  }
+  if (length(inp) == 0) {
+    return(data)
+  }
 
   inp <- c(-1, inp)
   ptr <- 2L
@@ -507,7 +513,7 @@ adjust_typing_speed <- function(data, typing_speed) {
 
 #' @importFrom stats runif
 
-rtime <- function(n, speed){
+rtime <- function(n, speed) {
   runif(n, min = speed * 0.5, max = speed * 1.5)
 }
 
@@ -540,7 +546,6 @@ get_locales <- function() {
 #' @export
 #' @examples
 #' asciicast_options()
-
 asciicast_options <- function() {
   list(
     cli.num_colors = 256,

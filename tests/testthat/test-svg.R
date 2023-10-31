@@ -1,10 +1,9 @@
-
 test_that("write_svg", {
   withr::local_options(asciicast_typing_speed = 0)
 
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
-  
+
   hello <- system.file(package = "asciicast", "examples", "hello.R")
   cast <- record(hello, interactive = FALSE)
 
@@ -35,7 +34,7 @@ test_that("themes", {
 
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
-  
+
   hello <- system.file(package = "asciicast", "examples", "hello.R")
   cast <- record(hello, interactive = FALSE)
 
@@ -49,7 +48,7 @@ test_that("write_svg errors", {
 
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
-  
+
   hello <- system.file(package = "asciicast", "examples", "hello.R")
   cast <- record(hello, interactive = FALSE)
 

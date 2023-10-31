@@ -1,4 +1,3 @@
-
 #' Initialize the asciicast knitr engine
 #'
 #' Call this function in your Rmd file to enable creating asciinema
@@ -41,7 +40,6 @@ init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
                               timeout = 10, startup = NULL,
                               record_env = NULL, echo_input = TRUE,
                               interactive = TRUE) {
-
   knitr::knit_engines$set("asciicast" = eng_asciicast)
   knitr::knit_engines$set("asciicastcpp11" = eng_asciicastcpp11)
   knitr::cache_engines$set("asciicast" = cache_eng_asciicast)
@@ -89,7 +87,7 @@ eng_asciicast <- function(options) {
 
   if (!options$eval) {
     options$engine <- "r"
-    return(knitr::engine_output(options, options$code, '', NULL))
+    return(knitr::engine_output(options, options$code, "", NULL))
   }
 
   cast_file <- tempfile()
@@ -140,19 +138,19 @@ eng_asciicastcpp11 <- function(options) {
     ), cpp11_file, useBytes = TRUE)
 
     code <- deparse(bquote({
-      cpp11::cpp_source(                                       # nocov start
+      cpp11::cpp_source( # nocov start
         file = .(cpp11_file),
         env = .GlobalEnv,
         clean = .(options$clean %||% TRUE),
         quiet = .(options$quiet %||% FALSE),
         cxx_std = .(options$cxx_std %||% Sys.getenv("CXX_STD", "CXX11"))
-      )                                                       # nocov end
+      ) # nocov end
     }))
     writeLines(c(code, "\n"), cast_file, useBytes = TRUE)
 
     proc <- .GlobalEnv$.knitr_asciicast_process
     if (!is.null(proc) && !proc$is_alive()) {
-      stop("asciicast subprocess crashed")                    # nocov
+      stop("asciicast subprocess crashed") # nocov
     }
 
     cast <- record(cast_file, process = proc)
@@ -172,7 +170,9 @@ cache_eng_asciicast <- function(options) {
 
 eng_asciicast_output_type <- function() {
   opt <- getOption("asciicast_knitr_output", "auto")
-  if (!identical(opt, "auto")) return(opt)
+  if (!identical(opt, "auto")) {
+    return(opt)
+  }
 
   at <- getOption("asciicast_at")
   pkgdown <- identical(Sys.getenv("IN_PKGDOWN"), "true")
@@ -184,7 +184,6 @@ eng_asciicast_output_type <- function() {
       # screenshot
       "html"
     }
-
   } else {
     "svg"
   }
@@ -202,7 +201,7 @@ eng_asciicast_print <- function(cast, options) {
     asciicast_knitr_html(cast, options)
   }
 
-  knitr::engine_output(options, options$code, '', extra)
+  knitr::engine_output(options, options$code, "", extra)
 }
 
 eng_write_html <- function(cast, path) {
@@ -246,7 +245,8 @@ cache_asciicast <- function(cast, path) {
 asciicast_knitr_svg <- function(cast, options) {
   filename <- file.path(
     knitr::opts_current$get("fig.path"),
-    paste0(options$label, ".svg"))
+    paste0(options$label, ".svg")
+  )
   mkdirp(dirname(filename))
 
   theme <- getOption("asciicast_theme") %||%
@@ -262,7 +262,7 @@ asciicast_knitr_svg <- function(cast, options) {
       withr::local_options(asciicast_theme = "github-light")
     }
     write_svg(cast, filename)
-    if (options$cache > 0) file.copy(filename, cached)        # nocov
+    if (options$cache > 0) file.copy(filename, cached) # nocov
   }
 
   ## Maybe we need to create a dark version as well
@@ -290,11 +290,11 @@ asciicast_knitr_svg <- function(cast, options) {
     }
   }
 
-  img <- knitr::knit_hooks$get('plot')(filename, options)
+  img <- knitr::knit_hooks$get("plot")(filename, options)
 
   if (is_readme) {
     if (substr(img, 1, 1) == "!") img <- md_image_to_img(img)
-    img_dark <- knitr::knit_hooks$get('plot')(filename2, options)
+    img_dark <- knitr::knit_hooks$get("plot")(filename2, options)
     if (substr(img_dark, 1, 1) == "!") img_dark <- md_image_to_img(img_dark)
     file_dark <- sub("^.*src=\"([^\"]+)\".*$", "\\1", img_dark)
     paste0(
@@ -319,7 +319,7 @@ md_image_to_img <- function(md) {
 asciicast_knitr_html <- function(cast, options) {
   cached <- paste0(options$hash, ".html")
   if (options$cache > 0 && file.exists(cached)) {
-    html <- readLines(cached)                                 # nocov
+    html <- readLines(cached) # nocov
   } else {
     if (options$cache > 0) {
       path <- cached

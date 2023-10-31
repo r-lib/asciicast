@@ -1,4 +1,3 @@
-
 as_json <- function(cast) {
   stopifnot(inherits(cast, "asciicast"))
   con <- textConnection(NULL, "w", local = TRUE)
@@ -13,10 +12,14 @@ write_json_con <- function(cast, con) {
   cat("\n", file = con)
 
   # data
-  cat(sep = "", file = con,
-      paste0("[", cast$output$time, ", ",
-             encode_str(cast$output$type), ", ",
-             encode_str(cast$output$data), "]", "\n"))
+  cat(
+    sep = "", file = con,
+    paste0(
+      "[", cast$output$time, ", ",
+      encode_str(cast$output$type), ", ",
+      encode_str(cast$output$data), "]", "\n"
+    )
+  )
 }
 
 #' Write an ascii cast to file
@@ -34,8 +37,9 @@ write_json_con <- function(cast, con) {
 #' cast <- record(script)
 #' json <- tempfile(fileext = ".json")
 #' write_json(cast, json)
-#' \dontshow{unlink(json, recursive = TRUE)}
-
+#' \dontshow{
+#' unlink(json, recursive = TRUE)
+#' }
 write_json <- function(cast, path) {
   con <- file(path, open = "wb")
   on.exit(close(con), add = TRUE)

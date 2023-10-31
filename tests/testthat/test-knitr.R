@@ -1,6 +1,4 @@
-
 test_that("basics", {
-  
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
 
@@ -33,7 +31,7 @@ test_that("basics", {
 
 test_that("options are set temporarily", {
   withr::local_options(asciicast_end_wait = 0)
-  
+
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
 
@@ -53,7 +51,7 @@ test_that("options are set temporarily", {
 
 test_that("crash", {
   withr::local_options(asciicast_end_wait = 0)
-  
+
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
 
@@ -68,7 +66,7 @@ test_that("crash", {
 
 test_that("caching", {
   withr::local_options(asciicast_end_wait = 0)
-  
+
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
 
@@ -90,7 +88,6 @@ test_that("caching", {
 })
 
 test_that("cpp11", {
-  
   dir.create(tmp <- tempfile())
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
 

@@ -1,4 +1,3 @@
-
 #' Record an asciinema screencast
 #'
 #' @param script Path of an R script to record. It can also be a readable
@@ -54,7 +53,6 @@
 #' script <- system.file("examples", "hello.R", package = "asciicast")
 #' cast <- record(script)
 #' play(cast)
-
 record <- function(script, typing_speed = NULL, empty_wait = NULL,
                    cols = NULL, rows = NULL, title = NULL, timestamp = NULL,
                    env = NULL, idle_time_limit = NULL,
@@ -63,13 +61,12 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
                    speed = NULL, process = NULL, interactive = TRUE,
                    locales = get_locales(), options = asciicast_options(),
                    incomplete_error = NULL, show_output = FALSE) {
-
   lines <- if (is.language(script)) {
     deparse(script)
   } else if (inherits(script, "connection")) {
     readLines(script)
   } else if (is.character(script) && length(script) == 1 &&
-             file_exists_safe(script)) {
+    file_exists_safe(script)) {
     readLines(script)
   } else {
     unlist(strsplit(as.character(script), "\n", fixed = TRUE))
@@ -111,11 +108,13 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
     startup <- str2lang(header$startup)
   }
 
-  output <- record_embedded(body, typing_speed, timeout, empty_wait,
-                            start_wait, end_wait, record_env,
-                            startup, echo, speed, process, interactive,
-                            locales, options, incomplete_error,
-                            show_output)
+  output <- record_embedded(
+    body, typing_speed, timeout, empty_wait,
+    start_wait, end_wait, record_env,
+    startup, echo, speed, process, interactive,
+    locales, options, incomplete_error,
+    show_output
+  )
 
   if (rows == "auto") {
     plain <- cli::ansi_strip(paste0(
@@ -152,7 +151,8 @@ file_exists_safe <- function(x) {
 new_cast <- function(config, output) {
   structure(
     list(config = config, output = output),
-    class = "asciicast")
+    class = "asciicast"
+  )
 }
 
 #' @export
@@ -189,7 +189,9 @@ parse_header <- function(lines) {
 
 parse_header_dcf <- function(lines) {
   lines <- sub("^#'\\s*", "", lines)
-  if (length(lines) == 0) return(list())
+  if (length(lines) == 0) {
+    return(list())
+  }
   dcf <- as.list(read.dcf(textConnection(lines))[1, ])
   names(dcf) <- tolower(names(dcf))
   dcf

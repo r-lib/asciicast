@@ -1,4 +1,3 @@
-
 test_that("record", {
   withr::local_options(asciicast_typing_speed = 0)
   hello <- system.file(package = "asciicast", "examples", "hello.R")

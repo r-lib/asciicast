@@ -1,4 +1,3 @@
-
 #' asciicast parameters
 #'
 #' You can set asciicast parameters in the header of the recorded R script.

@@ -1,4 +1,3 @@
-
 #' asciinema player HTML widget
 #'
 #' You can use this widget in Rmd files or Shiny applications, the
@@ -38,7 +37,6 @@
 #' @examplesIf interactive()
 #' cast <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
 #' asciinema_player(cast)
-
 asciinema_player <- function(cast, start_at = 0, rows = NULL, cols = NULL,
                              autoplay = NULL, loop = NULL, speed = NULL,
                              title = NULL, author = NULL, author_url = NULL,
@@ -47,7 +45,6 @@ asciinema_player <- function(cast, start_at = 0, rows = NULL, cols = NULL,
                              theme = NULL, idle_time_limit = NULL,
                              html_height = NULL, html_width = NULL,
                              element_id = NULL) {
-
   rows <- rows %||% cast$config$rows %||% cast$config$height %||% 24
   cols <- cols %||% cast$config$cols %||% cast$config$width %||% 80
   title <- title %||% cast$config$title %||% ""
@@ -61,7 +58,8 @@ asciinema_player <- function(cast, start_at = 0, rows = NULL, cols = NULL,
   write_json(cast, tmp)
   src <- paste0(
     "data:application/json;base64,",
-    jsonlite::base64_enc(readBin(tmp, what = "raw", n = file.size(tmp))))
+    jsonlite::base64_enc(readBin(tmp, what = "raw", n = file.size(tmp)))
+  )
 
   last_frame <- utils::tail(c(0, cast$output$time), 1)
   htmlwidgets::createWidget(
@@ -78,7 +76,8 @@ asciinema_player <- function(cast, start_at = 0, rows = NULL, cols = NULL,
       title = title,
       author = author %||% "",
       author_url = author_url %||% "",
-      author_img_url = author_img_url %||% ""),
+      author_img_url = author_img_url %||% ""
+    ),
     width = html_width,
     height = html_height,
     package = "asciicast",
@@ -89,21 +88,20 @@ asciinema_player <- function(cast, start_at = 0, rows = NULL, cols = NULL,
       browser.fill = TRUE,
       browser.padding = 20,
       knitr.defaultWidth = "100%",
-      knitr.defaultHeight = "100%")
+      knitr.defaultHeight = "100%"
+    )
   )
 }
 
-poster <- function(poster_text = NULL, poster_frame = NULL, secs = 0 ) {
+poster <- function(poster_text = NULL, poster_frame = NULL, secs = 0) {
   seconds <- if (identical(poster_frame, "")) {
     secs
-
   } else {
     poster_frame
   }
 
   if (!identical(poster_text, "")) {
     sprintf("data:text/plain,%s", poster_text)
-
   } else {
     sprintf("npt:%f", seconds)
   }

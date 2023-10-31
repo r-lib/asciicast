@@ -1,4 +1,3 @@
-
 test_that("record", {
   withr::local_options(asciicast_typing_speed = 0)
   hello <- system.file(package = "asciicast", "examples", "hello.R")
@@ -63,7 +62,7 @@ test_that("speed", {
   cast1 <- record(hello)
   cast2 <- record(hello, speed = 10)
   expect_true(
-    utils::tail(cast2$output$time, 1) < utils::tail(cast1$output$time, 1) /2
+    utils::tail(cast2$output$time, 1) < utils::tail(cast1$output$time, 1) / 2
   )
 })
 
@@ -142,7 +141,7 @@ test_that("forced pause", {
     "#! --",
     "2 + 2"
   ))
-  cmds <- grep("^type:", cast$output$data, value=TRUE)
+  cmds <- grep("^type:", cast$output$data, value = TRUE)
   expect_snapshot(cmds)
 })
 
@@ -151,6 +150,6 @@ test_that("edge case with no wait", {
     "#! --",
     "1 + 1"
   ), end_wait = 0)
-  cmds <- grep("^type:", cast$output$data, value=TRUE)
+  cmds <- grep("^type:", cast$output$data, value = TRUE)
   expect_snapshot(cmds)
 })

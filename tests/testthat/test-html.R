@@ -1,4 +1,3 @@
-
 test_that("no markup", {
   withr::local_options(asciicast_typing_speed = 0)
   cast <- record(quote({

@@ -1,4 +1,3 @@
-
 #' Record output of an R script and return it as a character vector
 #'
 #' This function uses [record()] internally, but instead of creating
@@ -24,7 +23,6 @@
 
 record_output <- function(script, echo = FALSE, prompt = echo, stdout = TRUE,
                           stderr = TRUE, ...) {
-
   cast <- record(
     script,
     typing_speed = 0,

@@ -1,4 +1,3 @@
-
 test_that("with_cli_process", {
   withr::local_options(cli.ansi = FALSE)
   expect_snapshot(

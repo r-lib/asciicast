@@ -1,4 +1,3 @@
-
 test_that("merge", {
   withr::local_options(asciicast_typing_speed = 0)
 

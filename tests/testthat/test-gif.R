@@ -1,4 +1,3 @@
-
 test_that("write_gif", {
   if (!is_windows() && !is_macos() && !is_linux()) {
     skip("Unsupported OS")
@@ -52,7 +51,6 @@ test_that("write_gif", {
     write_gif(cast, gif, show = TRUE)
   )
   expect_true(rs)
-  
 })
 
 test_that("write_gif errors", {

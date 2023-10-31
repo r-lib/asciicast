@@ -1,4 +1,3 @@
-
 #' testthat snapshot test with asciicast
 #'
 #' This function is very similar to [testthat::expect_snapshot_output()],
@@ -26,11 +25,9 @@
 #' Sys.getpid()
 #' testthat::local_edition(3)
 #' expect_snapshot_r_process(Sys.getpid())
-
 expect_snapshot_r_process <- function(..., interactive = TRUE, echo = TRUE,
                                       startup = NULL, transform = NULL,
                                       variant = NULL) {
-
   # errors.R assumes non-interactive in testthat, but we don't want that
   withr::local_envvar(TESTTHAT = NA_character_)
   dots <- eval(substitute(alist(...)))

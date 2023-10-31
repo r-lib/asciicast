@@ -1,4 +1,3 @@
-
 os_type <- function() {
   tolower(.Platform$OS.type)
 }

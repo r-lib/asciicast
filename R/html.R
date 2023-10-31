@@ -1,4 +1,3 @@
-
 #' Create a HTML snapshot of an asciicast
 #'
 #' @param cast `asciicast` object.
@@ -20,7 +19,6 @@
 write_html <- function(cast, path, at = "end", omit_last_line = NULL,
                        prefix = "", theme = NULL, details = FALSE,
                        summary = "See output") {
-
   omit_last_line <- as.logical(get_param("omit_last_line", TRUE))
   if (omit_last_line) cast <- remove_last_line(cast)
 
@@ -31,7 +29,7 @@ write_html <- function(cast, path, at = "end", omit_last_line = NULL,
 
   height <- cast$config$height
   width <- cast$config$width
-  screen <- cli::vt_output(cast$output$data, width = width , height = height)
+  screen <- cli::vt_output(cast$output$data, width = width, height = height)
 
   theme <- to_html_theme(interpret_theme(theme))
 
@@ -134,10 +132,9 @@ to_html_theme <- function(theme) {
 }
 
 format_html_line <- function(
-  segments,
-  theme = to_html_theme(interpret_theme(NULL)),
-  prefix = "") {
-
+    segments,
+    theme = to_html_theme(interpret_theme(NULL)),
+    prefix = "") {
   out <- paste(unlist(
     lapply(seq_len(nrow(segments)), function(i) {
       format_html_piece(segments[i, ], theme = theme)
@@ -152,7 +149,8 @@ format_html_line <- function(
 }
 
 format_html_piece <- function(pc, theme) {
-  style <- paste0("",
+  style <- paste0(
+    "",
     if (pc$bold) theme[[".ansi-bold"]],
     if (pc$italic) theme[[".ansi-italic"]],
     if (pc$underline) theme[[".ansi-underline"]],

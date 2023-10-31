@@ -1,4 +1,3 @@
-
 # We don't test the download currently. It does work, and will work as
 # long as the files are there on GH. It is also tested in write_gif,
 # if phantom is not installed.
@@ -12,7 +11,7 @@ test_that("install_phantomjs", {
     skip("Unsupported OS")
   }
   suppressMessages(install_phantomjs(
-    baseURL = 'https://github.com/wch/webshot/releases/download/v0.3.1'
+    baseURL = "https://github.com/wch/webshot/releases/download/v0.3.1"
   ))
   expect_true(TRUE)
   expect_true(file.exists(find_phantom()))

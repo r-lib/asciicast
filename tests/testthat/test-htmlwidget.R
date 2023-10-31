@@ -1,4 +1,3 @@
-
 test_that("asciinema_player", {
   code <- paste(
     sep = "\n",

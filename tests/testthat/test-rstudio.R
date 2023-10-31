@@ -1,4 +1,3 @@
-
 test_that("is_rstudio", {
   expect_false(is_rstudio())
 
@@ -19,7 +18,7 @@ test_that("view_image_in_rstudio", {
     view_image_in_rstudio,
     "rstudioapi::viewer",
     function(x) path <<- x
-    )
+  )
 
   view_image_in_rstudio(tempdir())
   expect_false(is.null(path))

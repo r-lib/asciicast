@@ -1,4 +1,3 @@
-
 load_svg_term <- function() {
   check_svg_support()
 
@@ -22,7 +21,6 @@ load_svg_term <- function() {
 #' @keywords internal
 
 load_frames <- function(cast, height = NA, width = NA) {
-
   # Start with this, because it is faster
   json <- paste(as_json(cast), collapse = "\n")
 

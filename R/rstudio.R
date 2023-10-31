@@ -1,4 +1,3 @@
-
 is_rstudio <- function() {
   "rstudioapi" %in% loadedNamespaces() &&
     rstudioapi::isAvailable()
