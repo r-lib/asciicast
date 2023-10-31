@@ -2,26 +2,22 @@ Package: asciicast
 Title: Create 'Ascii' Screen Casts from R Scripts
 Version: 2.3.0.9000
 Authors@R: c(
-    person(given = "Gábor",
-           family = "Csárdi",
-           role = c("aut", "cre"),
-           email = "csardi.gabor@gmail.com"),
-    person(given = "Romain",
-           family = "Francois",
-           role = "aut"),
-    person(given = "Mario",
-           family = "Nebl",
-           role = "aut",
+    person("Gábor", "Csárdi", , "csardi.gabor@gmail.com", role = c("aut", "cre")),
+    person("Romain", "Francois", role = "aut"),
+    person("Mario", "Nebl", role = "aut",
            comment = "https://github.com/marionebl/svg-term author"),
-    person(given = "Marcin",
-           family = "Kulik",
-           role = "aut",
-           comment = "https://github.com/asciinema/asciinema-player author"))
+    person("Marcin", "Kulik", role = "aut",
+           comment = "https://github.com/asciinema/asciinema-player author")
+  )
 Description: Record 'asciicast' screen casts from R scripts. Convert them
     to animated SVG images, to be used in 'README' files, or blog posts.
     Includes 'asciinema-player' as an 'HTML' widget, and an 'asciicast'
-    'knitr' engine, to embed 'ascii' screen casts in 'Rmarkdown' documents.
+    'knitr' engine, to embed 'ascii' screen casts in 'Rmarkdown'
+    documents.
 License: MIT + file LICENSE
+URL: https://github.com/r-lib/asciicast,
+    https://r-lib.github.io/asciicast/
+BugReports: https://github.com/r-lib/asciicast/issues
 Imports:
     cli (>= 3.3.0.9000),
     curl,
@@ -32,8 +28,6 @@ Imports:
     utils,
     V8,
     withr
-LinkingTo:
-    processx
 Suggests:
     callr,
     covr,
@@ -45,13 +39,10 @@ Suggests:
     rmarkdown,
     rstudioapi,
     testthat (>= 3.2.0)
-Config/Needs/website:
-    r-lib/downlit,
-    tidyverse/tidytemplate
+LinkingTo:
+    processx
+Config/Needs/website:r-lib/downlit, tidyverse/tidytemplate
+Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1.9000
-URL: https://github.com/r-lib/asciicast,
-    https://r-lib.github.io/asciicast/
-BugReports: https://github.com/r-lib/asciicast/issues
-Config/testthat/edition: 3
