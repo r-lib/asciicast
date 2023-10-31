@@ -21,7 +21,9 @@ script <- system.file("examples", "hello.R", package = "asciicast")
 cast <- record(script)
 json <- tempfile(fileext = ".json")
 write_json(cast, json)
-\dontshow{unlink(json, recursive = TRUE)}
+\dontshow{
+unlink(json, recursive = TRUE)
+}
 \dontshow{\}) # examplesIf}
 }
 \seealso{

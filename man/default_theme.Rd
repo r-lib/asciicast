@@ -18,7 +18,9 @@ cast <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
 svg_file <- tempfile(fileext = ".svg")
 mytheme <- modifyList(default_theme(), list(cursor = c(255, 0, 0)))
 write_svg(cast, svg_file, theme = mytheme)
-\dontshow{unlink(svg_file, recursive = TRUE)}
+\dontshow{
+unlink(svg_file, recursive = TRUE)
+}
 \dontshow{\}) # examplesIf}
 }
 \seealso{

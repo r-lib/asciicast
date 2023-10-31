@@ -7,7 +7,8 @@ Authors@R: c(
     person("Mario", "Nebl", role = "aut",
            comment = "https://github.com/marionebl/svg-term author"),
     person("Marcin", "Kulik", role = "aut",
-           comment = "https://github.com/asciinema/asciinema-player author")
+           comment = "https://github.com/asciinema/asciinema-player author"),
+    person(given = "Posit Software, PBC", role = c("cph", "fnd"))
   )
 Description: Record 'asciicast' screen casts from R scripts. Convert them
     to animated SVG images, to be used in 'README' files, or blog posts.
@@ -41,8 +42,8 @@ Suggests:
     testthat (>= 3.2.0)
 LinkingTo:
     processx
-Config/Needs/website:r-lib/downlit, tidyverse/tidytemplate
+Config/Needs/website: r-lib/downlit, tidyverse/tidytemplate
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1.9000
+RoxygenNote: 7.2.3

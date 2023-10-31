@@ -66,7 +66,9 @@ Create animated SVG from an asciicast
 cast <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
 svg_file <- tempfile(fileext = ".svg")
 write_svg(cast, svg_file)
-\dontshow{unlink(svg_file, recursive = TRUE)}
+\dontshow{
+unlink(svg_file, recursive = TRUE)
+}
 \dontshow{\}) # examplesIf}
 }
 \seealso{
