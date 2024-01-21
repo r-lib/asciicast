@@ -1,6 +1,6 @@
 Package: asciicast
 Title: Create 'Ascii' Screen Casts from R Scripts
-Version: 2.3.1
+Version: 2.3.1.9000
 Authors@R: c(
     person("Gábor", "Csárdi", , "csardi.gabor@gmail.com", role = c("aut", "cre")),
     person("Romain", "Francois", role = "aut"),
