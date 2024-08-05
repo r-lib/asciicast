@@ -18,6 +18,8 @@ test_that("R quits", {
 })
 
 test_that("R crashes", {
+  # TODO: needs callr release to fix callr:::crash()
+  if (getRversion() >= "4.5.0") skip("needs newer callr")
   # TODO: why does this fail?
   if (!is_embedded()) {
     skip("Fails on non-embedded R")
