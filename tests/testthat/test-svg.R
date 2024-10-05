@@ -58,7 +58,7 @@ test_that("write_svg errors", {
     "Unknown theme"
   )
 
-  mockery::stub(check_svg_support, "is_svg_supported", FALSE)
+  local_mocked_bindings(is_svg_supported = function() FALSE)
   expect_error(
     check_svg_support(),
     "needs a more recent Node library"
@@ -68,7 +68,7 @@ test_that("write_svg errors", {
 test_that("play", {
   path <- NULL
   on.exit(unlink(path), add = TRUE)
-  mockery::stub(play, "play_svg", function(x, ...) path <<- x)
+  local_mocked_bindings(play_svg = function(x, ...) path <<- x)
 
   hello <- system.file(package = "asciicast", "examples", "hello.R")
   cast <- record(hello, interactive = FALSE)

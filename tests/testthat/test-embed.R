@@ -69,7 +69,9 @@ test_that("speed", {
 })
 
 test_that("subprocess fails", {
-  mockery::stub(asciicast_start_process, "processx::poll", list("timeout"))
+  local_mocked_bindings(
+    poll = function(...) list("timeout"), .package = "processx"
+  )
   expect_error(
     asciicast_start_process(),
     "subprocess did not connect back"
@@ -129,7 +131,7 @@ test_that("adjust_typing_speed", {
 })
 
 test_that("find_rem error", {
-  mockery::stub(find_rem, "get_embedded", "")
+  local_mocked_bindings(get_embedded = function() "")
   expect_error(
     find_rem(),
     "Cannot find embedded R executable"

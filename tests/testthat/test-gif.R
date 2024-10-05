@@ -36,17 +36,17 @@ test_that("write_gif", {
     all(magick::image_info(mgif)$format == "GIF")
   )
 
-  mockery::stub(write_gif, "is_rstudio", TRUE)
+  local_mocked_bindings(is_rstudio = function() TRUE)
   rs <- NULL
-  mockery::stub(write_gif, "view_image_in_rstudio", function(path) rs <<- path)
+  local_mocked_bindings(view_image_in_rstudio = function(path) rs <<- path)
   suppressMessages(
     write_gif(cast, gif, show = TRUE)
   )
   expect_false(is.null(rs))
 
-  mockery::stub(write_gif, "is_rstudio", FALSE)
+  local_mocked_bindings(is_rstudio = function() FALSE)
   rs <- NULL
-  mockery::stub(write_gif, "image_display", function(anim) rs <<- TRUE)
+  local_mocked_bindings(image_display = function(anim) rs <<- TRUE)
   suppressMessages(
     write_gif(cast, gif, show = TRUE)
   )
@@ -54,16 +54,14 @@ test_that("write_gif", {
 })
 
 test_that("write_gif errors", {
-  mockery::stub(write_gif, "find_phantom", NULL)
+  local_mocked_bindings(find_phantom = function() NULL)
   expect_error(
     suppressMessages(write_gif()),
     "No phantom.js, exiting"
   )
 
-  mockery::stub(
-    write_gif,
-    "find_phantom",
-    asNamespace("processx")$get_tool("px")
+  local_mocked_bindings(
+    find_phantom = function() asNamespace("processx")$get_tool("px")
   )
   cast <- record(textConnection("1+1\n"))
   gif <- tempfile(fileext = ".gif")

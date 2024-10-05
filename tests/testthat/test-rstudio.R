@@ -1,8 +1,8 @@
 test_that("is_rstudio", {
   expect_false(is_rstudio())
 
-  mockery::stub(is_rstudio, "loadedNamespaces", "rstudioapi")
-  mockery::stub(is_rstudio, "rstudioapi::isAvailable", TRUE)
+  local_mocked_bindings(loadedNamespaces = function() "rstudioapi")
+  local_mocked_bindings(isAvailable = function() TRUE, .package = "rstudioapi")
   expect_true(is_rstudio())
 })
 
@@ -14,10 +14,8 @@ test_that("view_image_in_rstudio", {
   path <- NULL
   on.exit(unlink(path), add = TRUE)
 
-  mockery::stub(
-    view_image_in_rstudio,
-    "rstudioapi::viewer",
-    function(x) path <<- x
+  local_mocked_bindings(
+    viewer = function(x) path <<- x, .package = "rstudioapi"
   )
 
   view_image_in_rstudio(tempdir())
