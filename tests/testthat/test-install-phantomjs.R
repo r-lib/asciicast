@@ -18,9 +18,9 @@ test_that("install_phantomjs", {
 })
 
 test_that("install_phantomjs errors", {
-  mockery::stub(install_phantomjs, "is_windows", FALSE)
-  mockery::stub(install_phantomjs, "is_macos", FALSE)
-  mockery::stub(install_phantomjs, "is_linux", FALSE)
+  local_mocked_bindings(is_windows = function() FALSE)
+  local_mocked_bindings(is_macos = function() FALSE)
+  local_mocked_bindings(is_linux = function() FALSE)
   expect_message(
     install_phantomjs(),
     "this platform is not supported"
