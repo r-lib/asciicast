@@ -1,9 +1,9 @@
 pandoc: 3.1.11
-pkgdown: 2.1.0
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   asciicast-demo: asciicast-demo.html
-last_built: 2024-08-05T16:04Z
+last_built: 2024-10-06T12:27Z
 urls:
   reference: https://asciicast.r-lib.org/reference
   article: https://asciicast.r-lib.org/articles
