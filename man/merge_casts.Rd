@@ -32,7 +32,7 @@ are ignored.
 \code{clear_screen()} clears the screen between two casts.
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 # merge two casts, with a pause, and clear screen between them
 cast1 <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
 cast2 <- read_cast(system.file("examples", "dplyr.cast", package = "asciicast"))

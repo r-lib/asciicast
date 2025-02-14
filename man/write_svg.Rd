@@ -62,7 +62,7 @@ pane in RStudio, or in the web browser.}
 Create animated SVG from an asciicast
 }
 \examples{
-\dontshow{if (!asciicast:::is_rcmd_check()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (!asciicast:::is_rcmd_check()) withAutoprint(\{ # examplesIf}
 cast <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
 svg_file <- tempfile(fileext = ".svg")
 write_svg(cast, svg_file)
