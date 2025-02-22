@@ -10,9 +10,6 @@ template:
 reference:
 - title: Basics
   contents:
-
-- title: Basics
-  contents:
   - record
   - play
   - merge_casts
