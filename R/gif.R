@@ -1,5 +1,7 @@
 #' Export ascii screencast to animated GIF file
 #'
+#' `r lifecycle::badge('deprecated')`
+#'
 #' @param cast `asciicast` object.
 #' @param path Path to GIF file to create.
 #' @param show Whether to show the GIF on the screen, in the viewer pane
@@ -34,6 +36,10 @@ write_gif <- function(cast, path, show = NULL, cols = NULL,
                       rows = NULL, theme = NULL, scale = 2.0, speed = 1.0,
                       max_colors = 256, loop = 0, end_wait = 10,
                       optimize = TRUE) {
+  lifecycle::deprecate_warn("3.0.0", "write_gif()", "write_svg()",
+    details = "Convert the SVG to GIF."
+  )
+
   with_cli_process("Finding phantom.js", {
     phexe <- find_phantom()
     if (is.null(phexe)) throw(cli::format_error("No phantom.js, exiting."))

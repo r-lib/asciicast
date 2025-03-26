@@ -23,6 +23,7 @@ Imports:
     cli (>= 3.3.0.9000),
     curl,
     jsonlite,
+    lifecycle,
     magick (>= 2.2.9002),
     processx (>= 3.7.0),
     tibble,

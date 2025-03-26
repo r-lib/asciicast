@@ -1,4 +1,6 @@
 test_that("write_gif", {
+  skip_on_ci()
+
   if (!is_windows() && !is_macos() && !is_linux()) {
     skip("Unsupported OS")
   }
@@ -54,6 +56,8 @@ test_that("write_gif", {
 })
 
 test_that("write_gif errors", {
+  skip_on_ci()
+
   local_mocked_bindings(find_phantom = function() NULL)
   expect_error(
     suppressMessages(write_gif()),
