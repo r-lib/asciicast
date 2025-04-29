@@ -8,7 +8,8 @@ Authors@R: c(
            comment = "https://github.com/marionebl/svg-term author"),
     person("Marcin", "Kulik", role = "aut",
            comment = "https://github.com/asciinema/asciinema-player author"),
-    person("Posit Software, PBC", role = c("cph", "fnd"), comment = c(ROR = "03wc8by49"))
+    person("Posit Software, PBC", role = c("cph", "fnd"),
+           comment = c(ROR = "03wc8by49"))
   )
 Description: Record 'asciicast' screen casts from R scripts. Convert them
     to animated SVG images, to be used in 'README' files, or blog posts.
@@ -16,8 +17,7 @@ Description: Record 'asciicast' screen casts from R scripts. Convert them
     'knitr' engine, to embed 'ascii' screen casts in 'Rmarkdown'
     documents.
 License: MIT + file LICENSE
-URL: https://asciicast.r-lib.org/,
-    https://github.com/r-lib/asciicast
+URL: https://asciicast.r-lib.org/, https://github.com/r-lib/asciicast
 BugReports: https://github.com/r-lib/asciicast/issues
 Imports:
     cli (>= 3.3.0.9000),
@@ -43,7 +43,7 @@ LinkingTo:
     processx
 Config/Needs/website: r-lib/downlit, tidyverse/tidytemplate
 Config/testthat/edition: 3
+Config/usethis/last-upkeep: 2025-04-29
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-Config/usethis/last-upkeep: 2025-04-29
