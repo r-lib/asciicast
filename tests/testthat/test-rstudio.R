@@ -1,8 +1,8 @@
 test_that("is_rstudio", {
   expect_false(is_rstudio())
 
-  local_mocked_bindings(loadedNamespaces = function() "rstudioapi")
-  local_mocked_bindings(isAvailable = function() TRUE, .package = "rstudioapi")
+  fake(is_rstudio, "loadedNamespaces", "rstudioapi")
+  fake(is_rstudio, "rstudioapi::isAvailable", TRUE)
   expect_true(is_rstudio())
 })
 
@@ -14,9 +14,7 @@ test_that("view_image_in_rstudio", {
   path <- NULL
   on.exit(unlink(path), add = TRUE)
 
-  local_mocked_bindings(
-    viewer = function(x) path <<- x, .package = "rstudioapi"
-  )
+  fake(view_image_in_rstudio, "rstudioapi::viewer", function(x) path <<- x)
 
   view_image_in_rstudio(tempdir())
   expect_false(is.null(path))

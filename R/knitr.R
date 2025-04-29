@@ -36,10 +36,15 @@
 #' ```
 #' ````
 
-init_knitr_engine <- function(echo = FALSE, same_process = TRUE,
-                              timeout = 10, startup = NULL,
-                              record_env = NULL, echo_input = TRUE,
-                              interactive = TRUE) {
+init_knitr_engine <- function(
+  echo = FALSE,
+  same_process = TRUE,
+  timeout = 10,
+  startup = NULL,
+  record_env = NULL,
+  echo_input = TRUE,
+  interactive = TRUE
+) {
   knitr::knit_engines$set("asciicast" = eng_asciicast)
   knitr::knit_engines$set("asciicastcpp11" = eng_asciicastcpp11)
   knitr::cache_engines$set("asciicast" = cache_eng_asciicast)
@@ -126,19 +131,24 @@ eng_asciicastcpp11 <- function(options) {
     cpp11_file <- tempfile(fileext = ".cc")
     on.exit(unlink(c(cast_file, cpp11_file)), add = TRUE)
 
-    writeLines(c(
-      "#include \"cpp11.hpp\"",
-      "using namespace cpp11;",
-      "namespace writable = cpp11::writable;",
-      getOption("asciicast_cpp11_header"),
-      headers,
-      getOption("asciicast_cpp11_linkingto"),
-      "[[cpp11::register]]",
-      options$code
-    ), cpp11_file, useBytes = TRUE)
+    writeLines(
+      c(
+        "#include \"cpp11.hpp\"",
+        "using namespace cpp11;",
+        "namespace writable = cpp11::writable;",
+        getOption("asciicast_cpp11_header"),
+        headers,
+        getOption("asciicast_cpp11_linkingto"),
+        "[[cpp11::register]]",
+        options$code
+      ),
+      cpp11_file,
+      useBytes = TRUE
+    )
 
     code <- deparse(bquote({
-      cpp11::cpp_source( # nocov start
+      cpp11::cpp_source(
+        # nocov start
         file = .(cpp11_file),
         env = .GlobalEnv,
         clean = .(options$clean %||% TRUE),
@@ -299,8 +309,12 @@ asciicast_knitr_svg <- function(cast, options) {
     file_dark <- sub("^.*src=\"([^\"]+)\".*$", "\\1", img_dark)
     paste0(
       "<picture>\n",
-      "  <source media=\"(prefers-color-scheme: dark)\" srcset=\"", file_dark, "\">\n",
-      "  ", img, "\n",
+      "  <source media=\"(prefers-color-scheme: dark)\" srcset=\"",
+      file_dark,
+      "\">\n",
+      "  ",
+      img,
+      "\n",
       "</picture>\n"
     )
   } else {

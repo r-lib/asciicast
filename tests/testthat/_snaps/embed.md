@@ -48,6 +48,14 @@
       [1] "type: prompt"   "> "             "quit('no')\r\n" "type: input"   
       [5] "quit('no')\r\n" "busy: 1"        "type: wait"     ""              
 
+# incomplete expression
+
+    Code
+      record(textConnection("1 + (\n"))
+    Condition
+      Error:
+      ! Incomplete asciicast expression
+
 # echo = FALSE
 
     Code
@@ -59,6 +67,38 @@
        [7] "type: stdout"                "\r\n"                       
        [9] "busy: 0"                     "type: read"                 
       [11] "type: wait"                  ""                           
+
+# subprocess fails
+
+    Code
+      asciicast_start_process()
+    Condition
+      Error:
+      ! R subprocess did not connect back
+
+# startup crashes
+
+    Code
+      asciicast_start_process(startup = quote(callr:::crash()), interactive = FALSE)
+    Condition
+      Error:
+      ! asciicast process exited while running `startup`
+
+# cannot send input, buffer is full
+
+    Code
+      record(textConnection(strrep("1 + ", 1e+05)))
+    Condition
+      Error:
+      ! Cannot send input, buffer is full, line too long?
+
+# find_rem error
+
+    Code
+      find_rem()
+    Condition
+      Error:
+      ! Cannot find embedded R executable rem
 
 # forced pause
 

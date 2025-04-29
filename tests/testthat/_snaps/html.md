@@ -1,3 +1,11 @@
+# unknown theme
+
+    Code
+      write_html(cast, tempfile(), theme = "file1868d5a82f56e")
+    Condition
+      Error:
+      ! Unknown theme: file1868d5a82f56e
+
 # create_markup_{fg,bg}
 
     Code

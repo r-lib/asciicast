@@ -80,7 +80,7 @@ You can use this widget in Rmd files or Shiny applications, the
 same way as \href{http://www.htmlwidgets.org/}{other HTML widgets}.
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 cast <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
 asciinema_player(cast)
 \dontshow{\}) # examplesIf}

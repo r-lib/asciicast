@@ -32,11 +32,24 @@
 #' @importFrom cli cli_status cli_status_update cli_status_clear
 #' @export
 
-write_gif <- function(cast, path, show = NULL, cols = NULL,
-                      rows = NULL, theme = NULL, scale = 2.0, speed = 1.0,
-                      max_colors = 256, loop = 0, end_wait = 10,
-                      optimize = TRUE) {
-  lifecycle::deprecate_warn("3.0.0", "write_gif()", "write_svg()",
+write_gif <- function(
+  cast,
+  path,
+  show = NULL,
+  cols = NULL,
+  rows = NULL,
+  theme = NULL,
+  scale = 2.0,
+  speed = 1.0,
+  max_colors = 256,
+  loop = 0,
+  end_wait = 10,
+  optimize = TRUE
+) {
+  lifecycle::deprecate_warn(
+    "3.0.0",
+    "write_gif()",
+    "write_svg()",
     details = "Convert the SVG to GIF."
   )
 
@@ -83,16 +96,23 @@ write_gif <- function(cast, path, show = NULL, cols = NULL,
     rndr_html <- paste0("file:///", rndr_html) # nocovif !is_windows()
   }
   args <- c(
-    rndr_js, rndr_html, cols %||% frames$width,
+    rndr_js,
+    rndr_html,
+    cols %||% frames$width,
     rows %||% frames$height,
-    theme %||% cast$config$theme %||% "asciinema", scale
+    theme %||% cast$config$theme %||% "asciinema",
+    scale
   )
 
   status <- cli_status("{.alert-info Creating {length(screens)} snapshot{?s}}")
   env <- c(Sys.getenv(), c("PHJS_DEBUG" = "1"))
   phjs <- process$new(
-    phexe, args,
-    stdin = sin, stdout = "|", stderr = "|", env = env,
+    phexe,
+    args,
+    stdin = sin,
+    stdout = "|",
+    stderr = "|",
+    env = env,
     poll_connection = TRUE
   )
 
@@ -128,7 +148,9 @@ write_gif <- function(cast, path, show = NULL, cols = NULL,
     imgs <- image_read(png_files)
     anim <- image_animate(
       imgs,
-      optimize = optimize, loop = loop, delay = delays
+      optimize = optimize,
+      loop = loop,
+      delay = delays
     )
   })
 

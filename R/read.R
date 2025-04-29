@@ -62,7 +62,11 @@ read_cast <- function(json) {
 
 new_parse_error <- function(file, line = 1L) {
   msg <- paste0(
-    "Parse error in ", file, ":", line, ".",
+    "Parse error in ",
+    file,
+    ":",
+    line,
+    ".",
     if (line == 1L) " Only version 2 asciicast files are supported"
   )
   cnd <- new_error(msg)

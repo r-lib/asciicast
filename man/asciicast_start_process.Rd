@@ -49,7 +49,7 @@ This is for expert use, if you want to run multiple recordings in the
 same process.
 }
 \examples{
-\dontshow{if (!asciicast:::is_rcmd_check()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (!asciicast:::is_rcmd_check()) withAutoprint(\{ # examplesIf}
 # Use the same R process to record multiple casts
 process <- asciicast_start_process()
 script1 <- "a <- runif(10)\n"

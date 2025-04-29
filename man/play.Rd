@@ -20,7 +20,7 @@ file, and then previews a minimal HTML file with the SVG image,
 in the default browser.
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 cast <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
 play(cast)
 \dontshow{\}) # examplesIf}

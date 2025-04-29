@@ -12,8 +12,7 @@ mkdirp <- function(x) {
   dir.create(x, showWarnings = FALSE, recursive = TRUE)
 }
 
-get_param <- function(x, default = NULL,
-                      config = parent.frame()$cast$config) {
+get_param <- function(x, default = NULL, config = parent.frame()$cast$config) {
   x <- tolower(x)
   env <- parent.frame()
   env[[x]] %||%
