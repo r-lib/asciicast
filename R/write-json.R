@@ -18,11 +18,17 @@ write_json_con <- function(cast, con) {
 
   # data
   cat(
-    sep = "", file = con,
+    sep = "",
+    file = con,
     paste0(
-      "[", cast$output$time, ", ",
-      encode_str(cast$output$type), ", ",
-      encode_str(cast$output$data), "]", "\n"
+      "[",
+      cast$output$time,
+      ", ",
+      encode_str(cast$output$type),
+      ", ",
+      encode_str(cast$output$data),
+      "]",
+      "\n"
     )
   )
 }

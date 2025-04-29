@@ -10,3 +10,11 @@
       [5] "hi there                                                                        "                                      
       [6] "                                                                                "                                      
 
+---
+
+    Code
+      load_frames(cast)
+    Condition
+      Error:
+      ! Internal error, cannot find 'load-cast.js'.
+

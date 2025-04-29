@@ -37,14 +37,27 @@
 #' @examplesIf interactive()
 #' cast <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
 #' asciinema_player(cast)
-asciinema_player <- function(cast, start_at = 0, rows = NULL, cols = NULL,
-                             autoplay = NULL, loop = NULL, speed = NULL,
-                             title = NULL, author = NULL, author_url = NULL,
-                             author_img_url = NULL, poster_text = NULL,
-                             poster_frame = NULL, font_size = NULL,
-                             theme = NULL, idle_time_limit = NULL,
-                             html_height = NULL, html_width = NULL,
-                             element_id = NULL) {
+asciinema_player <- function(
+  cast,
+  start_at = 0,
+  rows = NULL,
+  cols = NULL,
+  autoplay = NULL,
+  loop = NULL,
+  speed = NULL,
+  title = NULL,
+  author = NULL,
+  author_url = NULL,
+  author_img_url = NULL,
+  poster_text = NULL,
+  poster_frame = NULL,
+  font_size = NULL,
+  theme = NULL,
+  idle_time_limit = NULL,
+  html_height = NULL,
+  html_width = NULL,
+  element_id = NULL
+) {
   rows <- rows %||% cast$config$rows %||% cast$config$height %||% 24
   cols <- cols %||% cast$config$cols %||% cast$config$width %||% 80
   title <- title %||% cast$config$title %||% ""
@@ -65,7 +78,9 @@ asciinema_player <- function(cast, start_at = 0, rows = NULL, cols = NULL,
   htmlwidgets::createWidget(
     name = "asciinema_player",
     list(
-      src = src, cols = cols, rows = rows,
+      src = src,
+      cols = cols,
+      rows = rows,
       autoplay = autoplay %||% cast$config$autoplay,
       loop = loop %||% cast$config$loop,
       start_at = start_at,

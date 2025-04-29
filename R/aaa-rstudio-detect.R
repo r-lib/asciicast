@@ -56,8 +56,10 @@ rstudio <- local({
       return(get_caps(data))
     }
 
-    if ((rspid <- Sys.getenv("RSTUDIO_SESSION_PID")) != "" &&
-      any(c("ps", "cli") %in% loadedNamespaces())) {
+    if (
+      (rspid <- Sys.getenv("RSTUDIO_SESSION_PID")) != "" &&
+        any(c("ps", "cli") %in% loadedNamespaces())
+    ) {
       detect_new(rspid, clear_cache)
     } else {
       detect_old(clear_cache)
@@ -98,16 +100,18 @@ rstudio <- local({
         "rstudio_build_pane"
       } else if (pane == "render") {
         "rstudio_render_pane"
-      } else if (pane == "terminal" && new$tty &&
-        new$envs["ASCIICAST"] != "true") {
+      } else if (
+        pane == "terminal" && new$tty && new$envs["ASCIICAST"] != "true"
+      ) {
         # not possible, because there is a shell in between, just in case
         "rstudio_terminal"
       } else {
         # don't know what kind of direct subprocess
         "rstudio_subprocess"
       }
-    } else if (pane == "terminal" && new$tty &&
-      new$envs[["ASCIICAST"]] != "true") {
+    } else if (
+      pane == "terminal" && new$tty && new$envs[["ASCIICAST"]] != "true"
+    ) {
       # not a direct subproces, so check other criteria as well
       "rstudio_terminal"
     } else {
@@ -143,22 +147,28 @@ rstudio <- local({
       # out, without inspecting some process data with ps::ps_*().
       # At least we rule out asciicast
       "rstudio_terminal"
-    } else if (!new$tty &&
-      new$envs[["RSTUDIO_TERM"]] == "" &&
-      new$envs[["R_BROWSER"]] == "false" &&
-      new$envs[["R_PDFVIEWER"]] == "false" &&
-      is_build_pane_command(new$args)) {
+    } else if (
+      !new$tty &&
+        new$envs[["RSTUDIO_TERM"]] == "" &&
+        new$envs[["R_BROWSER"]] == "false" &&
+        new$envs[["R_PDFVIEWER"]] == "false" &&
+        is_build_pane_command(new$args)
+    ) {
       # 5. R in the RStudio build pane
       # https://github.com/rstudio/rstudio/blob/master/src/cpp/session/
       # modules/build/SessionBuild.cpp#L231-L240
       "rstudio_build_pane"
-    } else if (new$envs[["RSTUDIOAPI_IPC_REQUESTS_FILE"]] != "" &&
-      grepl("rstudio", new$envs[["XPC_SERVICE_NAME"]])) {
+    } else if (
+      new$envs[["RSTUDIOAPI_IPC_REQUESTS_FILE"]] != "" &&
+        grepl("rstudio", new$envs[["XPC_SERVICE_NAME"]])
+    ) {
       # RStudio job, XPC_SERVICE_NAME=0 in the subprocess of a job
       # process. Hopefully this is reliable.
       "rstudio_job"
-    } else if (new$envs[["RSTUDIOAPI_IPC_REQUESTS_FILE"]] != "" &&
-      any(grepl("SourceWithProgress.R", new$args))) {
+    } else if (
+      new$envs[["RSTUDIOAPI_IPC_REQUESTS_FILE"]] != "" &&
+        any(grepl("SourceWithProgress.R", new$args))
+    ) {
       # Or we can check SourceWithProgress.R in the command line, see
       # https://github.com/r-lib/cli/issues/367
       "rstudio_job"

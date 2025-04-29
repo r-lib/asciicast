@@ -8,7 +8,6 @@ on:
   push:
     branches: [main, master]
   pull_request:
-    branches: [main, master]
 
 name: R-CMD-check.yaml
 
@@ -40,7 +39,6 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
-      ASCIICAST_TIMEOUT: 600
 
     steps:
       - uses: actions/checkout@v4

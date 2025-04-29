@@ -1,6 +1,5 @@
 is_rstudio <- function() {
-  "rstudioapi" %in% loadedNamespaces() &&
-    rstudioapi::isAvailable()
+  "rstudioapi" %in% loadedNamespaces() && rstudioapi::isAvailable()
 }
 
 view_image_in_rstudio <- function(path) {
@@ -11,10 +10,13 @@ view_image_in_rstudio <- function(path) {
   )
   file.copy(path, img)
 
-  cat(file = html, sprintf(
-    "<html><body><img src=\"%s\" width=\"100%%\"></body></html>",
-    basename(img)
-  ))
+  cat(
+    file = html,
+    sprintf(
+      "<html><body><img src=\"%s\" width=\"100%%\"></body></html>",
+      basename(img)
+    )
+  )
 
   rstudioapi::viewer(html)
 }

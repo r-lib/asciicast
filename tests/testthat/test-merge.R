@@ -46,8 +46,5 @@ test_that("merge", {
 })
 
 test_that("merge error", {
-  expect_error(
-    merge_casts(pause(5), clear_screen()),
-    "need to include at least one cast"
-  )
+  expect_snapshot(error = TRUE, merge_casts(pause(5), clear_screen()))
 })

@@ -21,17 +21,6 @@ test_that("load_frames", {
     sapply(frames$frames[[14]][[2]]$screen$lines, function(x) x[[1]][[1]])
   )
 
-  local_mocked_bindings(
-    system.file = function(..., package) {
-      if (..1 == "load-cast.js") {
-        ""
-      } else {
-        base::system.file(..., package = package)
-      }
-    }
-  )
-  expect_error(
-    load_frames(cast),
-    "cannot find 'load-cast.js'"
-  )
+  fake(load_frames, "system.file", "")
+  expect_snapshot(error = TRUE, load_frames(cast))
 })

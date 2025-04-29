@@ -53,26 +53,20 @@ test_that("write_svg errors", {
   cast <- record(hello, interactive = FALSE)
 
   svg <- file.path(tmp, "foobar.svg")
-  expect_error(
-    write_svg(cast, svg, theme = "foobarxx"),
-    "Unknown theme"
-  )
+  expect_snapshot(error = TRUE, write_svg(cast, svg, theme = "foobarxx"))
 
-  local_mocked_bindings(is_svg_supported = function() FALSE)
-  expect_error(
-    check_svg_support(),
-    "needs a more recent Node library"
-  )
+  fake(check_svg_support, "is_svg_supported", FALSE)
+  expect_snapshot(error = TRUE, check_svg_support())
 })
 
 test_that("play", {
   path <- NULL
   on.exit(unlink(path), add = TRUE)
-  local_mocked_bindings(play_svg = function(x, ...) path <<- x)
 
   hello <- system.file(package = "asciicast", "examples", "hello.R")
   cast <- record(hello, interactive = FALSE)
 
+  fake(play, "play_svg", function(x, ...) path <<- x)
   play(cast, at = "end")
 
   expect_false(is.null(path))
