@@ -124,7 +124,11 @@ test_that("adjust_typing_speed", {
 
 test_that("find_rem error", {
   fake(find_rem, "get_embedded", "")
-  expect_snapshot(error = TRUE, find_rem())
+  expect_snapshot(
+    error = TRUE,
+    find_rem(),
+    transform = function(x) sub("rem.exe", "rem", fixed = TRUE, x)
+  )
 })
 
 test_that("forced pause", {

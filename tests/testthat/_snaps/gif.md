@@ -71,13 +71,11 @@
     Code
       write_gif(cast, gif)
     Message
-      i Finding phantom.js[K
-      v Finding phantom.js ... done[K
+      i Finding phantom.js
+      v Finding phantom.js ... done
       
-      i Creating 4 snapshots[K
+      i Creating 3 snapshots
     Condition
       Error:
       ! phantom.js failed, see `$stderr` for standard error
-    Message
-      [K
 

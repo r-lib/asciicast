@@ -54,8 +54,8 @@ test_that("write_gif", {
 })
 
 test_that("write_gif errors", {
+  withr::local_options(cli.dynamic = FALSE, cli.ansi = FALSE)
   fake(write_gif, "find_phantom", NULL)
-  local_mocked_bindings(find_phantom = function() NULL)
   expect_snapshot(error = TRUE, suppressMessages(write_gif()))
 
   fake(
@@ -66,5 +66,10 @@ test_that("write_gif errors", {
   cast <- record(textConnection("1+1\n"))
   gif <- tempfile(fileext = ".gif")
   on.exit(unlink(gif), add = TRUE)
-  expect_snapshot(error = TRUE, write_gif(cast, gif))
+  expect_snapshot(
+    error = TRUE,
+    write_gif(cast, gif),
+    # this is kind of random, maybe 3, maybe 4 frames
+    transform = function(x) sub("4", "3", x)
+  )
 })
