@@ -5,7 +5,9 @@ always_allow_html: yes
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include = FALSE, cache = FALSE}
+```{r}
+#| include: false
+#| cache: false
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -79,32 +81,44 @@ for these examples.
 
 The input script:
 
-```{r code = readLines("inst/examples/hello.R"), eval = FALSE}
+```{r}
+#| code: !expr readLines("inst/examples/hello.R")
+#| eval: false
 ```
 
 The result:
 
-```{asciicast, code = readLines("inst/examples/hello.R"), cache = TRUE}
+```{asciicast}
+#| code: !expr readLines("inst/examples/hello.R")
+#| cache: true
 ```
 
 ### Asciicast demo in asciicast
 
 Input script that uses asciicast itself:
 
-```{r code = readLines("inst/examples/asciicast.R"), eval = FALSE}
+```{r}
+#| code: !expr readLines("inst/examples/asciicast.R")
+#| eval: false
 ```
 
-```{asciicast, code = readLines("inst/examples/asciicast.R"), cache = TRUE}
+```{asciicast}
+#| code: !expr readLines("inst/examples/asciicast.R")
+#| cache: true
 ```
 
 ### Errors are recorded
 
 Input script with errors:
 
-```{r code = readLines("inst/examples/errors.R"), eval = FALSE}
+```{r}
+#| code: !expr readLines("inst/examples/errors.R")
+#| eval: false
 ```
 
-```{asciicast, code = readLines("inst/examples/errors.R"), cache = TRUE}
+```{asciicast}
+#| code: !expr readLines("inst/examples/errors.R")
+#| cache: true
 ```
 
 ## Related tools

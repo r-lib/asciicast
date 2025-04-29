@@ -20,7 +20,10 @@ asciicast::init_knitr_engine()
 ```
 ````
 
-```{r echo = FALSE, results = "hide", purl = FALSE}
+```{r}
+#| echo: false
+#| results: hide
+#| purl: false
 asciicast::init_knitr_engine()
 ```
 
@@ -37,7 +40,8 @@ head(mtcars)
 
 This will produce the following cast:
 
-```{asciicast cache = TRUE}
+```{asciicast}
+#| cache: true
 # This will be an ascii cast
 # Let's evaluate some code
 head(mtcars)
@@ -57,7 +61,8 @@ the height of the widget.
 ```
 ````
 
-```{asciicast cache = TRUE}
+```{asciicast}
+#| cache: true
 #' Rows: 5
 
 # Not much here, so avoid a big widget
@@ -91,7 +96,9 @@ to use the code in the R scripts for other purposes.
 ```
 ````
 
-```{asciicast code = readLines("../inst/examples/hello.R"), cache = TRUE}
+```{asciicast}
+#| code: !expr readLines("../inst/examples/hello.R")
+#| cache: true
 ```
 
 ## Using SVG files
@@ -115,7 +122,8 @@ cli::rule(center = "TITLE", line = "~-", line_col = "blue")
 ```
 ````
 
-```{asciicast, cache = TRUE}
+```{asciicast}
+#| cache: true
 #' Rows: 3
 cli::rule(center = "TITLE", line = "~-", line_col = "blue")
 ```
@@ -134,7 +142,9 @@ cli::rule(center = "TITLE", line = "~-", line_col = "blue")
 ```
 ````
 
-```{asciicast, cache = TRUE, fig.with = 15}
+```{asciicast}
+#| cache: true
+#| fig.with: 15
 #' Rows: 3
 #' Cols: 82
 #' At: end
@@ -162,7 +172,9 @@ head(mtcars, 3)
 
 This will show the code above the SVG image. The header is not shown:
 
-```{asciicast, echo = TRUE, cache = TRUE}
+```{asciicast}
+#| echo: true
+#| cache: true
 #' Rows: 5
 #' At: end
 # This code will be shown
@@ -187,7 +199,8 @@ double mean_cpp(doubles x) {
 ```
 ````
 
-```{asciicastcpp11, echo = FALSE}
+```{asciicastcpp11}
+#| echo: false
 double mean_cpp(doubles x) {
   int n = x.size();
   double total = 0;
