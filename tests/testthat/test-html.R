@@ -1,9 +1,13 @@
 test_that("no markup", {
   withr::local_options(asciicast_typing_speed = 0)
-  cast <- record(quote({
-    options(cli.num_colors = 8)
-    cat(paste("pre", "nothing", "post"))
-  }), echo = FALSE, rows = 2)
+  cast <- record(
+    quote({
+      options(cli.num_colors = 8)
+      cat(paste("pre", "nothing", "post"))
+    }),
+    echo = FALSE,
+    rows = 2
+  )
   tmp <- tempfile("ac-html-", fileext = ".html")
   on.exit(unlink(tmp), add = TRUE)
   write_html(cast, tmp)
@@ -12,12 +16,19 @@ test_that("no markup", {
 
 test_that("8 colors", {
   withr::local_options(asciicast_typing_speed = 0)
-  cast <- record(quote({
-    options(cli.num_colors = 8)
-    cat(paste(
-      "pre", cli::col_yellow("yellow"), cli::bg_yellow(" yellow"), "post"
-    ))
-  }), echo = FALSE, rows = 2)
+  cast <- record(
+    quote({
+      options(cli.num_colors = 8)
+      cat(paste(
+        "pre",
+        cli::col_yellow("yellow"),
+        cli::bg_yellow(" yellow"),
+        "post"
+      ))
+    }),
+    echo = FALSE,
+    rows = 2
+  )
   tmp <- tempfile("ac-html-", fileext = ".html")
   on.exit(unlink(tmp), add = TRUE)
   write_html(cast, tmp)
@@ -26,13 +37,20 @@ test_that("8 colors", {
 
 test_that("styles", {
   withr::local_options(asciicast_typing_speed = 0)
-  cast <- record(quote({
-    options(cli.num_colors = 8)
-    cat(paste(
-      "pre", cli::style_bold("bold"), cli::style_italic("italic"),
-      cli::style_underline("underline"), "post"
-    ))
-  }), echo = FALSE, rows = 2)
+  cast <- record(
+    quote({
+      options(cli.num_colors = 8)
+      cat(paste(
+        "pre",
+        cli::style_bold("bold"),
+        cli::style_italic("italic"),
+        cli::style_underline("underline"),
+        "post"
+      ))
+    }),
+    echo = FALSE,
+    rows = 2
+  )
   tmp <- tempfile("ac-html-", fileext = ".html")
   on.exit(unlink(tmp), add = TRUE)
   write_html(cast, tmp)
@@ -41,11 +59,15 @@ test_that("styles", {
 
 test_that("256 colors", {
   withr::local_options(asciicast_typing_speed = 0)
-  cast <- record(quote({
-    options(cli.num_colors = 256)
-    mycol <- cli::make_ansi_style("orange")
-    cat(paste("pre", mycol("orange"), "post"))
-  }), echo = FALSE, rows = 2)
+  cast <- record(
+    quote({
+      options(cli.num_colors = 256)
+      mycol <- cli::make_ansi_style("orange")
+      cat(paste("pre", mycol("orange"), "post"))
+    }),
+    echo = FALSE,
+    rows = 2
+  )
   tmp <- tempfile("ac-html-", fileext = ".html")
   on.exit(unlink(tmp), add = TRUE)
   write_html(cast, tmp)
@@ -71,12 +93,16 @@ test_that("prefix", {
 
 test_that("true color", {
   mode <- if (l10n_info()[["UTF-8"]]) "utf8" else "ascii"
-  cast <- record(quote(
-    withr::with_options(
-      list(cli.num_colors = cli::truecolor),
-      cli::ansi_palette_show("dichro", colors = cli::truecolor)
-    )
-  ), cols = 200, rows = "auto")
+  cast <- record(
+    quote(
+      withr::with_options(
+        list(cli.num_colors = cli::truecolor),
+        cli::ansi_palette_show("dichro", colors = cli::truecolor)
+      )
+    ),
+    cols = 200,
+    rows = "auto"
+  )
   tmp <- tempfile("ac-html-", fileext = ".html")
   on.exit(unlink(tmp), add = TRUE)
   write_html(cast, tmp)
@@ -99,19 +125,23 @@ test_that("create_markup_{fg,bg}", {
 
 test_that("hyperlink", {
   withr::local_options(asciicast_typing_speed = 0)
-  cast <- record(quote({
-    options(cli.num_colors = 256, cli.hyperlink = TRUE)
-    st_from_bel <- function(x) {
-      gsub("\007", "\033\\", x, fixed = TRUE)
-    }
-    cat(paste(
-      "pre",
-      st_from_bel(
-        cli::style_hyperlink("text", "https://example.com")
-      ),
-      "post"
-    ))
-  }), echo = FALSE, rows = 2)
+  cast <- record(
+    quote({
+      options(cli.num_colors = 256, cli.hyperlink = TRUE)
+      st_from_bel <- function(x) {
+        gsub("\007", "\033\\", x, fixed = TRUE)
+      }
+      cat(paste(
+        "pre",
+        st_from_bel(
+          cli::style_hyperlink("text", "https://example.com")
+        ),
+        "post"
+      ))
+    }),
+    echo = FALSE,
+    rows = 2
+  )
   tmp <- tempfile("ac-html-", fileext = ".html")
   on.exit(unlink(tmp), add = TRUE)
   write_html(cast, tmp)

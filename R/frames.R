@@ -27,7 +27,9 @@ load_frames <- function(cast, height = NA, width = NA) {
   ct <- load_svg_term()
   ldjs <- system.file("load-cast.js", package = "asciicast")
   if (ldjs == "") {
-    throw(cli::format_error("Internal error, cannot find {.file load-cast.js}."))
+    throw(cli::format_error(
+      "Internal error, cannot find {.file load-cast.js}."
+    ))
   }
   ct$source(ldjs)
 

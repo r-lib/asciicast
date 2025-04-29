@@ -1,6 +1,10 @@
-record_internal <- function(lines, timeout, process,
-                            incomplete_error = TRUE,
-                            show_output = FALSE) {
+record_internal <- function(
+  lines,
+  timeout,
+  process,
+  incomplete_error = TRUE,
+  show_output = FALSE
+) {
   to <- as.double(timeout, units = "secs") * 1000
 
   ptr <- 1
@@ -46,10 +50,16 @@ record_internal <- function(lines, timeout, process,
 
       # wait until we see the "input" line, here we might read the
       # leftover from the output
-      output <<- c(output, wait_for(process, "^rlib$", "^type: input$", to, ptr - 1, show_output))
+      output <<- c(
+        output,
+        wait_for(process, "^rlib$", "^type: input$", to, ptr - 1, show_output)
+      )
 
       # wait until we get back a "busy" linem that means that it is running
-      output <<- c(output, wait_for(process, "^rlib$", "^busy:", to, ptr - 1, show_output))
+      output <<- c(
+        output,
+        wait_for(process, "^rlib$", "^busy:", to, ptr - 1, show_output)
+      )
 
       # if busy: 1, then the command is running, nothing more to send
       if (length(output) >= 1) {
@@ -62,7 +72,10 @@ record_internal <- function(lines, timeout, process,
   }
 
   wait_for_done <- function(show_output) {
-    output <<- c(output, wait_for(process, "^rlib$", "^busy: 0$", to, ptr - 1, show_output))
+    output <<- c(
+      output,
+      wait_for(process, "^rlib$", "^busy: 0$", to, ptr - 1, show_output)
+    )
   }
 
   while (ptr <= length(lines)) {
@@ -85,21 +98,25 @@ record_internal <- function(lines, timeout, process,
 }
 
 wait_for <- function(
-    px,
-    type = "",
-    value = "",
-    timeout = 1000,
-    linum = "???",
-    show_output = FALSE) {
+  px,
+  type = "",
+  value = "",
+  timeout = 1000,
+  linum = "???",
+  show_output = FALSE
+) {
   con <- attr(px, "sock")
   output <- character()
   while (TRUE) {
     ret <- processx::poll(list(con), timeout)
     if (ret[[1]] == "timeout") {
       err <- new_error(
-        "asciicast timeout after line ", linum,
-        "\noutput:\n", paste(utils::tail(output), collapse = "\n"),
-        "\nstdout:\n", px$read_output()
+        "asciicast timeout after line ",
+        linum,
+        "\noutput:\n",
+        paste(utils::tail(output), collapse = "\n"),
+        "\nstdout:\n",
+        px$read_output()
       )
       throw(err)
     }
@@ -133,11 +150,24 @@ read_all <- function(px, show_output = FALSE) {
   output
 }
 
-record_embedded <- function(lines, typing_speed, timeout, empty_wait,
-                            start_wait, end_wait,
-                            record_env, startup, echo, speed, process,
-                            interactive, locales, options,
-                            incomplete_error, show_output) {
+record_embedded <- function(
+  lines,
+  typing_speed,
+  timeout,
+  empty_wait,
+  start_wait,
+  end_wait,
+  record_env,
+  startup,
+  echo,
+  speed,
+  process,
+  interactive,
+  locales,
+  options,
+  incomplete_error,
+  show_output
+) {
   px <- process
 
   if (is.null(px)) {
@@ -227,10 +257,15 @@ record_embedded <- function(lines, typing_speed, timeout, empty_wait,
 #' cast2 <- record(textConnection(script2), process = process)
 #' cast1
 #' cast2
-asciicast_start_process <- function(startup = NULL, timeout = 10,
-                                    record_env = NULL, interactive = TRUE,
-                                    locales = get_locales(),
-                                    options = NULL, show_output = FALSE) {
+asciicast_start_process <- function(
+  startup = NULL,
+  timeout = 10,
+  record_env = NULL,
+  interactive = TRUE,
+  locales = get_locales(),
+  options = NULL,
+  show_output = FALSE
+) {
   sock <- processx::conn_create_unix_socket()
   sock_name <- processx::conn_file_name(sock)
   if (is_windows()) sock_name <- basename(sock_name) # nocovif !is_windows()
@@ -253,11 +288,17 @@ asciicast_start_process <- function(startup = NULL, timeout = 10,
 
   # throw away the output of the startup code
   set_locale_code <- paste0(
-    "Sys.setlocale('", names(locales), "', '", locales, "')"
+    "Sys.setlocale('",
+    names(locales),
+    "', '",
+    locales,
+    "')"
   )
   options <- modify_list(asciicast_options(), options)
   set_options_code <- paste0(
-    "options(", names(options), " = ",
+    "options(",
+    names(options),
+    " = ",
     map_chr(options, function(x) paste(deparse(x), collapse = "\n")),
     ")"
   )
@@ -303,7 +344,9 @@ asciicast_start_process_internal <- function(sock_name, env, interactive) {
         "--no-readline"
       ),
       env = env,
-      stdin = "|", stdout = "|", stderr = "2>&1"
+      stdin = "|",
+      stdout = "|",
+      stderr = "2>&1"
     )
     client <- find_client()
     cmd <- sprintf("dyn.load('%s')\n", client)
@@ -416,8 +459,10 @@ shift <- function(v) {
 
 add_empty_wait <- function(data, wait) {
   empty <- which(
-    data$type == "rlib" & data$data %in% c("type: input", "type: wait") &
-      shift(data$type) == "o" & shift(data$data) %in% c("\r\n", "")
+    data$type == "rlib" &
+      data$data %in% c("type: input", "type: wait") &
+      shift(data$type) == "o" &
+      shift(data$data) %in% c("\r\n", "")
   )
 
   if (length(empty) == 0) {
@@ -449,8 +494,10 @@ add_empty_wait <- function(data, wait) {
 
   # we might have shifted them, so calculate again
   empty <- which(
-    data$type == "rlib" & data$data %in% c("type: input", "type: wait") &
-      shift(data$type) == "o" & shift(data$data) %in% c("\r\n", "")
+    data$type == "rlib" &
+      data$data %in% c("type: input", "type: wait") &
+      shift(data$type) == "o" &
+      shift(data$data) %in% c("\r\n", "")
   )
 
   shft <- rep(0, nrow(data))
@@ -463,8 +510,10 @@ add_empty_wait <- function(data, wait) {
 
 adjust_typing_speed <- function(data, typing_speed) {
   inp <- which(
-    data$type == "rlib" & data$data == "type: input" &
-      shift(data$type) == "o" & !grepl("#[!]\\s*$", shift(data$data))
+    data$type == "rlib" &
+      data$data == "type: input" &
+      shift(data$type) == "o" &
+      !grepl("#[!]\\s*$", shift(data$data))
   )
 
   data$data <- sub("\\s+#[!]\\s*$", "\r\n", data$data)

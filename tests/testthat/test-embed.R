@@ -70,7 +70,8 @@ test_that("speed", {
 
 test_that("subprocess fails", {
   local_mocked_bindings(
-    poll = function(...) list("timeout"), .package = "processx"
+    poll = function(...) list("timeout"),
+    .package = "processx"
   )
   expect_error(
     asciicast_start_process(),
@@ -150,10 +151,13 @@ test_that("forced pause", {
 })
 
 test_that("edge case with no wait", {
-  cast <- record(c(
-    "#! --",
-    "1 + 1"
-  ), end_wait = 0)
+  cast <- record(
+    c(
+      "#! --",
+      "1 + 1"
+    ),
+    end_wait = 0
+  )
   cmds <- grep("^type:", cast$output$data, value = TRUE)
   expect_snapshot(cmds)
 })

@@ -53,20 +53,37 @@
 #' script <- system.file("examples", "hello.R", package = "asciicast")
 #' cast <- record(script)
 #' play(cast)
-record <- function(script, typing_speed = NULL, empty_wait = NULL,
-                   cols = NULL, rows = NULL, title = NULL, timestamp = NULL,
-                   env = NULL, idle_time_limit = NULL,
-                   timeout = NULL, start_wait = NULL, end_wait = NULL,
-                   record_env = NULL, startup = NULL, echo = TRUE,
-                   speed = NULL, process = NULL, interactive = TRUE,
-                   locales = get_locales(), options = asciicast_options(),
-                   incomplete_error = NULL, show_output = FALSE) {
+record <- function(
+  script,
+  typing_speed = NULL,
+  empty_wait = NULL,
+  cols = NULL,
+  rows = NULL,
+  title = NULL,
+  timestamp = NULL,
+  env = NULL,
+  idle_time_limit = NULL,
+  timeout = NULL,
+  start_wait = NULL,
+  end_wait = NULL,
+  record_env = NULL,
+  startup = NULL,
+  echo = TRUE,
+  speed = NULL,
+  process = NULL,
+  interactive = TRUE,
+  locales = get_locales(),
+  options = asciicast_options(),
+  incomplete_error = NULL,
+  show_output = FALSE
+) {
   lines <- if (is.language(script)) {
     deparse(script)
   } else if (inherits(script, "connection")) {
     readLines(script)
-  } else if (is.character(script) && length(script) == 1 &&
-    file_exists_safe(script)) {
+  } else if (
+    is.character(script) && length(script) == 1 && file_exists_safe(script)
+  ) {
     readLines(script)
   } else {
     unlist(strsplit(as.character(script), "\n", fixed = TRUE))
@@ -109,10 +126,21 @@ record <- function(script, typing_speed = NULL, empty_wait = NULL,
   }
 
   output <- record_embedded(
-    body, typing_speed, timeout, empty_wait,
-    start_wait, end_wait, record_env,
-    startup, echo, speed, process, interactive,
-    locales, options, incomplete_error,
+    body,
+    typing_speed,
+    timeout,
+    empty_wait,
+    start_wait,
+    end_wait,
+    record_env,
+    startup,
+    echo,
+    speed,
+    process,
+    interactive,
+    locales,
+    options,
+    incomplete_error,
     show_output
   )
 

@@ -19,7 +19,4 @@ starwars %>%
     n = n(),
     mass = mean(mass, na.rm = TRUE)
   ) %>%
-  filter(n > 1,
-         mass > 50)
-
-
+  filter(n > 1, mass > 50)

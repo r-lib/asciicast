@@ -16,9 +16,16 @@
 #'
 #' @export
 
-write_html <- function(cast, path, at = "end", omit_last_line = NULL,
-                       prefix = "", theme = NULL, details = FALSE,
-                       summary = "See output") {
+write_html <- function(
+  cast,
+  path,
+  at = "end",
+  omit_last_line = NULL,
+  prefix = "",
+  theme = NULL,
+  details = FALSE,
+  summary = "See output"
+) {
   omit_last_line <- as.logical(get_param("omit_last_line", TRUE))
   if (omit_last_line) cast <- remove_last_line(cast)
 
@@ -34,12 +41,20 @@ write_html <- function(cast, path, at = "end", omit_last_line = NULL,
   theme <- to_html_theme(interpret_theme(theme))
 
   lines <- lapply(seq_len(max(screen$lineno)), function(l) {
-    format_html_line(screen[screen$lineno == l, ], prefix = prefix, theme = theme)
+    format_html_line(
+      screen[screen$lineno == l, ],
+      prefix = prefix,
+      theme = theme
+    )
   })
 
   alllines <- c(
     if (details) c("<details><summary>", summary, "</summary>"),
-    paste0("<div class=\"asciicast\" style=\"", theme[["div.asciicast"]], "\"><pre>"),
+    paste0(
+      "<div class=\"asciicast\" style=\"",
+      theme[["div.asciicast"]],
+      "\"><pre>"
+    ),
     unlist(lines),
     "</pre></div>",
     if (details) "</details>"
@@ -132,14 +147,18 @@ to_html_theme <- function(theme) {
 }
 
 format_html_line <- function(
-    segments,
-    theme = to_html_theme(interpret_theme(NULL)),
-    prefix = "") {
-  out <- paste(unlist(
-    lapply(seq_len(nrow(segments)), function(i) {
-      format_html_piece(segments[i, ], theme = theme)
-    })
-  ), collapse = "")
+  segments,
+  theme = to_html_theme(interpret_theme(NULL)),
+  prefix = ""
+) {
+  out <- paste(
+    unlist(
+      lapply(seq_len(nrow(segments)), function(i) {
+        format_html_piece(segments[i, ], theme = theme)
+      })
+    ),
+    collapse = ""
+  )
 
   if (nchar(prefix) != 0) {
     out <- paste0(prefix, out)
@@ -155,7 +174,8 @@ format_html_piece <- function(pc, theme) {
     if (pc$italic) theme[[".ansi-italic"]],
     if (pc$underline) theme[[".ansi-underline"]],
     if (!is.na(pc$color)) create_markup_fg(pc$color, theme),
-    if (!is.na(pc$background_color)) create_markup_bg(pc$background_color, theme)
+    if (!is.na(pc$background_color))
+      create_markup_bg(pc$background_color, theme)
   )
   paste0(
     if (nchar(style)) paste0("<span style=\"", style, "\">"),

@@ -15,7 +15,8 @@ test_that("view_image_in_rstudio", {
   on.exit(unlink(path), add = TRUE)
 
   local_mocked_bindings(
-    viewer = function(x) path <<- x, .package = "rstudioapi"
+    viewer = function(x) path <<- x,
+    .package = "rstudioapi"
   )
 
   view_image_in_rstudio(tempdir())
