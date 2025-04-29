@@ -66,10 +66,7 @@ test_that("speed", {
 })
 
 test_that("subprocess fails", {
-  local_mocked_bindings(
-    poll = function(...) list("timeout"),
-    .package = "processx"
-  )
+  fake(asciicast_start_process, "processx::poll", list("timeout"))
   expect_snapshot(error = TRUE, asciicast_start_process())
 })
 
@@ -126,7 +123,7 @@ test_that("adjust_typing_speed", {
 })
 
 test_that("find_rem error", {
-  local_mocked_bindings(get_embedded = function() "")
+  fake(find_rem, "get_embedded", "")
   expect_snapshot(error = TRUE, find_rem())
 })
 

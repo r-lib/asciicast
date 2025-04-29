@@ -18,9 +18,9 @@ test_that("install_phantomjs", {
 })
 
 test_that("install_phantomjs errors", {
-  local_mocked_bindings(is_windows = function() FALSE)
-  local_mocked_bindings(is_macos = function() FALSE)
-  local_mocked_bindings(is_linux = function() FALSE)
+  fake(install_phantomjs, "is_windows", FALSE)
+  fake(install_phantomjs, "is_macos", FALSE)
+  fake(install_phantomjs, "is_linux", FALSE)
   expect_message(
     install_phantomjs(),
     "this platform is not supported"

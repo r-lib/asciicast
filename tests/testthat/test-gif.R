@@ -36,17 +36,17 @@ test_that("write_gif", {
     all(magick::image_info(mgif)$format == "GIF")
   )
 
-  local_mocked_bindings(is_rstudio = function() TRUE)
   rs <- NULL
-  local_mocked_bindings(view_image_in_rstudio = function(path) rs <<- path)
+  fake(write_gif, "is_rstudio", TRUE)
+  fake(write_gif, "view_image_in_rstudio", function(path) rs <<- path)
   suppressMessages(
     write_gif(cast, gif, show = TRUE)
   )
   expect_false(is.null(rs))
 
-  local_mocked_bindings(is_rstudio = function() FALSE)
   rs <- NULL
-  local_mocked_bindings(image_display = function(anim) rs <<- TRUE)
+  fake(write_gif, "is_rstudio", FALSE)
+  fake(write_gif, "image_display", function(anim) rs <<- TRUE)
   suppressMessages(
     write_gif(cast, gif, show = TRUE)
   )
@@ -54,11 +54,14 @@ test_that("write_gif", {
 })
 
 test_that("write_gif errors", {
+  fake(write_gif, "find_phantom", NULL)
   local_mocked_bindings(find_phantom = function() NULL)
   expect_snapshot(error = TRUE, suppressMessages(write_gif()))
 
-  local_mocked_bindings(
-    find_phantom = function() asNamespace("processx")$get_tool("px")
+  fake(
+    write_gif,
+    "find_phantom",
+    asNamespace("processx")$get_tool("px")
   )
   cast <- record(textConnection("1+1\n"))
   gif <- tempfile(fileext = ".gif")
