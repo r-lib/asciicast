@@ -36,7 +36,7 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="basics">Basics<a class="anchor" aria-label="anchor" href="#basics"></a></h2>
 
 
 
@@ -48,16 +48,121 @@
 
       <dl><dt>
 
-          <code><a href="asciicast-package.html">asciicast-package</a></code>
+          <code><a href="record.html">record()</a></code>
 
         </dt>
-        <dd>asciicast parameters</dd>
+        <dd>Record an asciinema screencast</dd>
+      </dl><dl><dt>
+
+          <code><a href="play.html">play()</a></code>
+
+        </dt>
+        <dd>Play asciinema cast as an SVG image in the default browser</dd>
+      </dl><dl><dt>
+
+          <code><a href="merge_casts.html">merge_casts()</a></code> <code><a href="merge_casts.html">clear_screen()</a></code> <code><a href="merge_casts.html">pause()</a></code>
+
+        </dt>
+        <dd>Merge multiple ASCII casts into one</dd>
+      </dl><dl><dt>
+
+          <code><a href="record_output.html">record_output()</a></code>
+
+        </dt>
+        <dd>Record output of an R script and return it as a character vector</dd>
+      </dl></div><div class="section level2">
+      <h2 id="sharing">Sharing<a class="anchor" aria-label="anchor" href="#sharing"></a></h2>
+
+
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="write_svg.html">write_svg()</a></code>
+
+        </dt>
+        <dd>Create animated SVG from an asciicast</dd>
+      </dl><dl><dt>
+
+          <code><a href="write_html.html">write_html()</a></code>
+
+        </dt>
+        <dd>Create a HTML snapshot of an asciicast</dd>
+      </dl><dl><dt>
+
+          <code><a href="write_gif.html">write_gif()</a></code>
+
+        </dt>
+        <dd>Export ascii screencast to animated GIF file</dd>
+      </dl><dl><dt>
+
+          <code><a href="write_json.html">write_json()</a></code>
+
+        </dt>
+        <dd>Write an ascii cast to file</dd>
+      </dl><dl><dt>
+
+          <code><a href="read_cast.html">read_cast()</a></code>
+
+        </dt>
+        <dd>Import an asciicast from an asciicast JSON file</dd>
+      </dl></div><div class="section level2">
+      <h2 id="theming-and-options">Theming and options<a class="anchor" aria-label="anchor" href="#theming-and-options"></a></h2>
+
+
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="default_theme.html">default_theme()</a></code>
+
+        </dt>
+        <dd>The default asciicast theme</dd>
       </dl><dl><dt>
 
           <code><a href="asciicast_options.html">asciicast_options()</a></code>
 
         </dt>
         <dd>Default options to set in the asciicast subprocess.</dd>
+      </dl><dl><dt>
+
+          <code><a href="asciicast-package.html">asciicast-package</a></code>
+
+        </dt>
+        <dd>asciicast parameters</dd>
+      </dl></div><div class="section level2">
+      <h2 id="other-functions">Other functions<a class="anchor" aria-label="anchor" href="#other-functions"></a></h2>
+
+
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="get_locales.html">get_locales()</a></code>
+
+        </dt>
+        <dd>Helper function to query locales as a named character vector.</dd>
+      </dl><dl><dt>
+
+          <code><a href="init_knitr_engine.html">init_knitr_engine()</a></code>
+
+        </dt>
+        <dd>Initialize the asciicast knitr engine</dd>
       </dl><dl><dt>
 
           <code><a href="asciicast_start_process.html">asciicast_start_process()</a></code>
@@ -72,90 +177,19 @@
         <dd>asciinema player HTML widget</dd>
       </dl><dl><dt>
 
-          <code><a href="default_theme.html">default_theme()</a></code>
-
-        </dt>
-        <dd>The default asciicast theme</dd>
-      </dl><dl><dt>
-
           <code><a href="expect_snapshot_r_process.html">expect_snapshot_r_process()</a></code>
 
         </dt>
         <dd>testthat snapshot test with asciicast</dd>
       </dl><dl><dt>
 
-          <code><a href="get_locales.html">get_locales()</a></code>
-
-        </dt>
-        <dd>Helper function to query locales as a named character vector.</dd>
-      </dl><dl><dt>
-
-          <code><a href="init_knitr_engine.html">init_knitr_engine()</a></code>
-
-        </dt>
-        <dd>Initialize the asciicast knitr engine</dd>
-      </dl><dl><dt>
-
           <code><a href="install_phantomjs.html">install_phantomjs()</a></code>
 
         </dt>
         <dd>Install PhantomJS</dd>
-      </dl><dl><dt>
-
-          <code><a href="merge_casts.html">clear_screen()</a></code> <code><a href="merge_casts.html">pause()</a></code> <code><a href="merge_casts.html">merge_casts()</a></code>
-
-        </dt>
-        <dd>Merge multiple ASCII casts into one</dd>
-      </dl><dl><dt>
-
-          <code><a href="play.html">play()</a></code>
-
-        </dt>
-        <dd>Play asciinema cast as an SVG image in the default browser</dd>
-      </dl><dl><dt>
-
-          <code><a href="read_cast.html">read_cast()</a></code>
-
-        </dt>
-        <dd>Import an asciicast from an asciicast JSON file</dd>
-      </dl><dl><dt>
-
-          <code><a href="record.html">record()</a></code>
-
-        </dt>
-        <dd>Record an asciinema screencast</dd>
-      </dl><dl><dt>
-
-          <code><a href="record_output.html">record_output()</a></code>
-
-        </dt>
-        <dd>Record output of an R script and return it as a character vector</dd>
-      </dl><dl><dt>
-
-          <code><a href="write_gif.html">write_gif()</a></code>
-
-        </dt>
-        <dd>Export ascii screencast to animated GIF file</dd>
-      </dl><dl><dt>
-
-          <code><a href="write_html.html">write_html()</a></code>
-
-        </dt>
-        <dd>Create a HTML snapshot of an asciicast</dd>
-      </dl><dl><dt>
-
-          <code><a href="write_json.html">write_json()</a></code>
-
-        </dt>
-        <dd>Write an ascii cast to file</dd>
-      </dl><dl><dt>
-
-          <code><a href="write_svg.html">write_svg()</a></code>
-
-        </dt>
-        <dd>Create animated SVG from an asciicast</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
    </div>
