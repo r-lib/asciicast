@@ -31,10 +31,7 @@ test_that("R crashes", {
 
 test_that("incomplete expression", {
   withr::local_options(asciicast_typing_speed = 0)
-  expect_error(
-    record(textConnection("1 + (\n")),
-    "Incomplete asciicast expression"
-  )
+  expect_snapshot(error = TRUE, record(textConnection("1 + (\n")))
 })
 
 test_that("incomplete expression allowed", {
@@ -46,9 +43,9 @@ test_that("incomplete expression allowed", {
 
 test_that("timeout", {
   withr::local_options(asciicast_typing_speed = 0)
+  # does not work well a snapshot, output changes
   expect_error(
-    record(textConnection("Sys.sleep(1)\n"), timeout = 0.1),
-    "asciicast timeout after line"
+    record(textConnection("Sys.sleep(1)\n"), timeout = 0.1)
   )
 })
 
@@ -73,10 +70,7 @@ test_that("subprocess fails", {
     poll = function(...) list("timeout"),
     .package = "processx"
   )
-  expect_error(
-    asciicast_start_process(),
-    "subprocess did not connect back"
-  )
+  expect_snapshot(error = TRUE, asciicast_start_process())
 })
 
 test_that("startup crashes", {
@@ -84,20 +78,20 @@ test_that("startup crashes", {
   if (!is_embedded()) {
     skip("Fails on non-embedded R")
   }
-  expect_error(
+  expect_snapshot(
+    error = TRUE,
     asciicast_start_process(
       startup = quote(callr:::crash()),
       interactive = FALSE
-    ),
-    "asciicast process exited while running"
+    )
   )
 })
 
 test_that("cannot send input, buffer is full", {
   skip_on_os("windows") # TODO
-  expect_error(
-    record(textConnection(strrep("1 + ", 100000))),
-    "Cannot send input, buffer is full"
+  expect_snapshot(
+    error = TRUE,
+    record(textConnection(strrep("1 + ", 100000)))
   )
 })
 
@@ -133,10 +127,7 @@ test_that("adjust_typing_speed", {
 
 test_that("find_rem error", {
   local_mocked_bindings(get_embedded = function() "")
-  expect_error(
-    find_rem(),
-    "Cannot find embedded R executable"
-  )
+  expect_snapshot(error = TRUE, find_rem())
 })
 
 test_that("forced pause", {

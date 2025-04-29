@@ -76,9 +76,9 @@ test_that("256 colors", {
 
 test_that("unknown theme", {
   cast <- record("ls()")
-  expect_error(
-    write_html(cast, tempfile(), theme = basename(tempfile())),
-    "Unknown theme"
+  expect_snapshot(
+    error = TRUE,
+    write_html(cast, tempfile(), theme = "file1868d5a82f56e")
   )
 })
 

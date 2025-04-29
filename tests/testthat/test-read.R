@@ -29,20 +29,11 @@ test_that("read cast from asciinema.org & from URL", {
 
 test_that("errors", {
   v1 <- test_path("fixtures", "v1.json")
-  expect_error(
-    read_cast(v1),
-    "Only version 2 asciicast files are supported"
-  )
+  expect_snapshot(error = TRUE, read_cast(v1))
 
   badver <- test_path("fixtures", "badver.json")
-  expect_error(
-    read_cast(badver),
-    "Only version 2 asciicast files are supported"
-  )
+  expect_snapshot(error = TRUE, read_cast(badver))
 
   bad <- test_path("fixtures", "bad.json")
-  expect_error(
-    read_cast(bad),
-    class = "asciicast_parse_error"
-  )
+  expect_snapshot(error = TRUE, read_cast(bad))
 })

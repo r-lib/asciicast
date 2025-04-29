@@ -55,10 +55,7 @@ test_that("write_gif", {
 
 test_that("write_gif errors", {
   local_mocked_bindings(find_phantom = function() NULL)
-  expect_error(
-    suppressMessages(write_gif()),
-    "No phantom.js, exiting"
-  )
+  expect_snapshot(error = TRUE, suppressMessages(write_gif()))
 
   local_mocked_bindings(
     find_phantom = function() asNamespace("processx")$get_tool("px")
@@ -66,8 +63,5 @@ test_that("write_gif errors", {
   cast <- record(textConnection("1+1\n"))
   gif <- tempfile(fileext = ".gif")
   on.exit(unlink(gif), add = TRUE)
-  expect_error(
-    write_gif(cast, gif),
-    "phantom.js failed"
-  )
+  expect_snapshot(error = TRUE, write_gif(cast, gif))
 })

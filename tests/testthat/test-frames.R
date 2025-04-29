@@ -30,8 +30,5 @@ test_that("load_frames", {
       }
     }
   )
-  expect_error(
-    load_frames(cast),
-    "cannot find 'load-cast.js'"
-  )
+  expect_snapshot(error = TRUE, load_frames(cast))
 })

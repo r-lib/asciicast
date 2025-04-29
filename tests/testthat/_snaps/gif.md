@@ -58,3 +58,26 @@
       v Writing GIF output ... done
       
 
+# write_gif errors
+
+    Code
+      suppressMessages(write_gif())
+    Condition
+      Error:
+      ! No phantom.js, exiting.
+
+---
+
+    Code
+      write_gif(cast, gif)
+    Message
+      i Finding phantom.js[K
+      v Finding phantom.js ... done[K
+      
+      i Creating 4 snapshots[K
+    Condition
+      Error:
+      ! phantom.js failed, see `$stderr` for standard error
+    Message
+      [K
+

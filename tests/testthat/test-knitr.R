@@ -58,9 +58,9 @@ test_that("crash", {
   opath <- test_path("fixtures", "test-2.Rmd")
   tpath <- file.path(tmp, basename(opath))
   file.copy(opath, tpath)
-  expect_error(
-    suppressMessages(rmarkdown::render(tpath, quiet = TRUE)),
-    "asciicast subprocess crashed"
+  expect_snapshot(
+    error = TRUE,
+    suppressMessages(rmarkdown::render(tpath, quiet = TRUE))
   )
 })
 

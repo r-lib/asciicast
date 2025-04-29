@@ -53,16 +53,10 @@ test_that("write_svg errors", {
   cast <- record(hello, interactive = FALSE)
 
   svg <- file.path(tmp, "foobar.svg")
-  expect_error(
-    write_svg(cast, svg, theme = "foobarxx"),
-    "Unknown theme"
-  )
+  expect_snapshot(error = TRUE, write_svg(cast, svg, theme = "foobarxx"))
 
   local_mocked_bindings(is_svg_supported = function() FALSE)
-  expect_error(
-    check_svg_support(),
-    "needs a more recent Node library"
-  )
+  expect_snapshot(error = TRUE, check_svg_support())
 })
 
 test_that("play", {

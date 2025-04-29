@@ -10,3 +10,13 @@
       [5] "hi there                                                                        "                                      
       [6] "                                                                                "                                      
 
+---
+
+    Code
+      load_frames(cast)
+    Condition
+      Warning in `readLines()`:
+      cannot open compressed file '', probable reason 'No such file or directory'
+      Error in `readLines()`:
+      ! cannot open the connection
+
