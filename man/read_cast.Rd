@@ -20,14 +20,14 @@ recording id, that is downloaded. It can also be a URL of private
 Import an asciicast from an asciicast JSON file
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 c1 <- read_cast("https://asciinema.org/a/uHQwIVpiZvu0Ioio8KYx6Uwlj.cast?dl=1")
 play(c1)
 
 c2 <- read_cast(258660)
 play(c2)
 \dontshow{\}) # examplesIf}
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 c3 <- read_cast(system.file("examples", "hello.cast", package = "asciicast"))
 play(c3)
 \dontshow{\}) # examplesIf}

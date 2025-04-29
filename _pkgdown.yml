@@ -7,5 +7,36 @@ template:
     in_header: |
       <script defer data-domain="/asciicast.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script>
 
+reference:
+- title: Basics
+  contents:
+  - record
+  - play
+  - merge_casts
+  - record_output
+
+- title: Sharing
+  contents:
+  - write_svg
+  - write_html
+  - write_gif
+  - write_json
+  - read_cast
+
+- title: Theming and options
+  contents:
+  - default_theme
+  - asciicast_options
+  - '`asciicast-package`'
+
+- title: Other functions
+  contents:
+  - get_locales
+  - init_knitr_engine
+  - asciicast_start_process
+  - asciinema_player
+  - expect_snapshot_r_process
+  - install_phantomjs
+
 development:
   mode: auto

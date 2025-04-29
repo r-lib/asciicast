@@ -16,7 +16,7 @@ The file uses the asciinema file format, version 2:
 \url{https://github.com/asciinema/asciinema/blob/master/doc/asciicast-v2.md}.
 }
 \examples{
-\dontshow{if (!asciicast:::is_rcmd_check()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (!asciicast:::is_rcmd_check()) withAutoprint(\{ # examplesIf}
 script <- system.file("examples", "hello.R", package = "asciicast")
 cast <- record(script)
 json <- tempfile(fileext = ".json")

@@ -112,7 +112,7 @@ file with \code{\link[=write_json]{write_json()}}.
 Record an asciinema screencast
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 script <- system.file("examples", "hello.R", package = "asciicast")
 cast <- record(script)
 play(cast)
