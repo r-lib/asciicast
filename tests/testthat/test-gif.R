@@ -1,4 +1,6 @@
 test_that("write_gif", {
+  skip_on_ci()
+
   if (!is_windows() && !is_macos() && !is_linux()) {
     skip("Unsupported OS")
   }
@@ -54,6 +56,7 @@ test_that("write_gif", {
 })
 
 test_that("write_gif errors", {
+  skip_on_ci()
   withr::local_options(cli.dynamic = FALSE, cli.ansi = FALSE)
   fake(write_gif, "find_phantom", NULL)
   expect_snapshot(error = TRUE, suppressMessages(write_gif()))

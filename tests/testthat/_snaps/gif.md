@@ -2,6 +2,11 @@
 
     Code
       write_gif(cast, gif, show = FALSE, rows = "auto")
+    Condition
+      Warning:
+      `write_gif()` was deprecated in asciicast 3.0.0.
+      i Please use `write_svg()` instead.
+      i Convert the SVG to GIF.
     Message
       i Finding phantom.js
       v Finding phantom.js ... done
@@ -63,6 +68,10 @@
     Code
       suppressMessages(write_gif())
     Condition
+      Warning:
+      `write_gif()` was deprecated in asciicast 3.0.0.
+      i Please use `write_svg()` instead.
+      i Convert the SVG to GIF.
       Error:
       ! No phantom.js, exiting.
 
@@ -70,6 +79,11 @@
 
     Code
       write_gif(cast, gif)
+    Condition
+      Warning:
+      `write_gif()` was deprecated in asciicast 3.0.0.
+      i Please use `write_svg()` instead.
+      i Convert the SVG to GIF.
     Message
       i Finding phantom.js
       v Finding phantom.js ... done
