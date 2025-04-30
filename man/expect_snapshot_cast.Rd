@@ -13,7 +13,7 @@ expect_snapshot_cast(
   start_at = NULL,
   end_at = NULL,
   at = "end",
-  cursor = NULL,
+  cursor = FALSE,
   rows = NULL,
   cols = NULL,
   padding = NULL,
