@@ -32,6 +32,8 @@ expect_snapshot_cast(
 \arguments{
 \item{expr}{An expression to evaluate and capture the output from}
 
+\item{...}{These dots are for future extensions and must be empty.}
+
 \item{dir}{Directory to save the SVG file (default: \code{tempdir()})}
 
 \item{num_colors}{The number of colors to use in the terminal (default: 256)}
@@ -58,14 +60,39 @@ all output is done.}
 
 \item{padding_y}{Distance between text and image bounds on y axis.}
 
-\item{omit_last_line}{Whether to omit the last line of the cast. This
-often just the prompt, and sometimes it is not worth showing.}
+\item{omit_last_line}{Must be \code{TRUE} because otherwise output dimensions are incorrect.}
 
 \item{theme}{A named list to override the default theme
 (see \code{\link[=default_theme]{default_theme()}}).}
 
 \item{show}{Whether to show the SVG file on the screen, in the viewer
 pane in RStudio, or in the web browser.}
+
+\item{name}{Snapshot name, derived from the expression by default.
+Override if the same test file creates two snapshots with the same expression.}
+
+\item{cran}{Should these expectations be verified on CRAN? By default,
+they are not, because snapshot tests tend to be fragile because they
+often rely on minor details of dependencies.}
+
+\item{compare}{A function used to compare the snapshot files. It should take
+two inputs, the paths to the \code{old} and \code{new} snapshot, and return either
+\code{TRUE} or \code{FALSE}. This defaults to \code{compare_file_text} if \code{name} has
+extension \code{.r}, \code{.R}, \code{.Rmd}, \code{.md}, or \code{.txt}, and otherwise uses
+\code{compare_file_binary}.
+
+\code{compare_file_binary()} compares byte-by-byte and
+\code{compare_file_text()} compares lines-by-line, ignoring
+the difference between Windows and Mac/Linux line endings.}
+
+\item{transform}{Optionally, a function to scrub sensitive or stochastic
+text from the output. Should take a character vector of lines as input
+and return a modified character vector as output.}
+
+\item{variant}{If not-\code{NULL}, results will be saved in
+\verb{_snaps/{variant}/{test}/{name}.{ext}}. This allows you to create
+different snapshots for different scenarios, like different operating
+systems or different R versions.}
 }
 \value{
 The value of \code{expr}, invisibly.

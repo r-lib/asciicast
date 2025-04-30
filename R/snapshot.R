@@ -72,7 +72,7 @@ capture_cast <- function(
   withr::local_options(cli.num_colors = num_colors)
 
   # Capture output
-  output <- capture.output({
+  output <- utils::capture.output({
     force(expr)
   })
 
@@ -88,8 +88,13 @@ capture_cast <- function(
 #' and registers it as a snapshot in SVG format with a name derived from the expression.
 #'
 #' @param dir Directory to save the SVG file (default: `tempdir()`)
+#' @inheritParams rlang::args_dots_empty
 #' @inheritParams capture_cast
 #' @inheritParams write_svg
+#' @inheritParams testthat::expect_snapshot_file
+#' @param name Snapshot name, derived from the expression by default.
+#'   Override if the same test file creates two snapshots with the same expression.
+#' @param omit_last_line Must be `TRUE` because otherwise output dimensions are incorrect.
 #'
 #' @return The value of `expr`, invisibly.
 #'   This function is normally called for its side effects.
@@ -121,6 +126,8 @@ expect_snapshot_cast <- function(
   transform = NULL,
   variant = NULL
 ) {
+  rlang::check_dots_empty()
+
   if (!isTRUE(omit_last_line)) {
     cli::cli_abort("Setting {.arg omit_last_line} to a value other than {.val TRUE} is not supported.")
   }
