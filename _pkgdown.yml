@@ -29,13 +29,22 @@ reference:
   - asciicast_options
   - '`asciicast-package`'
 
+- title: Manual creation of casts
+  contents:
+  - cast
+  - capture_cast
+
+- title: Snapshots
+  contents:
+  - expect_snapshot_cast
+  - expect_snapshot_r_process
+
 - title: Other functions
   contents:
   - get_locales
   - init_knitr_engine
   - asciicast_start_process
   - asciinema_player
-  - expect_snapshot_r_process
   - install_phantomjs
 
 development:
