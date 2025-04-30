@@ -57,5 +57,5 @@ be slow for casts with many frames.}
 \code{path}, invisibly.
 }
 \description{
-Export ascii screencast to animated GIF file
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 }
