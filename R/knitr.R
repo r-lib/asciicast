@@ -201,7 +201,8 @@ eng_asciicast_output_type <- function() {
 
 eng_asciicast_print <- function(cast, options) {
   output <- eng_asciicast_output_type()
-  extra <- if (!options$include) {
+  extra <- if (!options$include || identical(options$results, FALSE) ||
+               identical(options$results, "hide")) {
     NULL
   } else if (output == "svg") {
     asciicast_knitr_svg(cast, options)
