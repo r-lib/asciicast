@@ -1,5 +1,8 @@
 # asciicast (development version)
 
+* New `cast()`, `capture_cast()` and `expect_snapshot_cast()` functions
+  for lightweight cast creation and snapshotting (#61, #66, @krlmlr)
+
 # asciicast 2.3.1
 
 * New `show` argument in `write_svg()` to show the SVG on the screen.
